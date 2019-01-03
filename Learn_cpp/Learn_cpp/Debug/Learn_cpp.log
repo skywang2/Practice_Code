@@ -1,0 +1,13 @@
+﻿  源.cpp
+  Queue_cpp_built-in.cpp
+  Queue.cpp
+c:\users\skywang\desktop\cpp\learn_cpp\learn_cpp\queue.cpp(12): warning C4018: “>=”: 有符号/无符号不匹配
+  Tree1.cpp
+  main.cpp
+c:\users\skywang\desktop\cpp\learn_cpp\learn_cpp\queue.cpp(12): warning C4018: “>=”: 有符号/无符号不匹配
+c:\users\skywang\desktop\cpp\learn_cpp\learn_cpp\main.cpp(52): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\skywang\desktop\cpp\learn_cpp\learn_cpp\main.cpp(62): warning C4018: “<”: 有符号/无符号不匹配
+  Circular_Queue.cpp
+  正在生成代码...
+  Learn_cpp.vcxproj -> C:\Users\skywang\Desktop\CPP\Learn_cpp\Debug\Learn_cpp.exe
+  Learn_cpp.vcxproj -> C:\Users\skywang\Desktop\CPP\Learn_cpp\Debug\Learn_cpp.pdb (Partial PDB)
