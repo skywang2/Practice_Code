@@ -1,44 +1,41 @@
-// test.cpp : 定义控制台应用程序的入口点。
-//
-
-#include "stdafx.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <list>
 #include <iostream>
+#include <Windows.h>
 using namespace std;
 
-#define M 3
-#define N 2
-#define P 4
+const int matM = 3, matN = 2, matP = 4;
 
-void matrxMultiply(int matrix1[M][N], int matrix2[N][P], int result[M][P]) {
+void matrxMultiply(int matrix1[matM][matN], int matrix2[matN][matP], int result[matM][matP]) {
 	int i, j, k;
-	for(i = 0; i < M; i++)
-		for (j = 0; j < P; j++)
-			for (k = 0; k < N; k++) {
+	for(i = 0; i < matM; i++)
+		for (j = 0; j < matP; j++)
+			for (k = 0; k < matN; k++) {
 				result[i][j] = result[i][j] + matrix1[i][k] * matrix2[k][j];
 			}
 }
 
 int main()
 {
-	int i = 0, j = 0;
-	int matrix1[M][N], matrix2[N][P], result[M][P];
+	//3个矩阵相乘
+	int matrix1[matM][matN], matrix2[matN][matP], result[matM][matP];
 
-	for (i = 0; i < M; i++)//矩阵1
-		for (j = 0; j < N; j++)
-			cin >> matrix1[i][j];
+	for (int i = 0; i < matM; i++)//矩阵1
+		for (int j = 0; j < matN; j++)
+			//cin >> matrix1[i][j];
 
-	for (i = 0; i < N; i++)//矩阵2
-		for (j = 0; j < P; j++)
-			cin >> matrix2[i][j];
+	for (int i = 0; i < matN; i++)//矩阵2
+		for (int j = 0; j < matP; j++)
+			//cin >> matrix2[i][j];
 
-	for (i = 0; i < N; i++)//矩阵2
-		for (j = 0; j < P; j++)
+	for (int i = 0; i < matN; i++)//矩阵2
+		for (int j = 0; j < matP; j++)
 			result[i][j] = 0;
 
 	matrxMultiply(matrix1, matrix2, result);
+
+
 
     return 0;
 }
