@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MyEventClass</class>
+ <widget class="QWidget" name="MyEventClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>597</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MyEvent</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="MyLabel" name="label">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="MyLabel2" name="label_2">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>MyLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">E:\c&amp;cpp_code\primer_2\qevent\mylabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MyLabel2</class>
+   <extends>QLabel</extends>
+   <header location="global">E:\c&amp;cpp_code\primer_2\qevent\mylabel2.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="MyEvent.qrc"/>
+ </resources>
+ <connections/>
+</ui>
