@@ -6,3 +6,13 @@
 /cpp_project_win/test/*.user
 /cpp_project_win/test/x64/
 /cpp_project_win/Learn_cpp/x64/
+/cpp_project_win/MyThread/*.user
+/cpp_project_win/MyThread/x64/
+/cpp_project_win/MyThread_obj/*.user
+/cpp_project_win/MyThread_obj/x64/
+/cpp_project_win/qevent/*.user
+/cpp_project_win/qevent/x64/
+/cpp_project_win/qt_test/*.user
+/cpp_project_win/qt_test/x64/
+/cpp_project_win/thread_test/*.user
+/cpp_project_win/thread_test/x64/
