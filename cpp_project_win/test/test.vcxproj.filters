@@ -22,4 +22,12 @@
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HuaweiJudge.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="reverse.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
