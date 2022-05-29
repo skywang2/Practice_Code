@@ -23,9 +23,11 @@ public:
 		}
 		else {
 			p = (TreeNode *)malloc(sizeof(TreeNode));
-			p->val = data;
-			p->left = createTree();
-			p->right = createTree();
+			if (p) {
+				p->val = data;
+				p->left = createTree();
+				p->right = createTree();
+			}
 		}
 		return p;
 	}

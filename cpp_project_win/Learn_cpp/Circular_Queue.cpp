@@ -8,7 +8,7 @@ private:
 
 public:
 	MyCircularQueue(int k){
-		x = new int[k + 1];
+		x = new int[(long long)k + 1];//64位下指针是64位、8字节的
 		length = k + 1;
 		front = 0;	//参考答案用的-1，因为它在后面插入时先front自增，再赋值
 		rear = 0;
