@@ -1,0 +1,2 @@
+1.同时生成相同库名的动态库与静态库，libhello.a、libhello.so
+2.使用SET_TARGET_PROPERTIES命令修改输出库文件的命名以及清除当前名字，避免同名冲突
