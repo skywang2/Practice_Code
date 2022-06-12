@@ -4,7 +4,6 @@ qt_test::qt_test(QWidget *parent)
 	: QMainWindow(parent)
 {
 	move(0, 0);
-
 	ui.setupUi(this);
 
 	//菜单栏
@@ -20,14 +19,12 @@ qt_test::qt_test(QWidget *parent)
 	QAction* pBarMess = pBarFile->addAction("Message Box");
 	QAction* pBarQues = pBarFile->addAction("Question Box");
 	QAction* pBarFileOpen3 = pBarFile->addAction(QString::fromLocal8Bit("打开"));
-
 	(void)connect(pBarFileNew, &QAction::triggered, this, &qt_test::newFile);
 	(void)connect(pBarFileOpen, &QAction::triggered, this, &qt_test::fileOpen);
 	(void)connect(pBarFileOpen2, &QAction::triggered, this, &qt_test::fileOpen2);
 	(void)connect(pBarMess, &QAction::triggered, this, &qt_test::message);
 	(void)connect(pBarQues, &QAction::triggered, this, &qt_test::question);
 	(void)connect(pBarFileOpen3, &QAction::triggered, this, &qt_test::fileOpen3);
-
 	//工具栏
 	QToolBar* pTool = addToolBar("toolBar");
 	//工具栏快捷键
@@ -37,36 +34,30 @@ qt_test::qt_test(QWidget *parent)
 	pButBarFileNew->setText(QString::fromLocal8Bit("新建"));
 	pTool->addWidget(pButBarFileNew);
 	(void)connect(pButBarFileNew, &QPushButton::released, this, &qt_test::newFile);
-		 
-	b1.setParent(this);
-	b1.setText("111");
-	b1.resize(100, 50);
-	b1.move(50, 50);
-	b1.show();
-
-	b2.setParent(this);
-	b2.setText("222");
-	b2.resize(100, 50);
-	b2.move(200, 50);
-	b2.show();
-	 
-	void (qt_test:: * noParam)() = &qt_test::mySlots;
-	//void (qt_test:: * oneP aram)(int) = &qt_test::mySlots;
-	(void)connect(&b1, &QPushButton::released, this, noParam);
-	//(void)connect(&b1, &QPushButton::released,
-	//	[]()
-	//	{
-	//		qDebug() << "b1 lambda";
-	//	}
-	//		
-	//	);
-
 	//状态栏
 	QStatusBar* pStatusBar = statusBar();
 	QLabel* pLabel = new QLabel(this);
 	pLabel->setText("Normal text file");
 	pStatusBar->addWidget(pLabel);
-	pStatusBar->addPermanentWidget(new QLabel("222",this));
+	pStatusBar->addPermanentWidget(new QLabel("222", this));
+	//button1
+	b1.setParent(this);
+	b1.setText("111");
+	b1.resize(100, 50);
+	b1.move(50, 50);
+	b1.show();
+	//button2
+	b2.setParent(this);
+	b2.setText("222");
+	b2.resize(100, 50);
+	b2.move(200, 50);
+	b2.show();
+	ui.stackedWidget->currentWidget()->layout()->addWidget(&b1);//放到stackedWidget中
+	ui.stackedWidget->currentWidget()->layout()->addWidget(&b2);
+	//重载槽函数，需要定义成员函数指针才能用于Qt::connect
+	void (qt_test:: * noParam)() = &qt_test::mySlots;
+	void (qt_test:: * oneParam)(int) = &qt_test::mySlots;
+	(void)connect(&b1, &QPushButton::released, this, noParam);
 
 	//核心控件
 	//QTextEdit* pTxtEdit = new QTextEdit(this);
@@ -78,23 +69,16 @@ qt_test::qt_test(QWidget *parent)
 	//QTextEdit* pTxtSub = new QTextEdit(this);
 	//pDock->setWidget(pTxtSub);
 
+	//下拉列表显示补全信息
 	QLineEdit* ledit = new QLineEdit(this);
+	QStringList edtList;
+	edtList << "111" << "2222" << "333";
 	ledit->setText("asdfAAA");
 	ledit->setGeometry(50, 200, 100, 30);
-
-	QStringList list;
-	list << "111" << "2222" << "333";
-	
-	//下拉列表显示补全信息
-	QCompleter* com = new QCompleter(list, this);
+	ui.stackedWidget->currentWidget()->layout()->addWidget(ledit);
+	QCompleter* com = new QCompleter(edtList, this);
 	com->setCaseSensitivity(Qt::CaseInsensitive);
-
 	ledit->setCompleter(com);
-
-	//QLabel* lab = new QLabel("xxx", this);
-	//lab->setGeometry(100, 100, 500, 300);
-	//lab->setPixmap(QPixmap(":/images/test.jpg"));
-	//lab->setScaledContents(true);
 
 	QMovie* Movie = new QMovie(":/images/test.jpg");
 
@@ -103,6 +87,12 @@ qt_test::qt_test(QWidget *parent)
 
 	resize(720, 480);
 	setFixedSize(this->width(),this->height());
+
+	//使用下拉列表对stackedwidget换页，这一段放在函数最后
+	for(int i=0 ; i <ui.stackedWidget->count() ; ++i)
+		ui.comboBox->addItem(QString("page%1").arg(i));
+	(void)connect(ui.comboBox, QOverload<int>::of(&QComboBox::currentIndexChanged)
+		, ui.stackedWidget, &QStackedWidget::setCurrentIndex);//currentIndexChanged是一个重载函数
 }
 
 qt_test::~qt_test()
@@ -114,7 +104,7 @@ void qt_test::mySlots()
 {
 	qDebug() << "b1 111";
 }
-
+//重载槽函数
 void qt_test::mySlots(int i)
 {
 	qDebug() << "b1 111, i=" << i;
