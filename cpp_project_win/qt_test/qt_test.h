@@ -5,6 +5,8 @@
 #include <QDialog>
 #include "myButton.h"
 #include "ui_qt_test.h"
+class QTableView;
+class QSqlTableModel;
 
 class qt_test : public QMainWindow
 {
@@ -21,10 +23,14 @@ public:
 	void message();
 	void question();
 	void fileOpen3();
+	//初始化数据库；
+	void InitDb();
 
 private:
 	QPushButton b1;
 	myButton b2;
 	QDialog dlg2;
+	QTableView* m_pTableView;
+	QSqlTableModel* m_pTableModel;
 	Ui::qt_testClass ui;
 };

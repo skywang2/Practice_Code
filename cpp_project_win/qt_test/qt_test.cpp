@@ -16,6 +16,10 @@
 #include <QLineEdit>
 #include <QStringList>
 #include <QMovie>
+#include <QSqlDatabase>
+#include <QTableView>
+#include <QSqlTableModel>
+#include "initDb.hpp"
 
 qt_test::qt_test(QWidget *parent)
 	: QMainWindow(parent)
@@ -69,8 +73,8 @@ qt_test::qt_test(QWidget *parent)
 	b2.resize(100, 50);
 	b2.move(200, 50);
 	b2.show();
-	ui.stackedWidget->currentWidget()->layout()->addWidget(&b1);//放到stackedWidget中
-	ui.stackedWidget->currentWidget()->layout()->addWidget(&b2);
+	ui.stackedWidget->widget(0)->layout()->addWidget(&b1);//放到stackedWidget中
+	ui.stackedWidget->widget(0)->layout()->addWidget(&b2);
 	//重载槽函数，需要定义成员函数指针才能用于Qt::connect
 	void (qt_test:: * noParam)() = &qt_test::mySlots;
 	void (qt_test:: * oneParam)(int) = &qt_test::mySlots;
@@ -92,7 +96,7 @@ qt_test::qt_test(QWidget *parent)
 	edtList << "111" << "2222" << "333";
 	ledit->setText("asdfAAA");
 	ledit->setGeometry(50, 200, 100, 30);
-	ui.stackedWidget->currentWidget()->layout()->addWidget(ledit);
+	ui.stackedWidget->widget(0)->layout()->addWidget(ledit);
 	QCompleter* com = new QCompleter(edtList, this);
 	com->setCaseSensitivity(Qt::CaseInsensitive);
 	ledit->setCompleter(com);
@@ -103,6 +107,9 @@ qt_test::qt_test(QWidget *parent)
 
 	resize(720, 480);
 	setFixedSize(this->width(),this->height());
+
+	//初始化数据库和tableview、tablemodel
+	InitDb();
 
 	//使用下拉列表对stackedwidget换页，这一段放在函数最后
 	for(int i=0 ; i <ui.stackedWidget->count() ; ++i)
@@ -175,5 +182,37 @@ void qt_test::question()
 
 void qt_test::fileOpen3()
 {
-	QFileDialog::getOpenFileName(this, "open", "./", "Text(*.txt);;All(*.*)");
+	auto fileName = QFileDialog::getOpenFileName(this, "open", "./", "Text(*.txt);;All(*.*)");
+}
+
+void qt_test::InitDb()
+{
+	qDebug() << QSqlDatabase::drivers();
+	QDir(".").remove("testDB.db");
+	if (!QSqlDatabase::drivers().contains("QSQLITE"))
+	{
+		QMessageBox::critical(this, "Unable to load database", "This demo needs the SQLITE driver");
+		return;
+	}
+	QSqlError err = initDb();
+	if (err.type() != QSqlError::NoError)
+	{
+		qDebug() << "sql error:" << err;
+		return;
+	}
+	if (QSqlDatabase::contains("MyDBLink01"))
+	{
+		QSqlDatabase db = QSqlDatabase::database("MyDBLink01");
+		qDebug() << "db tables:" << db.tables();
+		db.close();
+	}
+	m_pTableView = new QTableView(this);
+	ui.stackedWidget->insertWidget(1, m_pTableView);
+	m_pTableModel = new QSqlTableModel(m_pTableView);
+	//m_pTableModel->setTable("books");
+	//if (!m_pTableModel->select()) {
+	//	qDebug() << "model select error";
+	//}
+
+
 }
