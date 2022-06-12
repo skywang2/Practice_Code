@@ -1,26 +1,9 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include <qpushbutton.h>
-#include <qdebug.h>
-#include <qmenubar.h>
-#include <qmenu.h>
-#include <qstring.h>
-#include <qaction.h>
-#include <qtoolbar.h>
-#include <qstatusbar.h>
-#include <qlabel.h>
-#include <qtextedit.h>
-#include <qdockwidget.h>
-#include <qdialog.h>
-#include <qmessagebox.h>
-#include <qfiledialog.h>
-#include <qcompleter.h>
-#include <qlineedit.h>
-#include <qstringlist.h>
-#include <qmovie.h>
+#include <QPushButton>
+#include <QDialog>
 #include "myButton.h"
-
 #include "ui_qt_test.h"
 
 class qt_test : public QMainWindow

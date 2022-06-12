@@ -1,4 +1,21 @@
 #include "qt_test.h"
+#include <QComboBox>
+#include <QDebug>
+#include <QMenuBar>
+#include <QMenu>
+#include <QString>
+#include <QAction>
+#include <QToolBar>
+#include <QStatusBar>
+#include <QLabel>
+#include <QTextEdit>
+#include <QDockWidget>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QCompleter>
+#include <QLineEdit>
+#include <QStringList>
+#include <QMovie>
 
 qt_test::qt_test(QWidget *parent)
 	: QMainWindow(parent)
@@ -80,8 +97,7 @@ qt_test::qt_test(QWidget *parent)
 	com->setCaseSensitivity(Qt::CaseInsensitive);
 	ledit->setCompleter(com);
 
-	QMovie* Movie = new QMovie(":/images/test.jpg");
-
+	QMovie Movie(":/images/test.jpg");//没用到
 	//设置styleSheet
 	ui.testCss->setStyleSheet("QLabel{color:red;}");
 
