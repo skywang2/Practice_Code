@@ -13,5 +13,5 @@ void builtInQueue() {
 	cout << "first:" << q.front() << endl;
 	cout << "last:" << q.back() << endl;
 
-	cin.get();
+	//cin.get();
 }

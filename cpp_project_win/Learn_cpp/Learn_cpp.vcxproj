@@ -118,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
+    <ClInclude Include="MyLocker.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />

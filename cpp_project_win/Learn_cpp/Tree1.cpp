@@ -75,6 +75,7 @@ public:
 		return path;
 	}
 
+	//¹ã¶È±éÀú
 	vector<vector<int>> levelOrder(TreeNode* root) {
 		TreeNode* p = NULL;
 		vector<vector<int>> set; 
