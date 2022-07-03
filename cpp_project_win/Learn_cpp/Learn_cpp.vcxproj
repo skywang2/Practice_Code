@@ -81,6 +81,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>include;</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -103,6 +104,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -110,15 +112,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Circular_Queue.hpp" />
+    <ClCompile Include="include\Circular_Queue.hpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Tree1.cpp" />
-    <ClCompile Include="Queue.hpp" />
-    <ClCompile Include="Queue_cpp_built-in.hpp" />
+    <ClCompile Include="include\Queue.hpp" />
+    <ClCompile Include="include\Queue_cpp_built-in.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h" />
-    <ClInclude Include="MyLocker.hpp" />
+    <ClInclude Include="include\Regex.hpp" />
+    <ClInclude Include="include\main.h" />
+    <ClInclude Include="include\MyLocker.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />

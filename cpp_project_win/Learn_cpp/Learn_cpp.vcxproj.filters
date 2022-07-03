@@ -21,21 +21,24 @@
     <ClCompile Include="Tree1.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Queue.hpp">
+    <ClCompile Include="include\Circular_Queue.hpp">
       <Filter>头文件</Filter>
     </ClCompile>
-    <ClCompile Include="Circular_Queue.hpp">
+    <ClCompile Include="include\Queue.hpp">
       <Filter>头文件</Filter>
     </ClCompile>
-    <ClCompile Include="Queue_cpp_built-in.hpp">
+    <ClCompile Include="include\Queue_cpp_built-in.hpp">
       <Filter>头文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h">
+    <ClInclude Include="include\Regex.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MyLocker.hpp">
+    <ClInclude Include="include\MyLocker.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\main.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -85,7 +85,7 @@ public:
 		q.push(root);
 		while (!q.empty()) {
 			vector<int> subset;
-			int size = q.size();	//用size限制当前层的循环次数
+			size_t size = q.size();	//用size限制当前层的循环次数
 			for (int i = 0; i < size; i++) {
 				p = q.front();q.pop();	
 				subset.push_back(p->val);	
