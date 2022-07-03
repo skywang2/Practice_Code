@@ -1,9 +1,9 @@
 #include "main.h"
 #include <iostream>
-#include "Circular_Queue.cpp"
-#include "Queue.cpp"
-#include "Tree1.cpp"
+#include "Circular_Queue.hpp"
+#include "Queue.hpp"
 #include "MyLocker.hpp"
+#include "Tree1.cpp"
 
 std::mutex g_mtx;
 
@@ -82,7 +82,7 @@ void test_level_tree() {
 	//system("pause");
 }
 
-void main() {
+int main(int argc, char* argv[]) {
 	builtInQueue();//简单使用队列
 	//test_Tree();
 	//test_level_tree();//创建树并广度遍历（层序遍历）
@@ -98,5 +98,10 @@ void main() {
 	{
 		cout << e.what() << endl;
 	}
-
+	catch (...)
+	{
+		cout << "unknow error." << endl;
+	}
+	
+	return 0;
 }

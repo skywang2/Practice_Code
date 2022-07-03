@@ -15,20 +15,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Queue.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Circular_Queue.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Queue_cpp_built-in.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Tree1.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Queue.hpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Circular_Queue.hpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Queue_cpp_built-in.hpp">
+      <Filter>头文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

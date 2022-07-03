@@ -110,11 +110,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Circular_Queue.cpp" />
+    <ClCompile Include="Circular_Queue.hpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Tree1.cpp" />
-    <ClCompile Include="Queue.cpp" />
-    <ClCompile Include="Queue_cpp_built-in.cpp" />
+    <ClCompile Include="Queue.hpp" />
+    <ClCompile Include="Queue_cpp_built-in.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
