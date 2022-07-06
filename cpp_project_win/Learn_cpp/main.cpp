@@ -4,6 +4,7 @@
 #include "Queue.hpp"
 #include "MyLocker.hpp"
 #include "Tree1.cpp"
+#include "Regex.hpp"
 
 std::mutex g_mtx;
 
@@ -82,6 +83,13 @@ void test_level_tree() {
 	//system("pause");
 }
 
+const int& GetConstRefValue()
+{
+	int a = 10;
+	cout << "&a:" << &a << endl;
+	return a;
+}
+
 int main(int argc, char* argv[]) {
 	builtInQueue();//简单使用队列
 	//test_Tree();
@@ -90,9 +98,23 @@ int main(int argc, char* argv[]) {
 	try
 	{
 		{
-		MyLockerUncopy mylocker01(&g_mtx);//该类不能拷贝，初始化时加锁，析构时解锁
+			cout << "-----MyLockerUncopy" << endl;
+			MyLockerUncopy mylocker01(&g_mtx);//该类不能拷贝，初始化时加锁，析构时解锁
 		}
 
+		//返回局部变量的const引用，这是错误的，会产生未初始化的变量，得到0xcccccccc（-858993460）
+		cout << "-----return const reference intger" << endl;
+		const int& p = GetConstRefValue();
+		cout << "p:" << p << endl;
+		cout << "&p:" << &p << endl;
+
+		//使用STL中的正则表达式类
+		cout << "-----using regex of STL" << endl;
+		RegexMatch();
+		RegexMatchResult();
+		RegexSearch();
+		RegexTokenize();
+		RegexReplace();
 	}
 	catch (exception e)
 	{
@@ -103,5 +125,6 @@ int main(int argc, char* argv[]) {
 		cout << "unknow error." << endl;
 	}
 	
+	system("pause");
 	return 0;
 }
