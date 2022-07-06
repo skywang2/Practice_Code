@@ -22,3 +22,5 @@
 /.vs/*
 /cpp_project_win/OpenGLWindow/*.user
 /cpp_project_win/OpenGLWindow/x64
+/cpp_project_win/qTestCase/x64
+/cpp_project_win/qTestCase/*.user

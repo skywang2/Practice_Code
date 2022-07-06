@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCase name="TestCaseNormalClassB">
+<Environment>
+    <QtVersion>5.12.6</QtVersion>
+    <QtBuild>Qt 5.12.6 (x86_64&#x002D;little_endian&#x002D;llp64 shared (dynamic) debug build; by MSVC 2015)</QtBuild>
+    <QTestVersion>5.12.6</QTestVersion>
+</Environment>
+<TestFunction name="initTestCase">
+<Incident type="pass" file="" line="0" />
+    <Duration msecs="0.02"/>
+</TestFunction>
+<TestFunction name="CaseGetTrue">
+<Incident type="pass" file="" line="0" />
+    <Duration msecs="0.0243"/>
+</TestFunction>
+<TestFunction name="cleanupTestCase">
+<Incident type="pass" file="" line="0" />
+    <Duration msecs="0.0146"/>
+</TestFunction>
+<Duration msecs="0.2667"/>
+</TestCase>
