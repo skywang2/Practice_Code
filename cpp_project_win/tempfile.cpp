@@ -76,7 +76,57 @@ public:
 //依赖倒置原则：高层模块不应依赖低层模块，两者都应依赖抽象模块；细节应依赖抽象。意思是高层模块应尽量调用抽象类、抽象接口，低层模块要继承、实现抽象类。
 //里氏代换原则：代码中子类替换掉父类时功能不受影响，外界看不出替换后的变化。
 
+//装饰模式
+#pragma once
+#include <iostream>
+using std::cout;
+using std::endl;
 
+class Car
+{
+public:
+	virtual void Run() = 0;
+};
+
+//被装饰类
+class MyCar : public Car
+{
+public:
+	MyCar() :Car() { return; }
+	void Run() { cout << "run" << endl; }
+};
+
+//装饰类，父类
+class Install : public Car
+{
+public:
+	Install() : Car()
+	{ return; }
+
+	void Run() { cout << "install something" << endl; }
+};
+
+//装饰类，子类
+class InstallWheel : public Install
+{
+public:
+	InstallWheel(Car& car)
+		:Install(),
+		car(car)
+	{ return; }
+
+	void Run()
+	{
+		cout << "install wheel" << endl;
+		car.Run();
+	}
+private:
+	Car& car;
+};
+
+	MyCar car;
+	InstallWheel wheel(car);
+	wheel.Run();
 
 
 
