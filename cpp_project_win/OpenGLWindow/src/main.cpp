@@ -1,5 +1,9 @@
+#define GLEW_STATIC 
 #include <iostream>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+using std::cout;
+using std::endl;
 
 int main(int argc, char* argv[])
 {
@@ -8,7 +12,7 @@ int main(int argc, char* argv[])
     /* Initialize the library */
     if (!glfwInit())
         return -1;
-
+    
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     if (!window)
@@ -19,6 +23,13 @@ int main(int argc, char* argv[])
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    GLenum err = glewInit();
+    if (GLEW_OK != err)
+    {
+        cout << "Error:" << glewGetErrorString(err) << endl;
+    }
+    cout << "Status: Using GL " << glGetString(GL_VERSION) << endl;//×¢Òâº¯ÊýÃû
+    cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << endl;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
