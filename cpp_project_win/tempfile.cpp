@@ -38,7 +38,7 @@ public:
   bool Algorithm() override { cout << "hello world" << endl;}
 };
 
-//1.经典策略模式，封装一套调用算法的统一接口
+//1.经典策略模式，封装一套调用算法的统一接口类
 class Context
 {
 public:
@@ -125,7 +125,6 @@ private:
 	Car& car;
 };
 
-void main(void)
 {
 	MyCar car;
 	InstallWheel wheel(car);//出于简化目的在构造函数中传入被装饰对象，实际开发还可增加set函数来设置被装饰对象
@@ -133,6 +132,37 @@ void main(void)
 }
 
 //代理模式
+class Sender
+{
+public:
+	virtual void Send() = 0;
+};
+
+class ClientClass : public Sender
+{
+public:
+	void Send() { std::cout << typeid(*this).name() << ", " << __FUNCTION__ << std::endl; }
+};
+
+class ProxyClass : public Sender
+{
+public:
+	ProxyClass() : m_client(nullptr) {}
+	void Send() 
+	{ 
+		if (!m_client) { m_client = new ClientClass; }
+		std::cout << typeid(*this).name() << ", " << __FUNCTION__ << std::endl; 
+		m_client->Send();
+		delete m_client;
+	}
+private:
+	ClientClass* m_client;//包含真正的请求对象
+};
+
+{
+	proxy::ProxyClass proxySender;
+	proxySender.Send();
+}
 
 //工厂模式
 //用于类型不多（多也没事），类型的实例化对象很多的情况，可以减少简单工厂中选择实例的判断语句
