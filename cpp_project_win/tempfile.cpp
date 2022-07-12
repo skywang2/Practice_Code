@@ -132,41 +132,113 @@ private:
 }
 
 //代理模式
-class Sender
+using namespace proxy
 {
-public:
-	virtual void Send() = 0;
-};
+	class Sender
+	{
+	public:
+		virtual void Send() = 0;
+	};
 
-class ClientClass : public Sender
-{
-public:
-	void Send() { std::cout << typeid(*this).name() << ", " << __FUNCTION__ << std::endl; }
-};
+	class ClientClass : public Sender
+	{
+	public:
+		void Send() { std::cout << typeid(*this).name() << ", " << __FUNCTION__ << std::endl; }
+	};
 
-class ProxyClass : public Sender
-{
-public:
-	ProxyClass() : m_client(nullptr) {}
-	void Send() 
-	{ 
-		if (!m_client) { m_client = new ClientClass; }
-		std::cout << typeid(*this).name() << ", " << __FUNCTION__ << std::endl; 
-		m_client->Send();
-		delete m_client;
-	}
-private:
-	ClientClass* m_client;//包含真正的请求对象
-};
+	class ProxyClass : public Sender
+	{
+	public:
+		ProxyClass() : m_client(nullptr) {}
+		void Send() 
+		{ 
+			if (!m_client) { m_client = new ClientClass; }
+			std::cout << typeid(*this).name() << ", " << __FUNCTION__ << std::endl; 
+			m_client->Send();
+			delete m_client;
+		}
+	private:
+		ClientClass* m_client;//包含真正的请求对象
+	};
+}
 
 {
-	proxy::ProxyClass proxySender;
+	using namespace proxy;
+	ProxyClass proxySender;
 	proxySender.Send();
 }
 
 //工厂模式
 //用于类型不多（多也没事），类型的实例化对象很多的情况，可以减少简单工厂中选择实例的判断语句
 //缺点：增加具体产品类的时候需要增加对应的工厂类
+namespace factory
+{
+	class Animal
+	{
+	public:
+		void eat() {}
+		void run() {}
+	};
+	
+	//具体类A
+	class ThingA : public Animal
+	{};
+
+	//具体类A
+	class ThingB : public Animal
+	{};
+
+	//简单工厂版本
+	class SimpleFactory
+	{
+	public:
+		static Animal* Create(int type)
+		{
+			Animal* tmp = nullptr;
+			switch (type)
+			{
+			case 0:
+				tmp = new ThingA;
+				break;
+			case 1:
+				tmp = new ThingB;
+				break;
+			default:
+				break;
+			}
+			return tmp;
+		}
+	};
+
+	//普通工厂版本
+	class ThingAFactory : public ThingA
+	{
+	public:
+		ThingA* Create()
+		{
+			return new ThingA;
+		}
+	};
+
+	class ThingBFactory : public ThingB
+	{
+	public:
+		ThingB* Create()
+		{
+			return new ThingB;
+		}
+	};
+}//namespace
+
+{
+	using namespace factory;
+	ThingAFactory factoryA;//通过多写工厂类子类来简化调用时的选择判断，既是优点也是缺点
+	auto a1 = factoryA.Create();
+	auto a2 = factoryA.Create();
+	ThingBFactory factoryB;
+	auto b1 = factoryB.Create();
+	auto b2 = factoryB.Create();
+}
 
 
 
