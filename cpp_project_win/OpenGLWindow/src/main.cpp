@@ -1,4 +1,5 @@
 #define GLEW_STATIC 
+#include <string>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -6,6 +7,49 @@
 #include <GLFW/glfw3.h>
 using std::cout;
 using std::endl;
+
+struct ShaderProgramSource
+{
+    std::string vertexShader;
+    std::string fragmentShader;
+};
+
+static ShaderProgramSource ParseShader(const std::string& filepath)
+{
+    enum class ShaderType
+    {
+        NONE = -1, VERTEX, FRAGMENT
+    };
+
+    std::ifstream fileStream(filepath);
+    if (!fileStream.is_open())
+    {
+        std::cout << "open file:" << filepath << " failed" << endl;
+        return {};
+    }
+    ShaderType type = ShaderType::NONE;
+    std::string line;
+    std::stringstream shaderStream[2];//vertex;fragment
+    while (std::getline(fileStream, line))
+    {
+        if (line.find("#shader") != std::string::npos)//查找#shader
+        {
+            if (line.find("vertex") != std::string::npos) 
+            {
+                type = ShaderType::VERTEX;
+            }
+            else if (line.find("fragment") != std::string::npos) 
+            {
+                type = ShaderType::FRAGMENT;
+            }
+        }
+        else
+        {
+            shaderStream[static_cast<int>(type)] << line << '\n';
+        }
+    }
+    return { shaderStream[0].str(), shaderStream[1].str() };
+}
 
 static unsigned int CompileShader(unsigned int type, const std::string& source)
 {
@@ -99,10 +143,14 @@ int main(int argc, char* argv[])
     cout << "Status: Using GL " << glGetString(GL_VERSION) << endl;//注意函数名
     cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << endl;
 
-    float positions[6] = {
+    float positions[] = {
+        0.5f, 0.5f,
         -0.5f, -0.5f,
-        0.f, 0.5f,
-        0.5f, -0.5f
+        0.5f, -0.5f,
+        
+        0.5f, 0.5f,
+        -0.5f, -0.5f,
+        -0.5f, 0.5f
     };
 
     //创建顶点数组对象VAO
@@ -113,7 +161,7 @@ int main(int argc, char* argv[])
     unsigned int buffer;
     glGenBuffers(1, &buffer);//申请一块buffer并得到他的地址
     glBindBuffer(GL_ARRAY_BUFFER, buffer);//绑定buffer，可能是指定buffer所存储的数据类型
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);//初始化buffer，单位字节
+    glBufferData(GL_ARRAY_BUFFER, 2 * 6 * sizeof(float), positions, GL_STATIC_DRAW);//初始化buffer，单位字节
     
     glEnableVertexAttribArray(0);//启用顶点属性数组
     glBindBuffer(GL_ARRAY_BUFFER, buffer); //
@@ -125,27 +173,13 @@ int main(int argc, char* argv[])
         nullptr);//定义buffer中的属性布局
     
     //顶点着色器vertex shader，主要是告诉OpenGL这个顶点在屏幕空间的位置
-    std::string vertexShader;
-    std::ifstream vertexFile("vertexShader.glsl");
-    if (vertexFile.is_open())
-    {
-        std::stringstream s;
-        s << vertexFile.rdbuf();
-        vertexShader = s.str();
-        vertexFile.close();
-    }
     //片段着色器/像素着色器，fragment shader/pixels shader
-    std::string fragmentShader;
-    std::ifstream fragmentFile("fragmentShader.glsl");
-    if (fragmentFile.is_open())
-    {
-        std::stringstream s;
-        s << fragmentFile.rdbuf();
-        fragmentShader = s.str();
-        fragmentFile.close();
-    }
-
-    unsigned int shader = CreateShader(vertexShader, fragmentShader);
+    ShaderProgramSource source = ParseShader("res/shaders/allShaders.shader");
+    cout << "=====vertex=====" << endl;
+    cout << source.vertexShader << endl;
+    cout << "=====fragmen=====" << endl;
+    cout << source.fragmentShader << endl;
+    unsigned int shader = CreateShader(source.vertexShader, source.fragmentShader);
     glUseProgram(shader);
 
     while (!glfwWindowShouldClose(window))
@@ -163,13 +197,13 @@ int main(int argc, char* argv[])
         glEnd();*/
 
         //渲染指令
-        glDrawArrays(GL_TRIANGLES, 0, 3);//无索引缓冲区
+        glDrawArrays(GL_TRIANGLES, 0, 2 * 3);//无索引缓冲区
         //glDrawElements(GL_TRIANGLES, 3, NULL);//
 
         glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
         glfwPollEvents();//检查触发事件，并调用对应的回调函数
     }
-    glDeleteShader(shader);
+    //glDeleteProgram(shader);
 
     glfwTerminate();//删除释放glfw所有资源
     return 0;
