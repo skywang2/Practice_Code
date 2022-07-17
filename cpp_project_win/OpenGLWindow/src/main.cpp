@@ -8,11 +8,45 @@
 using std::cout;
 using std::endl;
 
+#ifdef _DEBUG
+#define ASSERT(x) if(!(x)) __debugbreak();
+#else
+#define ASSERT(x) (x)
+#endif
+//GLCall，带错误打印和debug断点的调用宏
+//存在缺点无法用于if三元式，也无法处理返回值非bool的
+//#x把x转换成字符串，
+#define GLCall(x) GLClearError();\
+    x;\
+    ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+
 struct ShaderProgramSource
 {
     std::string vertexShader;
     std::string fragmentShader;
 };
+
+//检查是否存在错误，如果有则阻塞
+static void GLClearError()
+{
+    //glGetError调用时会返回flag并将其置为GL_NO_ERROR，通过循环将所有flag置为GL_NO_ERROR
+    while (glGetError() != GL_NO_ERROR);
+}
+
+//在每个函数后检查flag
+static bool GLLogCall(const char* function, const char* file, int line)
+{
+    //通过循环返回所有flag
+    while (GLenum error = glGetError())
+    {
+        cout << "[GL_error]"
+            << "["<< function << "]"
+            << "[" << file << ":" << line << "]"
+            << "(0x" << std::hex << error << ")" << endl;
+        return false;
+    }
+    return true;
+}
 
 static ShaderProgramSource ParseShader(const std::string& filepath)
 {
@@ -143,14 +177,19 @@ int main(int argc, char* argv[])
     cout << "Status: Using GL " << glGetString(GL_VERSION) << endl;//注意函数名
     cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << endl;
 
+    //顶点坐标
     float positions[] = {
         0.5f, 0.5f,
         -0.5f, -0.5f,
         0.5f, -0.5f,
-        
-        0.5f, 0.5f,
-        -0.5f, -0.5f,
         -0.5f, 0.5f
+    };
+
+    //顶点索引
+    unsigned int indices[] =
+    {
+        0, 1, 2,
+        0, 1, 3
     };
 
     //创建顶点数组对象VAO
@@ -164,7 +203,7 @@ int main(int argc, char* argv[])
     glBufferData(GL_ARRAY_BUFFER, 2 * 6 * sizeof(float), positions, GL_STATIC_DRAW);//初始化buffer，单位字节
     
     glEnableVertexAttribArray(0);//启用顶点属性数组
-    glBindBuffer(GL_ARRAY_BUFFER, buffer); //
+    //glBindBuffer(GL_ARRAY_BUFFER, buffer); //
     glVertexAttribPointer(0/*没有特殊含义，但必须与shader的layout一样*/,
         2, /*一个顶点有几个数据，此处一个顶点有x、y两个数据*/
         GL_FLOAT, /*数据类型*/
@@ -172,6 +211,11 @@ int main(int argc, char* argv[])
         2 * sizeof(float), /*数据跨度，一个顶点有几个字节*/
         nullptr);//定义buffer中的属性布局
     
+    unsigned int ibo;
+    glGenBuffers(1, &ibo);//申请一块buffer并得到他的地址
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);//GL状态机会自动关联GL_ARRAY_BUFFER与GL_ELEMENT_ARRAY_BUFFER对应的顶点
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
     //顶点着色器vertex shader，主要是告诉OpenGL这个顶点在屏幕空间的位置
     //片段着色器/像素着色器，fragment shader/pixels shader
     ShaderProgramSource source = ParseShader("res/shaders/allShaders.shader");
@@ -196,14 +240,19 @@ int main(int argc, char* argv[])
         glVertex2d(0.5f, -0.5f);
         glEnd();*/
 
+        //清除所有flag
+        //GLClearError();
         //渲染指令
-        glDrawArrays(GL_TRIANGLES, 0, 2 * 3);//无索引缓冲区
-        //glDrawElements(GL_TRIANGLES, 3, NULL);//
+        //glDrawArrays(GL_TRIANGLES, 0, 2 * 3);//无索引缓冲区
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_INT/*GL_UNSIGNED_INT*/, nullptr));//顶点索引
+        //ASSERT(GLLogCall());//增加debug下的自动断点
+
+        //glDebugMessageCallback//类似glGetError，可提供更多文本信息
 
         glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
         glfwPollEvents();//检查触发事件，并调用对应的回调函数
     }
-    //glDeleteProgram(shader);
+    glDeleteProgram(shader);
 
     glfwTerminate();//删除释放glfw所有资源
     return 0;
