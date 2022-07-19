@@ -240,5 +240,53 @@ namespace factory
 	auto b2 = factoryB.Create();
 }
 
+//原型模式
+//提供一个copy/clone函数，根据实现不同可提供浅拷贝或深拷贝
+//浅拷贝可用于已存在实例，但不方便再调用构造函数的情况
+//深拷贝可用于已存在实例，但构造过程复杂，拷贝效率较高的情况
+class Cloneable
+{
+public:
+	virtual Cloneable* clone() = 0;
+};
+class Resume : public Cloneable
+{
+	Cloneable* clone()
+	{
+		//copy/clone
+	}
+}
+
+{
+	Cloneable* item1 = new Resume;
+	Cloneable* item2 = item1.clone();
+}
+
+//模板模式
+//定义算法流程的固定步骤，将步骤的实现延迟到子类中实现，在子类中可修改算法某一步的具体操作而不影响整个流程
+class Algorithm
+{
+	virtual void Step1();
+	virtual void Step2();
+	virtual void Step3();
+	void Run()
+	{
+		Step1();
+		Step2();
+		Step3();
+	}
+}
+class GeneticAlgorithm ：Algorithm
+{
+	void Step1() { /*具体实现*/ }
+	void Step2() { /*具体实现*/ }
+	void Step3() { /*具体实现*/ }
+}
+
+{
+	GeneticAlgorithm ga;
+	ga.Run();
+}
 
 
+//迪米特法则：如果两个类没有直接通信，那就不应该产生联系。如果A类要调用B类的一个方法，可以通过第三方转发这个方法
