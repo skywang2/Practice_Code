@@ -240,5 +240,29 @@ namespace factory
 	auto b2 = factoryB.Create();
 }
 
+//原型模式
+//提供一个copy/clone函数，根据实现不同可提供浅拷贝或深拷贝
+//浅拷贝可用于已存在实例，但不方便再调用构造函数的情况
+//深拷贝可用于已存在实例，但构造过程复杂，拷贝效率较高的情况
+class Cloneable
+{
+public:
+	virtual Cloneable* clone() = 0;
+};
+class Resume : public Cloneable
+{
+	Cloneable* clone()
+	{
+		//copy/clone
+	}
+}
+
+{
+	Cloneable* item1 = new Resume;
+	Cloneable* item2 = item1.clone();
+}
+
+
+
 
 
