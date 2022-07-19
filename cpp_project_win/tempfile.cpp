@@ -288,3 +288,5 @@ class GeneticAlgorithm ：Algorithm
 	ga.Run();
 }
 
+
+//迪米特法则：如果两个类没有直接通信，那就不应该产生联系。如果A类要调用B类的一个方法，可以通过第三方转发这个方法
