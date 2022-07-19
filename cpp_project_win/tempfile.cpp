@@ -262,7 +262,29 @@ class Resume : public Cloneable
 	Cloneable* item2 = item1.clone();
 }
 
+//模板模式
+//定义算法流程的固定步骤，将步骤的实现延迟到子类中实现，在子类中可修改算法某一步的具体操作而不影响整个流程
+class Algorithm
+{
+	virtual void Step1();
+	virtual void Step2();
+	virtual void Step3();
+	void Run()
+	{
+		Step1();
+		Step2();
+		Step3();
+	}
+}
+class GeneticAlgorithm ：Algorithm
+{
+	void Step1() { /*具体实现*/ }
+	void Step2() { /*具体实现*/ }
+	void Step3() { /*具体实现*/ }
+}
 
-
-
+{
+	GeneticAlgorithm ga;
+	ga.Run();
+}
 
