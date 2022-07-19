@@ -167,6 +167,8 @@ int main(int argc, char* argv[])
     /* Make the window's context current */
     glfwMakeContextCurrent(window);//创建opengl上下文
 
+    glfwSwapInterval(1);//设置交换双缓冲的帧间隔，1表示渲染1帧交换一次
+
     glewExperimental = true;//在核心模式需要，使用扩展函数
     GLenum err = glewInit();
     if (GLEW_OK != err)
@@ -198,23 +200,23 @@ int main(int argc, char* argv[])
     //glBindVertexArray(VertexArrayID);
 
     unsigned int buffer;
-    glGenBuffers(1, &buffer);//申请一块buffer并得到他的地址
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);//绑定buffer，可能是指定buffer所存储的数据类型
-    glBufferData(GL_ARRAY_BUFFER, 2 * 6 * sizeof(float), positions, GL_STATIC_DRAW);//初始化buffer，单位字节
+    GLCall(glGenBuffers(1, &buffer));//申请一块buffer并得到他的地址
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));//绑定buffer，可能是指定buffer所存储的数据类型
+    GLCall(glBufferData(GL_ARRAY_BUFFER, 2 * 6 * sizeof(float), positions, GL_STATIC_DRAW));//初始化buffer，单位字节
     
-    glEnableVertexAttribArray(0);//启用顶点属性数组
+    GLCall(glEnableVertexAttribArray(0));//启用顶点属性数组
     //glBindBuffer(GL_ARRAY_BUFFER, buffer); //
-    glVertexAttribPointer(0/*没有特殊含义，但必须与shader的layout一样*/,
+    GLCall(glVertexAttribPointer(0/*没有特殊含义，但必须与shader的layout一样*/,
         2, /*一个顶点有几个数据，此处一个顶点有x、y两个数据*/
         GL_FLOAT, /*数据类型*/
         GL_FALSE, /*标准化*/
         2 * sizeof(float), /*数据跨度，一个顶点有几个字节*/
-        nullptr);//定义buffer中的属性布局
+        nullptr));//定义buffer中的属性布局
     
     unsigned int ibo;
-    glGenBuffers(1, &ibo);//申请一块buffer并得到他的地址
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);//GL状态机会自动关联GL_ARRAY_BUFFER与GL_ELEMENT_ARRAY_BUFFER对应的顶点
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+    GLCall(glGenBuffers(1, &ibo));//申请一块buffer并得到他的地址
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));//GL状态机会自动关联GL_ARRAY_BUFFER与GL_ELEMENT_ARRAY_BUFFER对应的顶点
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW));
 
     //顶点着色器vertex shader，主要是告诉OpenGL这个顶点在屏幕空间的位置
     //片段着色器/像素着色器，fragment shader/pixels shader
@@ -224,8 +226,15 @@ int main(int argc, char* argv[])
     cout << "=====fragmen=====" << endl;
     cout << source.fragmentShader << endl;
     unsigned int shader = CreateShader(source.vertexShader, source.fragmentShader);
-    glUseProgram(shader);
+    GLCall(glUseProgram(shader));
 
+    //获取program中的统一变量（全局变量）uniform的地址
+    int color = glGetUniformLocation(shader, "u_color");
+    ASSERT(color != -1);//当shader里未使用该变量时，该变量会被优化掉，因此glGetUniformLocation返回-1，或者其他错误情况也会返回-1
+    glUniform4f(color, 0.0, 0.0, 0.3, 1.0);
+
+    float r = 0.0, g = 0.1, b = 0.1;
+    float span = 0.01;
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);//增加额外的按键（事件）处理，设置状态
@@ -242,9 +251,12 @@ int main(int argc, char* argv[])
 
         //清除所有flag
         //GLClearError();
+        glUniform4f(color, r, 0.0, 0.0, 1.0);//给uniform赋值，每渲染一帧就要给uniform赋值
+        if (r < 0.0 || r > 1.0) { span *= -1; }
+        r += span;
         //渲染指令
         //glDrawArrays(GL_TRIANGLES, 0, 2 * 3);//无索引缓冲区
-        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_INT/*GL_UNSIGNED_INT*/, nullptr));//顶点索引
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));//顶点索引
         //ASSERT(GLLogCall());//增加debug下的自动断点
 
         //glDebugMessageCallback//类似glGetError，可提供更多文本信息
