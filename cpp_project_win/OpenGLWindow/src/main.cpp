@@ -19,6 +19,7 @@ using std::endl;
 #define GLCall(x) GLClearError();\
     x;\
     ASSERT(GLLogCall(#x, __FILE__, __LINE__))
+//glDebugMessageCallback//类似glGetError，可提供更多文本信息
 
 struct ShaderProgramSource
 {
@@ -156,6 +157,10 @@ int main(int argc, char* argv[])
     if (!glfwInit())
         return -1;
     
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     /* Create a windowed mode window and its OpenGL context */
     GLFWwindow*  window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     if (!window)
@@ -195,23 +200,23 @@ int main(int argc, char* argv[])
     };
 
     //创建顶点数组对象VAO
-    //GLuint VertexArrayID;
-    //glGenVertexArrays(1, &VertexArrayID);
-    //glBindVertexArray(VertexArrayID);
+    //VAO是顶端数组对象，VBO是顶点缓存对象，VAO中可存多个VBO，像数组一样
+    unsigned int vao;
+    GLCall(glGenVertexArrays(1, &vao));
+    GLCall(glBindVertexArray(vao));
 
     unsigned int buffer;
     GLCall(glGenBuffers(1, &buffer));//申请一块buffer并得到他的地址
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));//绑定buffer，可能是指定buffer所存储的数据类型
-    GLCall(glBufferData(GL_ARRAY_BUFFER, 2 * 6 * sizeof(float), positions, GL_STATIC_DRAW));//初始化buffer，单位字节
+    GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), positions, GL_STATIC_DRAW));//初始化buffer，单位字节
     
     GLCall(glEnableVertexAttribArray(0));//启用顶点属性数组
-    //glBindBuffer(GL_ARRAY_BUFFER, buffer); //
     GLCall(glVertexAttribPointer(0/*没有特殊含义，但必须与shader的layout一样*/,
         2, /*一个顶点有几个数据，此处一个顶点有x、y两个数据*/
         GL_FLOAT, /*数据类型*/
         GL_FALSE, /*标准化*/
         2 * sizeof(float), /*数据跨度，一个顶点有几个字节*/
-        nullptr));//定义buffer中的属性布局
+        nullptr));//定义buffer中的属性布局，并关联VAO与VBO
     
     unsigned int ibo;
     GLCall(glGenBuffers(1, &ibo));//申请一块buffer并得到他的地址
@@ -233,34 +238,30 @@ int main(int argc, char* argv[])
     ASSERT(color != -1);//当shader里未使用该变量时，该变量会被优化掉，因此glGetUniformLocation返回-1，或者其他错误情况也会返回-1
     glUniform4f(color, 0.0, 0.0, 0.3, 1.0);
 
+    //当顶点数组VAO、顶端缓存VBO、索引缓存IBO等都设置好后进行解绑，再while中逐帧绑定
+    GLCall(glUseProgram(0));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    GLCall(glBindVertexArray(0));
+
     float r = 0.0, g = 0.1, b = 0.1;
     float span = 0.01;
     while (!glfwWindowShouldClose(window))
     {
         processInput(window);//增加额外的按键（事件）处理，设置状态
 
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        //立即模式渲染，已淘汰
-        /* glBegin(GL_TRIANGLES);
-        glVertex2d(-0.5f, -0.5f);
-        glVertex2d(0.f, 0.5f);
-        glVertex2d(0.5f, -0.5f);
-        glEnd();*/
-
-        //清除所有flag
-        //GLClearError();
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        GLCall(glUseProgram(shader));//重新绑定shader
         glUniform4f(color, r, 0.0, 0.0, 1.0);//给uniform赋值，每渲染一帧就要给uniform赋值
         if (r < 0.0 || r > 1.0) { span *= -1; }
         r += span;
-        //渲染指令
+        //重新绑定VAO和IBO，因为VAO包含VBO，并且通过IBO给出索引
+        GLCall(glBindVertexArray(vao));
+        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo));
+        //绘制命令
         //glDrawArrays(GL_TRIANGLES, 0, 2 * 3);//无索引缓冲区
-        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));//顶点索引
-        //ASSERT(GLLogCall());//增加debug下的自动断点
-
-        //glDebugMessageCallback//类似glGetError，可提供更多文本信息
-
+        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));//使用顶点索引绘制
+        
         glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
         glfwPollEvents();//检查触发事件，并调用对应的回调函数
     }
@@ -269,3 +270,11 @@ int main(int argc, char* argv[])
     glfwTerminate();//删除释放glfw所有资源
     return 0;
 }
+
+//立即模式渲染，已淘汰
+/* glBegin(GL_TRIANGLES);
+glVertex2d(-0.5f, -0.5f);
+glVertex2d(0.f, 0.5f);
+glVertex2d(0.5f, -0.5f);
+glEnd();*/
+
