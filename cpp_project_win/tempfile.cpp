@@ -290,3 +290,51 @@ class GeneticAlgorithm ：Algorithm
 
 
 //迪米特法则：如果两个类没有直接通信，那就不应该产生联系。如果A类要调用B类的一个方法，可以通过第三方转发这个方法
+
+//外观模式
+//将一组有相同功能的对象作为成员变量，在外观类中定义函数，在函数中按需要的顺序调用功能类的同一种函数
+//非常常用的模式，有许多变体，可以从父类继承一套统一接口，也可以把一组功能通过上层类进行函数封装并调用（即父类函数中调用一组子类函数）
+class Control
+{
+public:
+	virtual void start() = 0;
+	virtual void end() = 0;
+}
+class Engine : public Control
+{
+public:
+	void start() override { m_s = new std::string; }
+	void end() override { delete m_s; }
+private:
+	std::string* m_s;
+}
+class Light : public Control
+{
+public:
+	void start() override { m_isOpen = true; }
+	void end() override { m_isOpen = false; }
+private:
+	bool m_isOpen;
+}
+class Facade : public Control
+{
+	void start() override
+	{
+		m_engine.start();
+		m_light.start();
+	}
+	void end() override
+	{
+		m_engine.end();
+		m_light.end();
+	}
+private:
+	Engine m_engine;
+	Light m_light;
+}
+
+
+
+
+
+
