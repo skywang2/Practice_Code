@@ -145,17 +145,17 @@ int main(int argc, char* argv[]) {
 		{
 			vector<TestEmplace> vec1, vec2;
 			//push_back
-			vec1.reserve(1000);
+			vec1.reserve(100);
 			clock_t start = clock();
 			//for (int i = 0; i < 1000; ++i)
 				vec1.push_back({ std::string("hello world"), 1 });
 			clock_t end = clock();
 			cout << "push_back time:" << (end - start)/100.0 << endl;
 			//emplace_back
-			vec2.reserve(1000);
+			vec2.reserve(100);
 			start = clock();
 			//for (int i = 0; i < 1000; ++i)
-				vec2.emplace_back("hello world", 1);//如果使用emplace_back(std::string("hello world"))会导致调用TestEmplace的移动构造
+				vec2.emplace_back(std::string("hello world"), 1);
 			end = clock();
 			cout << "emplace_back time:" << (end - start) / 100.0 << endl;
 		}
