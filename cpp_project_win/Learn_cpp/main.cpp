@@ -8,6 +8,20 @@
 
 std::mutex g_mtx;
 
+class TestEmplace
+{
+public:
+	TestEmplace(const std::string s) : m_s(s) { std::cout << __FUNCTION__ << std::endl; }
+	TestEmplace(const TestEmplace& t) 
+	{
+		m_s = t.m_s;
+		std::cout << __FUNCTION__ << std::endl;
+	}
+	//TestEmplace
+private:
+	std::string m_s;
+};
+
 void test_circularQueue() {
 	MyCircularQueue circularQueue(3);
 	circularQueue.enQueue(1);	//插入第一位
@@ -115,6 +129,15 @@ int main(int argc, char* argv[]) {
 		RegexSearch();
 		RegexTokenize();
 		RegexReplace();
+
+		//vector, emplace()/emplace_back()
+		{
+			vector<TestEmplace> vec;
+			vec.push_back({ std::string("hello world") });
+			vec.emplace_back(std::string("bye world"));
+		}
+
+		//static_assert
 	}
 	catch (exception e)
 	{
