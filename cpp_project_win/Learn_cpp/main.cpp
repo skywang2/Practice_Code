@@ -1,4 +1,5 @@
 #include "main.h"
+#include <ctime>
 #include <iostream>
 #include "Circular_Queue.hpp"
 #include "Queue.hpp"
@@ -11,15 +12,25 @@ std::mutex g_mtx;
 class TestEmplace
 {
 public:
-	TestEmplace(const std::string s) : m_s(s) { std::cout << __FUNCTION__ << std::endl; }
+	TestEmplace(const std::string s, int i) 
+		: m_s(s) , m_i(i)
+	{ 
+		std::cout << __FUNCTION__ << " raw" << std::endl; 
+	}
 	TestEmplace(const TestEmplace& t) 
 	{
 		m_s = t.m_s;
-		std::cout << __FUNCTION__ << std::endl;
+		m_i = t.m_i;
+		std::cout << __FUNCTION__ << " copy" << std::endl;
 	}
-	//TestEmplace
+	TestEmplace(const TestEmplace&& t) noexcept
+		: m_s(std::move(t.m_s)), m_i(t.m_i)
+	{
+		std::cout << __FUNCTION__ << " move" << std::endl;
+	}
 private:
 	std::string m_s;
+	int m_i;
 };
 
 void test_circularQueue() {
@@ -132,9 +143,21 @@ int main(int argc, char* argv[]) {
 
 		//vector, emplace()/emplace_back()
 		{
-			vector<TestEmplace> vec;
-			vec.push_back({ std::string("hello world") });
-			vec.emplace_back(std::string("bye world"));
+			vector<TestEmplace> vec1, vec2;
+			//push_back
+			vec1.reserve(1000);
+			clock_t start = clock();
+			//for (int i = 0; i < 1000; ++i)
+				vec1.push_back({ std::string("hello world"), 1 });
+			clock_t end = clock();
+			cout << "push_back time:" << (end - start)/100.0 << endl;
+			//emplace_back
+			vec2.reserve(1000);
+			start = clock();
+			//for (int i = 0; i < 1000; ++i)
+				vec2.emplace_back("hello world", 1);//如果使用emplace_back(std::string("hello world"))会导致调用TestEmplace的移动构造
+			end = clock();
+			cout << "emplace_back time:" << (end - start) / 100.0 << endl;
 		}
 
 		//static_assert
