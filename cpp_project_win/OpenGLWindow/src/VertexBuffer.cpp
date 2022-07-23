@@ -3,7 +3,7 @@
 #include "GL/glew.h"
 
 VertexBuffer::VertexBuffer(const void* data, unsigned int size)
-	: m_id(-1)
+	: m_id(0)
 {
 	GLCall(glGenBuffers(1, &m_id));//申请一块buffer并得到他的地址
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_id));//绑定buffer，可能是指定buffer所存储的数据类型
@@ -15,12 +15,12 @@ VertexBuffer::~VertexBuffer()
 	GLCall(glDeleteBuffers(1, &m_id));
 }
 
-void VertexBuffer::Bind()
+void VertexBuffer::Bind() const
 {
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_id));
 }
 
-void VertexBuffer::Unbind()
+void VertexBuffer::Unbind() const
 {
 	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }

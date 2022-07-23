@@ -8,6 +8,8 @@
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
 using std::cout;
 using std::endl;
 
@@ -158,21 +160,12 @@ int main(int argc, char* argv[])
             0, 1, 3
         };
 
-        //创建顶点数组对象VAO
-        //VAO是顶端数组对象，VBO是顶点缓存对象，VAO中可存多个VBO，像数组一样
-        unsigned int vao;
-        GLCall(glGenVertexArrays(1, &vao));
-        GLCall(glBindVertexArray(vao));
-
+        VertexArray vao;
         VertexBuffer vbo(positions, 4 * 2 * sizeof(float));
 
-        GLCall(glEnableVertexAttribArray(0));//启用顶点属性数组
-        GLCall(glVertexAttribPointer(0/*没有特殊含义，但必须与shader的layout一样*/,
-            2, /*一个顶点有几个数据，此处一个顶点有x、y两个数据*/
-            GL_FLOAT, /*数据类型*/
-            GL_FALSE, /*标准化*/
-            2 * sizeof(float), /*数据跨度，一个顶点有几个字节*/
-            nullptr));//定义buffer中的属性布局，并关联VAO与VBO
+        VertexBufferLayout layoutPosition;
+        layoutPosition.Push<float>(2);
+        vao.AddBuffer(vbo, layoutPosition);
 
         IndexBuffer ibo(indices, 6 * sizeof(unsigned int));
 
@@ -209,7 +202,7 @@ int main(int argc, char* argv[])
             if (r < 0.0 || r > 1.0) { span *= -1; }
             r += span;
             //重新绑定VAO和IBO，因为VAO包含VBO，并且通过IBO给出索引
-            GLCall(glBindVertexArray(vao));
+            vao.Bind();
             ibo.Bind();
             //绘制命令
             //glDrawArrays(GL_TRIANGLES, 0, 2 * 3);//无索引缓冲区

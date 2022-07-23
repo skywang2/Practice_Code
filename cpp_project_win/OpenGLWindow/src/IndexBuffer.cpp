@@ -3,7 +3,7 @@
 #include "GL/glew.h"
 
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
-	: m_id(-1),
+	: m_id(0),
 	m_count(0)
 {
 	GLCall(glGenBuffers(1, &m_id));//申请一块buffer并得到他的地址
