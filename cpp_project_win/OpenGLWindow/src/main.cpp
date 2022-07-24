@@ -10,109 +10,110 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
+#include "Shader.h"
 using std::cout;
 using std::endl;
 
-struct ShaderProgramSource
-{
-    std::string vertexShader;
-    std::string fragmentShader;
-};
+//struct ShaderProgramSource
+//{
+//    std::string vertexShader;
+//    std::string fragmentShader;
+//};
 
-static ShaderProgramSource ParseShader(const std::string& filepath)
-{
-    enum class ShaderType
-    {
-        NONE = -1, VERTEX, FRAGMENT
-    };
-
-    std::ifstream fileStream(filepath);
-    if (!fileStream.is_open())
-    {
-        std::cout << "open file:" << filepath << " failed" << endl;
-        return {};
-    }
-    ShaderType type = ShaderType::NONE;
-    std::string line;
-    std::stringstream shaderStream[2];//vertex;fragment
-    while (std::getline(fileStream, line))
-    {
-        if (line.find("#shader") != std::string::npos)//查找#shader
-        {
-            if (line.find("vertex") != std::string::npos) 
-            {
-                type = ShaderType::VERTEX;
-            }
-            else if (line.find("fragment") != std::string::npos) 
-            {
-                type = ShaderType::FRAGMENT;
-            }
-        }
-        else
-        {
-            shaderStream[static_cast<int>(type)] << line << '\n';
-        }
-    }
-    return { shaderStream[0].str(), shaderStream[1].str() };
-}
-
-static unsigned int CompileShader(unsigned int type, const std::string& source)
-{
-    unsigned int id = glCreateShader(type);//创建shader对象
-    const char* src = source.c_str();
-    glShaderSource(id, 1, &src, nullptr);//绑定shader源码
-    glCompileShader(id);//编译shader源码
-
-    //错误检查，日志
-    int result = -1;  
-    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-    if (GL_FALSE == result)
-    {
-        int length = 0;
-        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char*)alloca(length * sizeof(char));//alloca可以在栈上分配内存
-        glGetShaderInfoLog(id, length, &length, message);
-        std::cout << message << std::endl;
-        glDeleteShader(id);
-        return 0;
-    }
-
-    return id;//返回shader标识符
-}
-
-//传入shader源码字符串，构造着色器的公共代码
-static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
-{
-    unsigned int program = glCreateProgram();
-    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
-    int result = -1;
-
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
-
-    glLinkProgram(program);//将shader对象链接到program对象上，创建一个GPU（可编程顶点处理器）上的可执行对象
-    glGetProgramiv(program, GL_LINK_STATUS, &result);
-    if (GL_FALSE == result)
-    {
-        int length = 0;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
-        char* message = (char*)alloca(length * sizeof(char));//alloca可以在栈上分配内存
-        glGetProgramInfoLog(program, length, &length, message);
-        std::cout << message << std::endl;
-        glDeleteProgram(program);
-        return 0;
-    }
-    glValidateProgram(program);//验证程序对象
-
-    glDetachShader(program, vs);
-    glDetachShader(program, fs);
-
-    glDeleteShader(vs);
-    glDeleteShader(fs);
-
-    return program;
-}
+//static ShaderProgramSource ParseShader(const std::string& filepath)
+//{
+//    enum class ShaderType
+//    {
+//        NONE = -1, VERTEX, FRAGMENT
+//    };
+//
+//    std::ifstream fileStream(filepath);
+//    if (!fileStream.is_open())
+//    {
+//        std::cout << "open file:" << filepath << " failed" << endl;
+//        return {};
+//    }
+//    ShaderType type = ShaderType::NONE;
+//    std::string line;
+//    std::stringstream shaderStream[2];//vertex;fragment
+//    while (std::getline(fileStream, line))
+//    {
+//        if (line.find("#shader") != std::string::npos)//查找#shader
+//        {
+//            if (line.find("vertex") != std::string::npos) 
+//            {
+//                type = ShaderType::VERTEX;
+//            }
+//            else if (line.find("fragment") != std::string::npos) 
+//            {
+//                type = ShaderType::FRAGMENT;
+//            }
+//        }
+//        else
+//        {
+//            shaderStream[static_cast<int>(type)] << line << '\n';
+//        }
+//    }
+//    return { shaderStream[0].str(), shaderStream[1].str() };
+//}
+//
+//static unsigned int CompileShader(unsigned int type, const std::string& source)
+//{
+//    unsigned int id = glCreateShader(type);//创建shader对象
+//    const char* src = source.c_str();
+//    glShaderSource(id, 1, &src, nullptr);//绑定shader源码
+//    glCompileShader(id);//编译shader源码
+//
+//    //错误检查，日志
+//    int result = -1;  
+//    glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+//    if (GL_FALSE == result)
+//    {
+//        int length = 0;
+//        glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+//        char* message = (char*)alloca(length * sizeof(char));//alloca可以在栈上分配内存
+//        glGetShaderInfoLog(id, length, &length, message);
+//        std::cout << message << std::endl;
+//        glDeleteShader(id);
+//        return 0;
+//    }
+//
+//    return id;//返回shader标识符
+//}
+//
+////传入shader源码字符串，构造着色器的公共代码
+//static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+//{
+//    unsigned int program = glCreateProgram();
+//    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+//    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+//    int result = -1;
+//
+//    glAttachShader(program, vs);
+//    glAttachShader(program, fs);
+//
+//    glLinkProgram(program);//将shader对象链接到program对象上，创建一个GPU（可编程顶点处理器）上的可执行对象
+//    glGetProgramiv(program, GL_LINK_STATUS, &result);
+//    if (GL_FALSE == result)
+//    {
+//        int length = 0;
+//        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+//        char* message = (char*)alloca(length * sizeof(char));//alloca可以在栈上分配内存
+//        glGetProgramInfoLog(program, length, &length, message);
+//        std::cout << message << std::endl;
+//        glDeleteProgram(program);
+//        return 0;
+//    }
+//    glValidateProgram(program);//验证程序对象
+//
+//    glDetachShader(program, vs);
+//    glDetachShader(program, fs);
+//
+//    glDeleteShader(vs);
+//    glDeleteShader(fs);
+//
+//    return program;
+//}
 
 int main(int argc, char* argv[])
 {
@@ -171,24 +172,28 @@ int main(int argc, char* argv[])
 
         //顶点着色器vertex shader，主要是告诉OpenGL这个顶点在屏幕空间的位置
         //片段着色器/像素着色器，fragment shader/pixels shader
-        ShaderProgramSource source = ParseShader("res/shaders/allShaders.shader");
-        cout << "=====vertex=====" << endl;
-        cout << source.vertexShader << endl;
-        cout << "=====fragmen=====" << endl;
-        cout << source.fragmentShader << endl;
-        unsigned int shader = CreateShader(source.vertexShader, source.fragmentShader);
-        GLCall(glUseProgram(shader));
+        Shader shader("res/shaders/allShaders.shader");
+        //ShaderProgramSource source = ParseShader("res/shaders/allShaders.shader");
+        //cout << "=====vertex=====" << endl;
+        //cout << source.vertexShader << endl;
+        //cout << "=====fragmen=====" << endl;
+        //cout << source.fragmentShader << endl;
+        //unsigned int shader = CreateShader(source.vertexShader, source.fragmentShader);
+        //GLCall(glUseProgram(shader));
+        shader.Bind();
+
 
         //获取program中的统一变量（全局变量）uniform的地址
-        int color = glGetUniformLocation(shader, "u_color");
-        ASSERT(color != -1);//当shader里未使用该变量时，该变量会被优化掉，因此glGetUniformLocation返回-1，或者其他错误情况也会返回-1
-        glUniform4f(color, 0.0f, 0.0f, 0.3f, 1.0f);
+        shader.SetUniform4f("u_color", 0.0f, 0.0f, 0.3f, 1.0f);
+        //int color = glGetUniformLocation(shader, "u_color");
+        //ASSERT(color != -1);//当shader里未使用该变量时，该变量会被优化掉，因此glGetUniformLocation返回-1，或者其他错误情况也会返回-1
+        //glUniform4f(color, 0.0f, 0.0f, 0.3f, 1.0f);
 
         //当顶点数组VAO、顶端缓存VBO、索引缓存IBO等都设置好后进行解绑，再while中逐帧绑定
-        GLCall(glUseProgram(0));
         vbo.Unbind();
         ibo.Unbind();
-        GLCall(glBindVertexArray(0));
+        shader.Unbind();
+        vao.Unbind();
 
         float r = 0.0f, g = 0.1f, b = 0.1f;
         float span = 0.01f;
@@ -197,8 +202,10 @@ int main(int argc, char* argv[])
             ProcessInput(window);//增加额外的按键（事件）处理，设置状态
 
             GLCall(glClear(GL_COLOR_BUFFER_BIT));
-            GLCall(glUseProgram(shader));//重新绑定shader
-            glUniform4f(color, r, 0.0f, 0.0f, 1.0f);//给uniform赋值，每渲染一帧就要给uniform赋值
+            shader.Bind();
+            //GLCall(glUseProgram(shader));//重新绑定shader
+            //glUniform4f(color, r, 0.0f, 0.0f, 1.0f);//给uniform赋值，每渲染一帧就要给uniform赋值
+            shader.SetUniform4f("u_color", r, 0.0f, 0.0f, 1.0f);
             if (r < 0.0 || r > 1.0) { span *= -1; }
             r += span;
             //重新绑定VAO和IBO，因为VAO包含VBO，并且通过IBO给出索引
@@ -211,7 +218,6 @@ int main(int argc, char* argv[])
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
             glfwPollEvents();//检查触发事件，并调用对应的回调函数
         }
-        glDeleteProgram(shader);
     }
 
     glfwTerminate();//删除释放glfw所有资源

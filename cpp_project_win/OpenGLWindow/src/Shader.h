@@ -1,6 +1,7 @@
 #pragma once
-
 #include <string>
+#include <unordered_map>
+#include <map>
 
 struct ShaderProgramSource
 {
@@ -17,12 +18,14 @@ private:
     };
 
     unsigned int m_programID;
+    std::map<const std::string, int> m_varibles;
 
 public:
 	Shader(const std::string& filepath);
 	~Shader();
 
-    void Bind() const;
+    void SetUniform4f(const std::string& varible, float v1, float v2, float v3, float v4);
+        void Bind() const;
     void Unbind() const;
 
 private:

@@ -20,6 +20,17 @@ Shader::~Shader()
 {
 }
 
+void Shader::SetUniform4f(const std::string& varible, float v1, float v2, float v3, float v4)
+{
+    if (m_varibles.find(varible) == m_varibles.end())
+    {
+        m_varibles[varible] = glGetUniformLocation(m_programID, "u_color");//获取program中的统一变量（全局变量）uniform的地址
+    }
+
+    //ASSERT(color != -1);//当shader里未使用该变量时，该变量会被优化掉，因此glGetUniformLocation返回-1，或者其他错误情况也会返回-1
+    glUniform4f(m_varibles[varible], v1, v2, v3, v4);
+}
+
 void Shader::Bind() const
 {
     GLCall(glUseProgram(m_programID));
