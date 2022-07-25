@@ -6,10 +6,11 @@
 #include "Renderer.h"
 
 Shader::Shader(const std::string& filepath)
-    : m_programID(0)
+    : m_programID(0),
+    m_filepath(filepath)
 {
     ShaderProgramSource source = ParseShader(filepath);
-    CreateShader(source.vertexShader, source.fragmentShader);
+    m_programID = CreateShader(source.vertexShader, source.fragmentShader);
     //std::cout << "=====vertex=====" << std::endl;
     //std::cout << source.vertexShader << std::endl;
     //std::cout << "=====fragmen=====" << std::endl;
@@ -20,17 +21,6 @@ Shader::~Shader()
 {
 }
 
-void Shader::SetUniform4f(const std::string& varible, float v1, float v2, float v3, float v4)
-{
-    if (m_varibles.find(varible) == m_varibles.end())
-    {
-        m_varibles[varible] = glGetUniformLocation(m_programID, "u_color");//获取program中的统一变量（全局变量）uniform的地址
-    }
-
-    //ASSERT(color != -1);//当shader里未使用该变量时，该变量会被优化掉，因此glGetUniformLocation返回-1，或者其他错误情况也会返回-1
-    glUniform4f(m_varibles[varible], v1, v2, v3, v4);
-}
-
 void Shader::Bind() const
 {
     GLCall(glUseProgram(m_programID));
@@ -39,6 +29,28 @@ void Shader::Bind() const
 void Shader::Unbind() const
 {
     GLCall(glUseProgram(0));
+}
+
+void Shader::SetUniform4f(const std::string& varible, float v1, float v2, float v3, float v4)
+{
+    GLCall(glUniform4f(GetUniformLocation(varible), v1, v2, v3, v4));
+}
+
+int Shader::GetUniformLocation(const std::string& varible)
+{
+    if (m_varibles.find(varible) != m_varibles.end())
+    {
+        return m_varibles[varible];
+    }
+
+    int location = glGetUniformLocation(m_programID, varible.c_str());
+    if (-1 == location)
+    {
+        //ASSERT(color != -1);//当shader里未使用该变量时，该变量会被优化掉，因此glGetUniformLocation返回-1，或者其他错误情况也会返回-1
+    }
+    std::cout << varible << " is:" << location << std::endl;
+    m_varibles[varible] = location;//获取program中的统一变量（全局变量）uniform的地址
+    return location;
 }
 
 ShaderProgramSource Shader::ParseShader(const std::string& filepath)
@@ -98,35 +110,35 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
     return id;//返回shader标识符
 }
 
-bool Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
-    m_programID = glCreateProgram();
+    unsigned int program = glCreateProgram();
     unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
     unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
     int result = -1;
 
-    glAttachShader(m_programID, vs);
-    glAttachShader(m_programID, fs);
+    glAttachShader(program, vs);
+    glAttachShader(program, fs);
 
-    glLinkProgram(m_programID);//将shader对象链接到program对象上，链接一个GPU（可编程顶点处理器）上的可执行对象
-    glGetProgramiv(m_programID, GL_LINK_STATUS, &result);
+    glLinkProgram(program);//将shader对象链接到program对象上，链接一个GPU（可编程顶点处理器）上的可执行对象
+    glGetProgramiv(program, GL_LINK_STATUS, &result);
     if (GL_FALSE == result)
     {
         int length = 0;
-        glGetProgramiv(m_programID, GL_INFO_LOG_LENGTH, &length);
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
         char* message = (char*)alloca(length * sizeof(char));//alloca可以在栈上分配内存
-        glGetProgramInfoLog(m_programID, length, &length, message);
+        glGetProgramInfoLog(program, length, &length, message);
         std::cout << message << std::endl;
-        glDeleteProgram(m_programID);
+        glDeleteProgram(program);
         return false;
     }
-    glValidateProgram(m_programID);//验证程序对象
+    glValidateProgram(program);//验证程序对象
 
-    glDetachShader(m_programID, vs);
-    glDetachShader(m_programID, fs);
+    glDetachShader(program, vs);
+    glDetachShader(program, fs);
 
     glDeleteShader(vs);
     glDeleteShader(fs);
 
-    return true;
+    return program;
 }
