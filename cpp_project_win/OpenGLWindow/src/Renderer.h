@@ -1,5 +1,8 @@
 #ifndef SRC_RENDERER_H
 #define SRC_RENDERER_H
+#include "VertexArray.h"
+#include "IndexBuffer.h"
+#include "Shader.h"
 
 #ifdef _DEBUG
 #define ASSERT(x) if(!(x)) __debugbreak();
@@ -20,4 +23,18 @@ void GLClearError();//检查是否存在错误，如果有则阻塞
 bool GLLogCall(const char* function, const char* file, int line);//在每个函数后检查flag
 void ProcessInput(GLFWwindow* window);//按键状态处理函数
 
-#endif // !SRC_RENDERER_H
+class Renderer
+{
+public:
+    Renderer();
+    ~Renderer();
+
+    void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+    void Clear() const;
+private:
+
+};
+
+
+
+#endif //SRC_RENDERER_H
