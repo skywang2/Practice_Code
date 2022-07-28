@@ -1,0 +1,23 @@
+#pragma once
+#include "Renderer.h"
+
+class Texture
+{
+private:
+	unsigned int m_id;
+	std::string m_filepath;
+	unsigned char* m_buffer;
+	int m_width, m_height;
+	int m_BPP;//bits pre pixel
+
+public:
+	Texture(const std::string& filepath);
+	~Texture();
+
+	void Bind(unsigned int slot = 0) const;
+	void Unbind() const;
+
+	inline int GetWidth() const { return m_width; }
+	inline int GetHeight() const { return m_height; }
+};
+

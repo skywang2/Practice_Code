@@ -16,6 +16,18 @@
     <Filter Include="源文件\shader">
       <UniqueIdentifier>{da81847f-b30e-4543-938b-62725b86350c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\stb">
+      <UniqueIdentifier>{22c29ada-3658-404e-9ba7-6d31ef565e75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\stb">
+      <UniqueIdentifier>{8c2f8b76-ad98-4e5e-afb9-b494941ed508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\texture">
+      <UniqueIdentifier>{5259a4b5-c0be-41ef-ac3d-e0d87a670442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\texture">
+      <UniqueIdentifier>{8804826e-c8b4-4612-86f2-6bf198f36ba0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
@@ -41,6 +53,12 @@
     </ClCompile>
     <ClCompile Include="src\Shader.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\include\stb_image.cpp">
+      <Filter>源文件\stb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>源文件\texture</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +90,12 @@
     </ClInclude>
     <ClInclude Include="src\Shader.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\stb_image.h">
+      <Filter>头文件\stb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>头文件\texture</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,6 +11,8 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "Shader.h"
+#include "include\stb_image.h"
+
 using std::cout;
 using std::endl;
 
