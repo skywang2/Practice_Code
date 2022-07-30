@@ -11,7 +11,7 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "Shader.h"
-#include "include\stb_image.h"
+#include "Texture.h"
 
 using std::cout;
 using std::endl;
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    GLFWwindow*  window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    GLFWwindow*  window = glfwCreateWindow(1280/*640*/, 720/*480*/, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -49,10 +49,10 @@ int main(int argc, char* argv[])
     {
         //顶点坐标
         float positions[] = {
-            0.5f, 0.5f,
-            -0.5f, -0.5f,
-            0.5f, -0.5f,
-            -0.5f, 0.5f
+            0.5f, 0.5f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
+            -0.5f, -0.5f, 0.0f, 0.0f,
+            0.5f, -0.5f, 1.0f, 0.0f,
+            -0.5f, 0.5f, 0.0f, 1.0f
         };
 
         //顶点索引
@@ -63,10 +63,11 @@ int main(int argc, char* argv[])
         };
 
         VertexArray vao;
-        VertexBuffer vbo(positions, 4 * 2 * sizeof(float));
+        VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
 
         VertexBufferLayout layoutPosition;
-        layoutPosition.Push<float>(2);
+        layoutPosition.Push<float>(2);//顶点坐标
+        layoutPosition.Push<float>(2);//纹理坐标
         vao.AddBuffer(vbo, layoutPosition);
 
         IndexBuffer ibo(indices, 6 * sizeof(unsigned int));
@@ -75,9 +76,12 @@ int main(int argc, char* argv[])
         //片段着色器/像素着色器，fragment shader/pixels shader
         Shader shader("res/shaders/allShaders.shader");
         shader.Bind();
+        shader.SetUniform4f("u_color", 0.0f, 0.0f, 0.3f, 1.0f);//获取program中的统一变量（全局变量）uniform的地址，并赋值
 
-        //获取program中的统一变量（全局变量）uniform的地址，并赋值
-        shader.SetUniform4f("u_color", 0.0f, 0.0f, 0.3f, 1.0f);
+        Texture texture("res/textures/texture01.png");
+        int texSlot = 0;//纹理槽的下标
+        texture.Bind(texSlot);
+        shader.SetUniform1i("u_texture", texSlot);
 
         //当顶点数组VAO、顶端缓存VBO、索引缓存IBO等都设置好后进行解绑，再while中逐帧绑定
         vao.Unbind();
