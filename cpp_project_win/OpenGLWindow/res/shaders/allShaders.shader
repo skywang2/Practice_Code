@@ -7,9 +7,12 @@ layout(location = 1) in vec2 texCoord;
 //输出到片段着色器
 out vec2 v_texCoord;
 
+//mvp变换矩阵
+uniform mat4 u_MVP;
+
 void main()
 {
-	gl_Position = position;
+	gl_Position = u_MVP * position;
 	v_texCoord = texCoord;
 }
 
@@ -29,4 +32,5 @@ void main()
 	//槽，纹理坐标
 	vec4 texColor = texture(u_texture, v_texCoord);
 	color = texColor;
+	color = vec4(1.0);
 }

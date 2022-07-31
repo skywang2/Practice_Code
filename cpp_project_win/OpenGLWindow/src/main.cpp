@@ -3,8 +3,11 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "GL/glew.h"
+#include "GLFW/glfw3.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -19,7 +22,9 @@ using std::endl;
 int main(int argc, char* argv[])
 {
     if (!glfwInit())
+    {
         return -1;
+    }
     
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -49,10 +54,10 @@ int main(int argc, char* argv[])
     {
         //顶点坐标
         float positions[] = {
-            0.5f, 0.5f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
-            -0.5f, -0.5f, 0.0f, 0.0f,
-            0.5f, -0.5f, 1.0f, 0.0f,
-            -0.5f, 0.5f, 0.0f, 1.0f
+            150.0f, 150.0f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
+            50.0f, 50.0f, 0.0f, 0.0f,
+            150.0f, 50.0f, 1.0f, 0.0f,
+            50.0f, 150.0f, 0.0f, 1.0f
         };
 
         //顶点索引
@@ -77,11 +82,14 @@ int main(int argc, char* argv[])
 
         IndexBuffer ibo(indices, 6 * sizeof(unsigned int));
 
+        glm::mat4 proj = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);//正交矩阵
+
         //顶点着色器vertex shader，主要是告诉OpenGL这个顶点在屏幕空间的位置
         //片段着色器/像素着色器，fragment shader/pixels shader
         Shader shader("res/shaders/allShaders.shader");
         shader.Bind();
         shader.SetUniform4f("u_color", 0.0f, 0.0f, 0.3f, 1.0f);//获取program中的统一变量（全局变量）uniform的地址，并赋值
+        shader.SetUniformMat4f("u_MVP", proj);//传入MVP矩阵
 
         Texture texture("res/textures/texture01.png");
         int texSlot = 0;//纹理槽的下标
