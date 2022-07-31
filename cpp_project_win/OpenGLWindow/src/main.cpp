@@ -62,8 +62,10 @@ int main(int argc, char* argv[])
             0, 1, 3
         };
 
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);//设置颜色混合方式
+        GLCall(glEnable(GL_BLEND));
+        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
+        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE));//设置颜色混合方式
+        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ZERO));//设置颜色混合方式
 
         VertexArray vao;
         VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
