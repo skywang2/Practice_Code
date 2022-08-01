@@ -83,13 +83,16 @@ int main(int argc, char* argv[])
         IndexBuffer ibo(indices, 6 * sizeof(unsigned int));
 
         glm::mat4 proj = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);//正交矩阵
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-50, 0, 0));//视图矩阵，把相机向右移动100，相当于物体向左移动100
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 200, 0));//模型矩阵
+        glm::mat4 mvp = proj * view * model;
 
         //顶点着色器vertex shader，主要是告诉OpenGL这个顶点在屏幕空间的位置
         //片段着色器/像素着色器，fragment shader/pixels shader
         Shader shader("res/shaders/allShaders.shader");
         shader.Bind();
         shader.SetUniform4f("u_color", 0.0f, 0.0f, 0.3f, 1.0f);//获取program中的统一变量（全局变量）uniform的地址，并赋值
-        shader.SetUniformMat4f("u_MVP", proj);//传入MVP矩阵
+        shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
 
         Texture texture("res/textures/texture01.png");
         int texSlot = 0;//纹理槽的下标
