@@ -333,6 +333,67 @@ private:
 	Light m_light;
 }
 
+//建造者模式
+//用于构造新对象，新对象使用一组固定流程进行建造（初始化），并且流程的每一步可以根据类型进行定制
+//具体实现有建造类、指挥类，建造类负责实现建造函数（初始化）和返回被建造的产品对象，指挥类负责调用建造类对象
+class Product
+{};
+class Computer : public Product
+{
+	std::vector<Product*> m_componts;
+public:
+	void Add(Product* obj)
+	{
+		m_componts.push_back(obj);
+	}
+};
+class Memory : public Product
+{};
+class CPU : public Product
+{};
+class Builder
+{
+public:
+	void BuildPartA(Product* obj) = 0;
+	void BuildPartB(Product* obj) = 0;
+	Product* GetResult() = 0;
+}
+class ComputerBuilder : public Builder
+{
+private:
+	Product* m_computer = new Computer;
+public:
+	void BuildPartA()
+	{
+		m_computer.Add(new Memory);
+	}
+	void BuildPartB()
+	{
+		m_computer.Add(new CPU);
+	}
+	Product* GetResult()
+	{
+		return m_computer;
+	}
+};
+class Director
+{
+public:
+	//调用建造类建造对应的对象
+	void StartBuild(Builder* bdr)
+	{
+		bdr->BuildPartA();
+		bdr->BuildPartB();
+	}
+}
+
+{
+	ComputerBuilder builder;
+	Director director;
+	director.StartBuild(builder);
+	
+	Computer* computer01 = builder.GetResult();
+}
 
 
 
