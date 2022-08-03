@@ -7,6 +7,9 @@
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "include/imgui/imgui.h"
+#include "include/imgui/imgui_impl_glfw.h"
+#include "include/imgui/imgui_impl_opengl3.h"
 
 #include "Renderer.h"
 #include "VertexBuffer.h"
@@ -19,8 +22,14 @@
 using std::cout;
 using std::endl;
 
+static void glfw_error_callback(int error, const char* description)
+{
+    fprintf(stderr, "Glfw Error %d: %s\n", error, description);
+}
+
 int main(int argc, char* argv[])
 {
+    glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
     {
         return -1;
@@ -40,6 +49,14 @@ int main(int argc, char* argv[])
 
     glfwMakeContextCurrent(window);//创建opengl上下文
     glfwSwapInterval(1);//设置交换双缓冲的帧间隔，1表示渲染1帧交换一次
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();//创建imgui的上下文
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 
     glewExperimental = true;//在核心模式需要，使用扩展函数
     GLenum err = glewInit();
@@ -107,10 +124,13 @@ int main(int argc, char* argv[])
 
         Renderer renderer;
 
+        bool show_demo_window = true;
+        bool show_another_window = false;
         float r = 0.0f, g = 0.1f, b = 0.1f;
         float span = 0.01f;
         while (!glfwWindowShouldClose(window))
         {
+            glfwPollEvents();//检查触发事件，并调用对应的回调函数
             ProcessInput(window);//增加额外的按键（事件）处理，设置状态
 
             renderer.Clear();
@@ -125,12 +145,34 @@ int main(int argc, char* argv[])
             if (r < 0.0 || r > 1.0) { span *= -1; }//改变颜色
             r += span;
 
+            //渲染imgui相关
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+
+            //1.Show the big demo window
+            //if (show_demo_window)
+            //    ImGui::ShowDemoWindow(&show_demo_window);
+            //2.增加一些控件
+            {
+                ImGui::Text("This is some useful text.");
+                ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+            }
+            //3.显示别的窗口
+            //4.渲染
+            ImGui::Render();
+
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
-            glfwPollEvents();//检查触发事件，并调用对应的回调函数
         }
     }
 
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    glfwDestroyWindow(window);
     glfwTerminate();//删除释放glfw所有资源
+
     return 0;
 }
 
