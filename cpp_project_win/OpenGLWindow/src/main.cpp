@@ -46,7 +46,6 @@ int main(int argc, char* argv[])
         glfwTerminate();
         return -1;
     }
-
     glfwMakeContextCurrent(window);//创建opengl上下文
     glfwSwapInterval(1);//设置交换双缓冲的帧间隔，1表示渲染1帧交换一次
 
@@ -55,8 +54,10 @@ int main(int argc, char* argv[])
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsClassic();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    ImGui_ImplOpenGL3_Init("#version 330 core");
 
     glewExperimental = true;//在核心模式需要，使用扩展函数
     GLenum err = glewInit();
@@ -126,6 +127,8 @@ int main(int argc, char* argv[])
 
         bool show_demo_window = true;
         bool show_another_window = false;
+        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
         float r = 0.0f, g = 0.1f, b = 0.1f;
         float span = 0.01f;
         while (!glfwWindowShouldClose(window))
@@ -133,8 +136,57 @@ int main(int argc, char* argv[])
             glfwPollEvents();//检查触发事件，并调用对应的回调函数
             ProcessInput(window);//增加额外的按键（事件）处理，设置状态
 
-            renderer.Clear();
 
+
+            //渲染imgui相关
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
+            //1.Show the big demo window
+            if (show_demo_window)
+                ImGui::ShowDemoWindow(&show_demo_window);
+            //2.增加一些控件
+            {
+                static float f = 0.0f;
+                static int counter = 0;
+
+                ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+
+                ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
+                ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
+                ImGui::Checkbox("Another Window", &show_another_window);
+
+                ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+                ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+
+                if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+                    counter++;
+                ImGui::SameLine();
+                ImGui::Text("counter = %d", counter);
+
+                ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+                ImGui::End();
+            }
+            //3.显示别的窗口
+            if (show_another_window)
+            {
+                ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
+                ImGui::Text("Hello from another window!");
+                if (ImGui::Button("Close Me"))
+                    show_another_window = false;
+                ImGui::End();
+            }
+            //4.渲染
+            ImGui::Render();
+            int display_w, display_h;
+            glfwGetFramebufferSize(window, &display_w, &display_h);
+            //cout << "w:" << display_w << ", h:" << display_h << endl;
+            glViewport(0, 0, display_w, display_h);
+            glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+            renderer.Clear();//glClear(GL_COLOR_BUFFER_BIT);
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            //非UI相关渲染
             shader.Bind();//绑定shader
             shader.SetUniform4f("u_color", r, 0.0f, 0.0f, 1.0f);
 
@@ -144,23 +196,6 @@ int main(int argc, char* argv[])
 
             if (r < 0.0 || r > 1.0) { span *= -1; }//改变颜色
             r += span;
-
-            //渲染imgui相关
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
-            ImGui::NewFrame();
-
-            //1.Show the big demo window
-            //if (show_demo_window)
-            //    ImGui::ShowDemoWindow(&show_demo_window);
-            //2.增加一些控件
-            {
-                ImGui::Text("This is some useful text.");
-                ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            }
-            //3.显示别的窗口
-            //4.渲染
-            ImGui::Render();
 
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
         }
