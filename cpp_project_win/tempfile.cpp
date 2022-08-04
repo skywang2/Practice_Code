@@ -395,6 +395,77 @@ public:
 	Computer* computer01 = builder.GetResult();
 }
 
+//观察者模式，又称发布-订阅模式
+//通过构造抽象通知类和观察者类，实现解耦效果，体现依赖倒转原则
+//通常用于一对多的关系，一个对象改变需要通知其他对象都改变，并且被通知的对象互相独立
+//经典观察者模式，观察者拥有函数名相同的响应函数
+class Subject
+{
+	std::vector<Observer*> observers;
+public:
+	void Attach(Observer* ob)
+	{
+		observers.push_back(ob);
+	}
+	void Attach(Observer* ob)
+	{
+		auto it = std::find(observers.begin(), observers.end(), ob);
+		if(it != observers.end())
+		{
+			observers.push_back(it);
+		}
+	}
+	void Notify()
+	{
+		for(auto& it : observers)
+		{
+			it->Update();
+		}
+	}
+};
+class SubClass : public Subject
+{
+//do something
+};
+class Observer
+{
+public:
+	void Update() = 0;
+};
+class ObClassA : public Observer
+{
+public:
+	void Update()
+	{
+		//do something
+	}
+};
+class ObClassB : public Observer
+{
+public:
+	void Update()
+	{
+		//do something
+	}
+};
+
+{
+	SubClassA subject;
+	ObClassA* obA = new ObClassA;
+	ObClassB* obB = new ObClassB;
+	
+	subject.Attach(obA);
+	subject.Attach(obB);
+	subject.Notify();
+	subject.Detech(obA);
+}
+
+//事件委托（.net原生支持，c++需要自己实现），抽象通知类不依赖抽象观察者类，因此无需注册相关函数
+
+
+
+
+
 
 
 
