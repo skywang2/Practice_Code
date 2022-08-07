@@ -71,18 +71,18 @@ int main(int argc, char* argv[])
 
     {
         //顶点坐标
-        float positions[] = {
-            150.0f, 150.0f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
-            50.0f, 50.0f, 0.0f, 0.0f,
-            150.0f, 50.0f, 1.0f, 0.0f,
-            50.0f, 150.0f, 0.0f, 1.0f
-        };
         //float positions[] = {
-        //    0.5f, 0.5f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
-        //    -0.5f, -0.5f, 0.0f, 0.0f,
-        //    0.5f, -0.5f, 1.0f, 0.0f,
-        //    -0.5f, 0.5f, 0.0f, 1.0f
+        //    150.0f, 150.0f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
+        //    50.0f, 50.0f, 0.0f, 0.0f,
+        //    150.0f, 50.0f, 1.0f, 0.0f,
+        //    50.0f, 150.0f, 0.0f, 1.0f
         //};
+        float positions[] = {
+            100.0f, 100.0f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
+            0, 0, 0.0f, 0.0f,
+            100.0f, 0, 1.0f, 0.0f,
+            0, 100.0f, 0.0f, 1.0f
+        };
 
         //顶点索引
         unsigned int indices[] =
@@ -133,18 +133,29 @@ int main(int argc, char* argv[])
 
         Renderer renderer;
 
-        ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
+        glm::vec3 translation(0, 0, 0);
         float r = 0.0f, g = 0.1f, b = 0.1f;
         float span = 0.01f;
+        int display_w, display_h;
         while (!glfwWindowShouldClose(window))
         {
             glfwPollEvents();//检查触发事件，并调用对应的回调函数
             ProcessInput(window);//增加额外的按键（事件）处理，设置状态
-            int display_w, display_h;
             glfwGetFramebufferSize(window, &display_w, &display_h);
-            static float x = 0.0f;
-            static float y = 0.0f;
+
+            renderer.Clear();
+            //自定义的渲染内容
+            glm::mat4 proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, -1.0f, 1.0f);//正交矩阵
+            glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));//视图矩阵，把相机向右移动100，相当于物体向左移动100
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(translation.x, translation.y, 0));//模型矩阵
+            glm::mat4 mvp = proj * view * model;
+            shader.Bind();//绑定shader
+            shader.SetUniform4f("u_color", r, 0.0f, 0.0f, 1.0f);//在shader中绘制红色呼吸灯效果，目前不用
+            shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
+            //绘制命令
+            renderer.Draw(vao, ibo, shader);
+            if (r < 0.0 || r > 1.0) { span *= -1; }//改变颜色
+            r += span;
 
             //渲染imgui相关
             ImGui_ImplOpenGL3_NewFrame();
@@ -153,16 +164,9 @@ int main(int argc, char* argv[])
             //创建窗口，增加一些控件
             {
                 ImGui::Begin("Hello, world!");//创建带标题的主窗口
-
-                ImGui::SliderFloat("x", &x, 0.0f, (float)display_w);//拖动条
-                ImGui::SliderFloat("y", &y, 0.0f, (float)display_h);//拖动条
-                ImGui::ColorEdit3("clear color", (float*)&clear_color);//颜色选择器
+                ImGui::SliderFloat("x", &translation.x, 0.0f, (float)display_w);
+                ImGui::SliderFloat("y", &translation.y, 0.0f, (float)display_h);
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);//显示帧率
-                //static int counter = 0;
-                //if (ImGui::Button("Button")) { counter++; }
-                //ImGui::SameLine();//把前后两句的控件放在同一行
-                //ImGui::Text("counter = %d", counter);
-
                 ImGui::End();
             }
             //渲染imgui窗口
@@ -170,23 +174,7 @@ int main(int argc, char* argv[])
             //0.5*width*(x+1.0);0.5*height*(y+1.0)
             //如果点坐标用[-1,1]表示则需要用glViewport转换到窗口比例（相对坐标），否则使用绝对坐标（窗口变化，物体大小不变）
             glViewport(0, 0, display_w, display_h);
-            glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-            renderer.Clear();//glClear(GL_COLOR_BUFFER_BIT);
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//真正的渲染函数
-
-            //自定义的渲染内容
-            glm::mat4 proj = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);//正交矩阵
-            glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));//视图矩阵，把相机向右移动100，相当于物体向左移动100
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0));//模型矩阵
-            glm::mat4 mvp = proj * view * model;
-            shader.Bind();//绑定shader
-            shader.SetUniform4f("u_color", r, 0.0f, 0.0f, 1.0f);//在shader中绘制红色呼吸灯效果，目前不用
-            shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
-            //绘制命令
-            renderer.Draw(vao, ibo, shader);
-            GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));//使用顶点索引绘制
-            if (r < 0.0 || r > 1.0) { span *= -1; }//改变颜色
-            r += span;
 
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
         }
@@ -202,6 +190,13 @@ int main(int argc, char* argv[])
     return 0;
 }
 
+//float positions[] = {
+//    0.5f, 0.5f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
+//    -0.5f, -0.5f, 0.0f, 0.0f,
+//    0.5f, -0.5f, 1.0f, 0.0f,
+//    -0.5f, 0.5f, 0.0f, 1.0f
+//};
+
 //重新绑定VAO和IBO，因为VAO包含VBO，并且通过IBO给出索引
 //vao.Bind();//已包含在renderer.Draw
 //ibo.Bind();
@@ -215,3 +210,27 @@ glVertex2d(0.f, 0.5f);
 glVertex2d(0.5f, -0.5f);
 glEnd();*/
 
+//创建一个按钮和字符串，并排显示
+//static int counter = 0;
+//if (ImGui::Button("Button")) { counter++; }
+//ImGui::SameLine();//把前后两句的控件放在同一行
+//ImGui::Text("counter = %d", counter);
+
+//渲染imgui相关
+//ImGui_ImplOpenGL3_NewFrame();
+//ImGui_ImplGlfw_NewFrame();
+//ImGui::NewFrame();
+//创建窗口，增加一些控件
+//{
+//    ImGui::Begin("Hello, world!");//创建带标题的主窗口
+//    ImGui::SliderFloat3("translation", &translation.x, 0.0f, (float)display_w);//拖动条
+//    ImGui::SliderFloat3("translation", &translation.y, 0.0f, (float)display_h);//拖动条
+//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+//    ImGui::ColorEdit3("clear color", (float*)&clear_color);//颜色选择器
+//    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);//显示帧率
+//    ImGui::End();
+//}
+//渲染imgui窗口
+//ImGui::Render();
+//glClear(GL_COLOR_BUFFER_BIT);
+//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//真正的渲染函数
