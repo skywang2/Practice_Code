@@ -78,10 +78,10 @@ int main(int argc, char* argv[])
         //    50.0f, 150.0f, 0.0f, 1.0f
         //};
         float positions[] = {
-            100.0f, 100.0f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
-            0, 0, 0.0f, 0.0f,
-            100.0f, 0, 1.0f, 0.0f,
-            0, 100.0f, 0.0f, 1.0f
+            50.0f, 50.0f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
+            -50.f, -50.f, 0.0f, 0.0f,
+            50.0f, -50.f, 1.0f, 0.0f,
+            -50.f, 50.0f, 0.0f, 1.0f
         };
 
         //顶点索引
@@ -91,10 +91,9 @@ int main(int argc, char* argv[])
             0, 1, 3
         };
 
-        GLCall(glEnable(GL_BLEND));
-        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
-        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE));//设置颜色混合方式
-        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ZERO));//设置颜色混合方式
+        //暂时注释掉，确保看清渲染对象的完整轮廓
+        //GLCall(glEnable(GL_BLEND));
+        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
 
         VertexArray vao;
         VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
@@ -106,19 +105,11 @@ int main(int argc, char* argv[])
 
         IndexBuffer ibo(indices, 6 * sizeof(unsigned int));
 
-        //glm::mat4 proj = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);//正交矩阵
-        //glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-50, 0, 0));//视图矩阵，把相机向右移动100，相当于物体向左移动100
-        //glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 200, 0));//模型矩阵
-        //glm::mat4 mvp = proj * view * model;
-        //glm::mat4 proj = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);//正交矩阵
-        //glm::mat4 mvp = proj;
-
         //顶点着色器vertex shader，主要是告诉OpenGL这个顶点在屏幕空间的位置
         //片段着色器/像素着色器，fragment shader/pixels shader
         Shader shader("res/shaders/allShaders.shader");
         shader.Bind();
         shader.SetUniform4f("u_color", 0.0f, 0.0f, 0.3f, 1.0f);//获取program中的统一变量（全局变量）uniform的地址，并赋值
-        //shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
 
         Texture texture("res/textures/texture01.png");
         int texSlot = 0;//纹理槽的下标
@@ -133,9 +124,10 @@ int main(int argc, char* argv[])
 
         Renderer renderer;
 
-        glm::vec3 translation(0, 0, 0);
-        float r = 0.0f, g = 0.1f, b = 0.1f;
-        float span = 0.01f;
+        glm::vec3 translationA(50, 50, 0);
+        glm::vec3 translationB(150, 150, 0);
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));//视图矩阵，把相机向右移动100，相当于物体向左移动100
+
         int display_w, display_h;
         while (!glfwWindowShouldClose(window))
         {
@@ -145,17 +137,24 @@ int main(int argc, char* argv[])
 
             renderer.Clear();
             //自定义的渲染内容
-            glm::mat4 proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, -1.0f, 1.0f);//正交矩阵
-            glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));//视图矩阵，把相机向右移动100，相当于物体向左移动100
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(translation.x, translation.y, 0));//模型矩阵
-            glm::mat4 mvp = proj * view * model;
-            shader.Bind();//绑定shader
-            shader.SetUniform4f("u_color", r, 0.0f, 0.0f, 1.0f);//在shader中绘制红色呼吸灯效果，目前不用
-            shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
-            //绘制命令
-            renderer.Draw(vao, ibo, shader);
-            if (r < 0.0 || r > 1.0) { span *= -1; }//改变颜色
-            r += span;
+            {   //第一个图形
+                glm::mat4 proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, -1.0f, 1.0f);//正交矩阵
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);//模型矩阵
+                glm::mat4 mvp = proj * view * model;
+                shader.Bind();//绑定shader
+                shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
+
+                renderer.Draw(vao, ibo, shader);//绘制命令
+            }
+            {   //第二个图形，使用同一个图形和不同的MVP矩阵
+                glm::mat4 proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, -1.0f, 1.0f);
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
+                glm::mat4 mvp = proj * view * model;
+                shader.Bind();//绑定shader
+                shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
+
+                renderer.Draw(vao, ibo, shader);//绘制命令
+            }
 
             //渲染imgui相关
             ImGui_ImplOpenGL3_NewFrame();
@@ -163,9 +162,11 @@ int main(int argc, char* argv[])
             ImGui::NewFrame();
             //创建窗口，增加一些控件
             {
-                ImGui::Begin("Hello, world!");//创建带标题的主窗口
-                ImGui::SliderFloat("x", &translation.x, 0.0f, (float)display_w);
-                ImGui::SliderFloat("y", &translation.y, 0.0f, (float)display_h);
+                ImGui::Begin("Control");//创建带标题的主窗口
+                ImGui::SliderFloat("1_x", &translationA.x, 0.0f, (float)display_w);//第一个图形
+                ImGui::SliderFloat("1_y", &translationA.y, 0.0f, (float)display_h);
+                ImGui::SliderFloat("2_x", &translationB.x, 0.0f, (float)display_w);//第二个图形
+                ImGui::SliderFloat("2_y", &translationB.y, 0.0f, (float)display_h);
                 ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);//显示帧率
                 ImGui::End();
             }
@@ -234,3 +235,19 @@ glEnd();*/
 //ImGui::Render();
 //glClear(GL_COLOR_BUFFER_BIT);
 //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//真正的渲染函数
+
+//MVP矩阵
+//glm::mat4 proj = glm::ortho(0.0f, 1280.0f, 0.0f, 720.0f, -1.0f, 1.0f);//正交矩阵
+//glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-50, 0, 0));//视图矩阵，把相机向右移动100，相当于物体向左移动100
+//glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 200, 0));//模型矩阵
+//glm::mat4 mvp = proj * view * model;
+//glm::mat4 proj = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);//正交矩阵
+//glm::mat4 mvp = proj;
+
+//呼吸灯效果
+//float r = 0.0f, g = 0.1f, b = 0.1f;
+//float span = 0.01f;
+//shader.SetUniform4f("u_color", r, 0.0f, 0.0f, 1.0f);//在shader中绘制红色呼吸灯效果，目前不用
+//if (r < 0.0 || r > 1.0) { span *= -1; }//改变颜色
+//r += span;
+
