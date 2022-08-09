@@ -34,6 +34,12 @@
     <Filter Include="源文件\imgui">
       <UniqueIdentifier>{4b5b25f8-17e8-4232-a3d3-5c4f504011c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\tests">
+      <UniqueIdentifier>{f2f1d337-4498-49f5-8fe0-6160dcb7a005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\tests">
+      <UniqueIdentifier>{f10bd7fa-9ebc-437c-9ac9-54f5611a77c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
@@ -85,6 +91,9 @@
       <Filter>源文件\imgui</Filter>
     </ClCompile>
     <ClCompile Include="src\Texture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tests\TestClearColor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -150,6 +159,12 @@
     </ClInclude>
     <ClInclude Include="src\Texture.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tests\Test.h">
+      <Filter>头文件\tests</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tests\TestClearColor.h">
+      <Filter>头文件\tests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

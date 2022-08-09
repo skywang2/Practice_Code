@@ -19,6 +19,8 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "tests/TestClearColor.h"
+
 using std::cout;
 using std::endl;
 
@@ -128,6 +130,7 @@ int main(int argc, char* argv[])
         glm::vec3 translationB(150, 150, 0);
         glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));//视图矩阵，把相机向右移动100，相当于物体向左移动100
 
+        //test::TestClearColor testClearColor;
         int display_w, display_h;
         while (!glfwWindowShouldClose(window))
         {
@@ -176,6 +179,10 @@ int main(int argc, char* argv[])
             //如果点坐标用[-1,1]表示则需要用glViewport转换到窗口比例（相对坐标），否则使用绝对坐标（窗口变化，物体大小不变）
             glViewport(0, 0, display_w, display_h);
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//真正的渲染函数
+
+            test.OnUpdate(0.f);
+            test.OnRender();
+            test.OnImGuiRender();
 
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
         }
