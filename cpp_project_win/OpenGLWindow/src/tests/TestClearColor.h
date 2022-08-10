@@ -1,7 +1,7 @@
 #pragma once
 #include "Test.h"
 
-namespace test {
+namespace tests {
 
 	class TestClearColor : public Test
 	{

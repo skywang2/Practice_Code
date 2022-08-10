@@ -3,7 +3,7 @@
 #include "../include/imgui/imgui.h"
 #include "../Renderer.h"
 
-namespace test {
+namespace tests {
 	TestClearColor::TestClearColor()
 		:m_color{0.f, 0.f, 0.f, 0.f}
 	{

@@ -94,6 +94,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\tests\TestClearColor.cpp">
+      <Filter>源文件\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tests\Test.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
