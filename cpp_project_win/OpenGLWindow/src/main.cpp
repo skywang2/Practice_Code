@@ -21,10 +21,12 @@
 
 #include "tests/Test.h"
 #include "tests/TestClearColor.h"
+#include "tests/TestTexture2D.h"
 
 using std::cout;
 using std::endl;
 
+//创建菜单，添加测试项（使用过程式）
 inline void MyMenu(int& page, tests::Test* test)
 {
     //创建菜单
@@ -41,7 +43,7 @@ inline void MyMenu(int& page, tests::Test* test)
         }
         break;
     case 1:
-        if (ImGui::Button("<-")){ page = 0; }
+        if (ImGui::Button("<-")) { page = 0; }
         test->OnImGuiRender();//渲染imgui控件
         break;
     case 2:
@@ -108,7 +110,7 @@ int main(int argc, char* argv[])
         tests::Test* current = nullptr;
         tests::TestMenu* menu = new tests::TestMenu();//初始为菜单页面
         menu->RegisterTest<tests::TestClearColor>("Clear Color");
-        menu->RegisterTest<tests::TestClearColor>("Clear Color2");
+        menu->RegisterTest<tests::TestTexture2D>("Texture2D");
 
         int display_w, display_h;
         int page = 0;//0-菜单；1-窗口1；2-窗口2；。。。
@@ -118,6 +120,7 @@ int main(int argc, char* argv[])
             ProcessInput(window);//增加额外的按键（事件）处理，设置状态
             glfwGetFramebufferSize(window, &display_w, &display_h);
 
+            glClearColor(0.f, 0.f, 0.f, 1.f);
             renderer.Clear();
 
             //渲染imgui相关
@@ -130,23 +133,21 @@ int main(int argc, char* argv[])
             if (current)
             {
                 current->OnUpdate(0.f);//做一些渲染准备工作
+                current->SetRenderer(&renderer);
                 current->OnRender();//渲染图形
                 ImGui::Begin("Test");
                 do
                 {
                     if (current != menu && ImGui::Button("<-"))//测试项中按下返回键
                     {
-                        current = menu;
+                        //current = menu;
                         menu->SetCurrentTest(menu);
                         break;//跳过下一句，避免同时渲染测试项和菜单按钮
                     }
-                    current->OnImGuiRender();
+                    current->OnImGuiRender();//修改TestMenu内部的render指针
                 } while (0);
                 ImGui::End();
             }
-
-            //创建菜单，添加测试项（使用过程式）
-            //MyMenu(page, &clearColor);
 
             //渲染imgui窗口
             ImGui::Render();            
@@ -154,8 +155,13 @@ int main(int argc, char* argv[])
             glViewport(0, 0, display_w, display_h);//0.5*width*(x+1.0);0.5*height*(y+1.0)
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//真正的渲染函数
 
-
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
+        }
+        
+        if (menu)
+        {
+            delete menu;
+            menu = nullptr;
         }
     }
 

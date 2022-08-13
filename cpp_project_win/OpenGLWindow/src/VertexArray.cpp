@@ -41,8 +41,8 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 		////关联绑定的VAO与VBO，并定义buffer中的属性布局
 		//i：索引为i的顶点属性，与shader中location一致；
 		//count：当前属性有几个数（固定填1、2、3、4）；
-		//offset：当前属性的字节数
-		GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride(), reinterpret_cast<const void*>(offset)));
+		//offset：当前属性的偏移地址（字节）
+		GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride()/*一个点所有属性总长度*/, reinterpret_cast<const void*>(offset)/*当前属性偏移地址*/));
 		offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
 	}
 } 
