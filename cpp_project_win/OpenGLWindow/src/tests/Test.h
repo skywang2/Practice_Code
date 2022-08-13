@@ -16,7 +16,6 @@ namespace tests {
 		virtual void OnUpdate(float deltaTime) {}//更新状态、变量
 		virtual void OnRender() {}//要渲染的图形
 		virtual void OnImGuiRender() {}//要渲染的imgui控件
-		virtual void SetRenderer(void* render) {}
 	};
 
 	class TestMenu : public Test

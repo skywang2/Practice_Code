@@ -133,7 +133,6 @@ int main(int argc, char* argv[])
             if (current)
             {
                 current->OnUpdate(0.f);//做一些渲染准备工作
-                current->SetRenderer(&renderer);
                 current->OnRender();//渲染图形
                 ImGui::Begin("Test");
                 do

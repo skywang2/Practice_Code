@@ -11,6 +11,8 @@ namespace tests {
 			50.0f, -50.f, 1.0f, 0.0f,
 			-50.f, 50.0f, 0.0f, 1.0f}
 		, indices	{0, 1, 2, 0, 1, 3}
+		, display_w(1280)
+		, display_h(720)
 		, translation(50, 50, 0)
 		, view(glm::mat4(1.0f))
 		, vao()
@@ -19,7 +21,7 @@ namespace tests {
 		, ibo(indices, 6 * sizeof(unsigned int))
 		, shader("res/shaders/allShaders.shader")
 		, texture("res/textures/texture01.png")
-		, m_renderer(nullptr)
+		, m_renderer()
 	{
 		layoutPosition.Push<float>(2);//顶点坐标
 		layoutPosition.Push<float>(2);//纹理坐标
@@ -32,10 +34,6 @@ namespace tests {
 		texture.Bind(texSlot);
 		shader.SetUniform1i("u_texture", texSlot);
 
-		vao.Unbind();
-		vbo.Unbind();
-		ibo.Unbind();
-		shader.Unbind();
 	}
 
 	TestTexture2D::~TestTexture2D()
@@ -48,14 +46,11 @@ namespace tests {
 
 	void TestTexture2D::OnUpdate(float deltaTime)
 	{
-		shader.Bind();
-		glm::mat4 proj = glm::ortho(0.0f, (float)1280, 0.0f, (float)720, -1.0f, 1.0f);//正交矩阵
+		proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, -1.0f, 1.0f);//正交矩阵
 		view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);//模型矩阵
-		glm::mat4 mvp = proj * view * model;
+		model = glm::translate(glm::mat4(1.0f), translation);//模型矩阵
+		mvp = proj * view * model;
 		shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
-		shader.Unbind();
-
 	}
 
 	void TestTexture2D::OnRender()
@@ -63,17 +58,19 @@ namespace tests {
 		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-		m_renderer->Draw(vao, ibo, shader);//绘制命令
+		m_renderer.Draw(vao, ibo, shader);//绘制命令
 	}
 
 	void TestTexture2D::OnImGuiRender()
 	{
-		ImGui::Button("test");
+		ImGui::SliderFloat("test2_x", &translation.x, 0.0f, (float)display_w);
+		ImGui::SliderFloat("test2_y", &translation.y, 0.0f, (float)display_h);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);//显示帧率
 	}
 
-	void TestTexture2D::SetRenderer(void* renderer)
-	{
-		m_renderer = reinterpret_cast<Renderer*>(renderer);
-	}
+	//void TestTexture2D::SetRenderer(void* renderer)
+	//{
+	//	m_renderer = reinterpret_cast<Renderer*>(renderer);
+	//}
 
 }
