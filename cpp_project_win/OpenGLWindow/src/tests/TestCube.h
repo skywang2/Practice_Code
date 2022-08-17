@@ -1,5 +1,6 @@
 #pragma once
 #include "Test.h"
+#include <memory>
 //#include "GL/glew.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -25,22 +26,22 @@ namespace tests {
 		void OnImGuiRender() override;
 
 	private:
-		float positions[4*4];
-		unsigned int indices[2*3];
+		float positions[8 * 3];
+		unsigned int indices[12 * 3];
 		int display_w, display_h;
 
-		glm::vec3 translation;
 		glm::mat4 proj;
 		glm::mat4 view;
-		glm::mat4 model;
+		glm::vec3 translation;//平移缩放
+		glm::mat4 model;//平移缩放
 		glm::mat4 mvp;
 
-		VertexArray vao;
-		VertexBuffer vbo;
+		std::unique_ptr<VertexArray> vao;//vertex buffer内存布局
+		std::unique_ptr<VertexBuffer> vbo;
+		std::unique_ptr<IndexBuffer> ibo;
+		std::unique_ptr<Shader> shader;
+		std::unique_ptr<Texture> texture;
 		VertexBufferLayout layoutPosition;
-		IndexBuffer ibo;
-		Shader shader;
-		Texture texture;
 		Renderer m_renderer;
 	};
 

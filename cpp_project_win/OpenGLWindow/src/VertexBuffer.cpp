@@ -10,9 +10,21 @@ VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 	GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW));//初始化buffer，单位字节
 }
 
+VertexBuffer::VertexBuffer(const VertexBuffer& _vb)
+{
+	m_id = _vb.m_id;
+}
+
 VertexBuffer::~VertexBuffer()
 {
 	GLCall(glDeleteBuffers(1, &m_id));
+}
+
+VertexBuffer& VertexBuffer::operator=(const VertexBuffer& _vb)
+{
+	m_id = _vb.m_id;
+
+	return *this;
 }
 
 void VertexBuffer::Bind() const

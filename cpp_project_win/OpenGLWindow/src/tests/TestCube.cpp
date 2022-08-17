@@ -1,55 +1,65 @@
 #include "TestCube.h"
 #include "../include/imgui/imgui.h"
 
+#include "../LoadModel.h"
 
 namespace tests {
 	TestCube::TestCube()
-		: positions{
-			50.0f, 50.0f, 1.0f, 1.0f,//前两个是2D点坐标，后两个是对应的纹理坐标
-			-50.f, -50.f, 0.0f, 0.0f,
-			50.0f, -50.f, 1.0f, 0.0f,
-			-50.f, 50.0f, 0.0f, 1.0f}
-		, indices	{0, 1, 2, 0, 1, 3}
+		: positions{}
+		, indices{}
 		, display_w(1280)
 		, display_h(720)
-		, translation(50, 50, 0)
-		, view(glm::mat4(1.0f))
+		, proj()
+		, view()
+		, translation()
+		, model()
+		, mvp()
 		, vao()
-		, vbo(positions, 4 * 4 * sizeof(float))
+		, vbo()
 		, layoutPosition()
-		, ibo(indices, 6 * sizeof(unsigned int))
-		, shader("res/shaders/allShaders.shader")
-		, texture("res/textures/texture01.png")
+		, ibo()
+		, shader()
+		, texture()
 		, m_renderer()
 	{
-		layoutPosition.Push<float>(2);//顶点坐标
-		layoutPosition.Push<float>(2);//纹理坐标
-		vao.AddBuffer(vbo, layoutPosition);
+		//typedef decltype(*positions) Type;
+		LoadVertexAttri<float>("res/model/VertexBuffer_cube01.txt", positions, 8 * 3);
+		LoadVertexAttri<unsigned int>("res/model/IndexBuffer_cube01.txt", indices, 12 * 3);
 
-		shader.Bind();
-		shader.SetUniform4f("u_color", 0.0f, 0.0f, 0.3f, 1.0f);//此处未使用该值，可忽略
+		vao.reset(new VertexArray);
+		vbo.reset(new VertexBuffer(positions, 8 * 3 * sizeof(float)));
+		ibo.reset(new IndexBuffer(indices, 12 * 3));
+		//shader.reset(new Shader(""));
+		//texture.reset();
 
-		int texSlot = 0;//纹理槽的下标
-		texture.Bind(texSlot);
-		shader.SetUniform1i("u_texture", texSlot);
+		//layoutPosition.Push<float>(2);//顶点坐标
+		//layoutPosition.Push<float>(2);//纹理坐标
+		//vao.AddBuffer(vbo, layoutPosition);
+
+		//shader.Bind();
+		//shader.SetUniform4f("u_color", 0.0f, 0.0f, 0.3f, 1.0f);//此处未使用该值，可忽略
+
+		//int texSlot = 0;//纹理槽的下标
+		//texture.Bind(texSlot);
+		//shader.SetUniform1i("u_texture", texSlot);
 
 	}
 
 	TestCube::~TestCube()
 	{
-		vao.Unbind();
-		vbo.Unbind();
-		ibo.Unbind();
-		shader.Unbind();
+		//vao.Unbind();
+		//vbo.Unbind();
+		//ibo.Unbind();
+		//shader.Unbind();
 	}
 
 	void TestCube::OnUpdate(float deltaTime)
 	{
-		proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, -1.0f, 1.0f);//正交矩阵
-		view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-		model = glm::translate(glm::mat4(1.0f), translation);//模型矩阵
-		mvp = proj * view * model;
-		shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
+		//proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, -1.0f, 1.0f);//正交矩阵
+		//view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+		//model = glm::translate(glm::mat4(1.0f), translation);//模型矩阵
+		//mvp = proj * view * model;
+		//shader.SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
 	}
 
 	void TestCube::OnRender()
@@ -57,7 +67,7 @@ namespace tests {
 		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-		m_renderer.Draw(vao, ibo, shader);//绘制命令
+		//m_renderer.Draw(vao, ibo, shader);//绘制命令
 	}
 
 	void TestCube::OnImGuiRender()

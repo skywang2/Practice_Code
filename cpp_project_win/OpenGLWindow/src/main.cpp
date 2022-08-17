@@ -22,6 +22,7 @@
 #include "tests/Test.h"
 #include "tests/TestClearColor.h"
 #include "tests/TestTexture2D.h"
+#include "tests/TestCube.h"
 
 using std::cout;
 using std::endl;
@@ -111,6 +112,7 @@ int main(int argc, char* argv[])
         tests::TestMenu* menu = new tests::TestMenu();//初始为菜单页面
         menu->RegisterTest<tests::TestClearColor>("Clear Color");
         menu->RegisterTest<tests::TestTexture2D>("Texture2D");
+        menu->RegisterTest<tests::TestCube>("TestCube");
 
         int display_w, display_h;
         int page = 0;//0-菜单；1-窗口1；2-窗口2；。。。
