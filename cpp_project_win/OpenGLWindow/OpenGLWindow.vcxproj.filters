@@ -116,6 +116,9 @@
     <None Include="res\shaders\allShaders.shader">
       <Filter>源文件\shader</Filter>
     </None>
+    <None Include="res\shaders\shader_cube01.shader">
+      <Filter>源文件\shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
