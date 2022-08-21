@@ -28,15 +28,10 @@ namespace tests {
 		//, m_renderer()
 	{
 		//Α’·½Με
-		//LoadVertexAttri<GLfloat>("res/model/cube01_VertexBuffer.txt", positions, 8 * 3);
-		//LoadVertexAttri<GLuint>("res/model/cube01_IndexBuffer.txt", indices, 12 * 3);
-		//125
-		LoadVertexAttri<GLfloat>("res/model/cube01_sanjiao_VertexBuffer.txt", positions, 8 * 3);
-		unsigned int idxLineNum = LoadVertexAttri<GLuint>("res/model/cube01_sanjiao_IndexBuffer.txt", indices, 12 * 3);
+		LoadVertexAttri<GLfloat>("res/model/cube01_VertexBuffer.txt", positions, 8 * 3);
+		unsigned int idxLineNum = LoadVertexAttri<GLuint>("res/model/cube01_IndexBuffer.txt", indices, 12 * 3);
 
 		vao.reset(new VertexArray);
-		//vbo.reset(new VertexBuffer(positions, 8 * 3 * sizeof(float)));
-		//ibo.reset(new IndexBuffer(indices, 12 * 3));
 		vbo.reset(new VertexBuffer(positions, 8 * 3 * sizeof(float)));
 		ibo.reset(new IndexBuffer(indices, idxLineNum * 3));
 		shader.reset(new Shader("res/shaders/shader_cube01_vertex.glsl", "res/shaders/shader_cube01_fragment.glsl"));
