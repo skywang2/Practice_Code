@@ -7,6 +7,6 @@ in vec4 v_color;
 void main()
 {
 	//vec4 texColor = texture(u_texture, v_texCoord);	//²Û£¬ÎÆÀí×ø±ê
-	color = vec4(v_color.x, v_color.y, v_color.z, 1.0);
+	color = vec4(abs(v_color.x)/50, abs(v_color.y)/50, abs(v_color.z)/50, 1.0);
 //	color = vec4(1.0);
 }

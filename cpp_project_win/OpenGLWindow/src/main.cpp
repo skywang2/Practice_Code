@@ -27,6 +27,8 @@
 using std::cout;
 using std::endl;
 
+extern GLFWwindow* g_window = nullptr;
+
 //创建菜单，添加测试项（使用过程式）
 inline void MyMenu(int& page, tests::Test* test)
 {
@@ -75,6 +77,7 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow*  window = glfwCreateWindow(1280/*640*/, 720/*480*/, "Hello World", NULL, NULL);
+    g_window = window;
     if (!window)
     {
         glfwTerminate();
@@ -104,8 +107,9 @@ int main(int argc, char* argv[])
         GLCall(glEnable(GL_BLEND));
         GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
 
-        //创建渲染器
-        Renderer renderer;
+        //启用z-buffer深度缓冲
+        GLCall(glEnable(GL_DEPTH_TEST));
+        GLCall(glDepthFunc(GL_LESS));
         
         //创建菜单，添加测试项
         tests::Test* current = nullptr;
@@ -114,6 +118,8 @@ int main(int argc, char* argv[])
         menu->RegisterTest<tests::TestTexture2D>("Texture2D");
         menu->RegisterTest<tests::TestCube>("TestCube");
 
+        //创建渲染器
+        Renderer renderer;
         int display_w, display_h;
         int page = 0;//0-菜单；1-窗口1；2-窗口2；。。。
         while (!glfwWindowShouldClose(window))
@@ -153,7 +159,7 @@ int main(int argc, char* argv[])
             //渲染imgui窗口
             ImGui::Render();            
             //如果点坐标用[-1,1]表示则需要用glViewport转换到窗口比例（相对坐标），否则使用绝对坐标（窗口变化，物体大小不变）
-            glViewport(0, 0, display_w, display_h);//0.5*width*(x+1.0);0.5*height*(y+1.0)
+            //glViewport(0, 0, display_w, display_h);//0.5*width*(x+1.0);0.5*height*(y+1.0)
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//真正的渲染函数
 
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区

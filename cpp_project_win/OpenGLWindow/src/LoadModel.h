@@ -9,14 +9,15 @@ param[in]	filepath，文件路径
 param[out]	arr，数组首地址
 param[in]	数组长度*/
 template<typename T>
-bool LoadVertexAttri(const std::string& filepath, T* arr, unsigned int count)
+unsigned int LoadVertexAttri(const std::string& filepath, T* arr, unsigned int count)
 {
 	if (filepath.empty() || !arr)
 	{
-		return false;
+		return 0;
 	}
 	memset(arr, 0, sizeof(T) * count);
 
+	unsigned int lineNum = 0;
 	std::string line;
 	std::fstream file(filepath, std::fstream::in);
 	if (file.is_open())
@@ -32,10 +33,11 @@ bool LoadVertexAttri(const std::string& filepath, T* arr, unsigned int count)
 				arr++;
 				count--;
 			}
+			lineNum++;
 		}
 		file.close();
-		return true;
+		return lineNum;
 	}
 
-	return false;
+	return lineNum;
 }
