@@ -23,7 +23,8 @@ private:
     std::string m_filepath;
 
 public:
-	Shader(const std::string& filepath);
+	Shader(const std::string& filepath);//all in one
+    Shader(const std::string& vertex, const std::string& fragment);
 	~Shader();
 
     void Bind() const;

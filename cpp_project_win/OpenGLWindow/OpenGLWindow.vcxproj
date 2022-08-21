@@ -177,7 +177,8 @@
   <ItemGroup>
     <None Include="res\shaders\allShaders.shader" />
     <None Include="res\shaders\fragmentShader.glsl" />
-    <None Include="res\shaders\shader_cube01.shader" />
+    <None Include="res\shaders\shader_cube01_fragment.glsl" />
+    <None Include="res\shaders\shader_cube01_vertex.glsl" />
     <None Include="res\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

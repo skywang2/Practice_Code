@@ -20,7 +20,6 @@ VertexArray::~VertexArray()
 void VertexArray::Bind() const
 {
 	GLCall(glBindVertexArray(m_id));
-
 }
 
 void VertexArray::Unbind() const
@@ -46,7 +45,3 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 		offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
 	}
 } 
-
-//void VertexArray::AddLayout(const BufferLayout&)
-//{
-//}

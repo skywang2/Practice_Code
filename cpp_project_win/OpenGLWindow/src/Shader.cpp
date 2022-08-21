@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <vector>
 #include "GL/glew.h"
 #include "Renderer.h"
 
@@ -15,6 +16,25 @@ Shader::Shader(const std::string& filepath)
     //std::cout << source.vertexShader << std::endl;
     //std::cout << "=====fragmen=====" << std::endl;
     //std::cout << source.fragmentShader << std::endl;
+}
+
+Shader::Shader(const std::string& vertex, const std::string& fragment)
+{
+    std::vector<std::string> paths;
+    paths.push_back(vertex);
+    paths.push_back(fragment);
+
+    std::stringstream ss[2];
+    for (int i = 0; i < paths.size(); i++)
+    {
+        std::fstream file(paths[i]);
+        std::string line;
+        while (std::getline(file, line))
+        {
+            ss[i] << line << '\n';
+        }        
+    }
+    m_programID = CreateShader(ss[0].str(), ss[1].str());
 }
 
 Shader::~Shader()
@@ -111,6 +131,7 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
         int length = 0;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
         char* message = (char*)alloca(length * sizeof(char));//alloca可以在栈上分配内存
+        memset(message, 0, length * sizeof(char));
         glGetShaderInfoLog(id, length, &length, message);
         std::cout << message << std::endl;
         glDeleteShader(id);
@@ -137,6 +158,7 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
         int length = 0;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
         char* message = (char*)alloca(length * sizeof(char));//alloca可以在栈上分配内存
+        memset(message, 0, length * sizeof(char));
         glGetProgramInfoLog(program, length, &length, message);
         std::cout << message << std::endl;
         glDeleteProgram(program);
