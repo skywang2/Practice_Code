@@ -108,7 +108,7 @@ int main(int argc, char* argv[])
         GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
 
         //启用z-buffer深度缓冲
-        GLCall(glEnable(GL_DEPTH_TEST));
+        //GLCall(glEnable(GL_DEPTH_TEST));
         GLCall(glDepthFunc(GL_LESS));
         
         //创建菜单，添加测试项
