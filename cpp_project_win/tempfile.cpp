@@ -463,12 +463,64 @@ public:
 //在通知类中加入实现事件委托的成员对象，在外部将观察者的通知处理函数注册到事件委托对象中，因此观察者中接受通知的处理函数可以不同名
 
 //抽象工厂模式
+//使用两层抽象，即工厂类是抽象类，工厂类中生成并返回的对象也以抽象类形式表示，一个工厂可以生成多种抽象类
+class IDepartment//抽象类，创建一张“部门”相关的数据表
+{
+public:
+	void Insert(string query);	
+};
+class SqlserverDepartment : public IDepartment//Sqlserver数据库
+{
+public：
+	void Insert(string query);
+};
+class AccessDepartment : public IDepartment//access数据库
+{
+public：
+	void Insert(string query);
+};
+class IPeople//抽象类，创建一张“员工”相关的数据表
+{
+public:
+	void Insert(string query);	
+};
+class SqlserverPeople : public IPeople//Sqlserver数据库
+{
+public：
+	void Insert(string query);
+};
+class AccessPeople : public IPeople//access数据库
+{
+public：
+	void Insert(string query);
+};
+class IFactory//抽象工厂类	
+{
+public:
+	IDepartment CreateDepartment();
+	IPeople CreatePeople();
+};
+class SqlserverFactory : public IFactory
+{
+public:
+	IDepartment CreateDepartment() { return SqlserverDepartment() }
+	IPeople CreatePeople() { return SqlserverPeople() }
+};
+class AccessFactory : public IFactory
+{
+public:
+	IDepartment CreateDepartment() { return AccessDepartment() }
+	IPeople CreatePeople() { return AccessPeople() }
+};
 
-
-
-
-
-
+{
+	IFactory* factory = new SqlserverFactory();//使用抽象工厂类指针指向具体工厂类
+	IDepartment* id = factory->CreateDepartment();
+	IPeople* ip = factory->();
+	
+	id->Insert("xxxxxx");
+	ip->Insert("xxxxxx");
+}
 
 
 
