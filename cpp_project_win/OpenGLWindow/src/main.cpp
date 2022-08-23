@@ -104,12 +104,12 @@ int main(int argc, char* argv[])
 
     {
         //暂时注释掉，确保看清渲染对象的完整轮廓
-        GLCall(glEnable(GL_BLEND));
-        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
+        //GLCall(glEnable(GL_BLEND));
+        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
 
         //启用z-buffer深度缓冲
-        //GLCall(glEnable(GL_DEPTH_TEST));
-        GLCall(glDepthFunc(GL_LESS));
+        GLCall(glEnable(GL_DEPTH_TEST));
+        GLCall(glDepthFunc(GL_ALWAYS));
         
         //创建菜单，添加测试项
         tests::Test* current = nullptr;
@@ -128,8 +128,8 @@ int main(int argc, char* argv[])
             ProcessInput(window);//增加额外的按键（事件）处理，设置状态
             glfwGetFramebufferSize(window, &display_w, &display_h);
 
-            glClearColor(0.f, 0.f, 0.f, 1.f);
-            renderer.Clear();
+            //glClearColor(0.f, 0.f, 0.f, 1.f);
+            //renderer.Clear();
 
             //渲染imgui相关
             ImGui_ImplOpenGL3_NewFrame();

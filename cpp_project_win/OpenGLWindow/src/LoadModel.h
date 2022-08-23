@@ -24,6 +24,11 @@ unsigned int LoadVertexAttri(const std::string& filepath, T* arr, unsigned int c
 	{
 		while (std::getline(file, line))
 		{
+			if (line.find("//") != std::string::npos)
+			{
+				continue;
+			}
+
 			std::string one;
 			std::stringstream ss(line);
 			while (std::getline(ss, one, ','))

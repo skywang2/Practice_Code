@@ -4,6 +4,7 @@
 //#include "GL/glew.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
+#include "../include/imgui/imgui.h"
 
 #include "../Renderer.h"
 #include "../VertexBuffer.h"
@@ -45,6 +46,8 @@ namespace tests {
 		//std::unique_ptr<Texture> texture;
 		VertexBufferLayout layoutPosition;
 		Renderer m_renderer;
+
+		ImVec4 m_clear_color;
 	};
 
 }

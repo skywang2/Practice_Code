@@ -34,6 +34,9 @@
     <Filter Include="源文件\tests">
       <UniqueIdentifier>{f10bd7fa-9ebc-437c-9ac9-54f5611a77c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\shader\cube">
+      <UniqueIdentifier>{0ca45797-44c8-4c1c-ba83-445bbbfabf30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
@@ -116,11 +119,11 @@
     <None Include="res\shaders\allShaders.shader">
       <Filter>源文件\shader</Filter>
     </None>
-    <None Include="res\shaders\shader_cube01_vertex.glsl">
-      <Filter>源文件\shader</Filter>
-    </None>
     <None Include="res\shaders\shader_cube01_fragment.glsl">
-      <Filter>源文件\shader</Filter>
+      <Filter>源文件\shader\cube</Filter>
+    </None>
+    <None Include="res\shaders\shader_cube01_vertex.glsl">
+      <Filter>源文件\shader\cube</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
