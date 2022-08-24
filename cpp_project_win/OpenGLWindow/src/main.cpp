@@ -103,13 +103,12 @@ int main(int argc, char* argv[])
     cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION) << endl;
 
     {
-        //暂时注释掉，确保看清渲染对象的完整轮廓
-        //GLCall(glEnable(GL_BLEND));
-        //GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
+        GLCall(glEnable(GL_BLEND));
+        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
 
         //启用z-buffer深度缓冲
         GLCall(glEnable(GL_DEPTH_TEST));
-        GLCall(glDepthFunc(GL_ALWAYS));
+        GLCall(glDepthFunc(GL_LESS));
         
         //创建菜单，添加测试项
         tests::Test* current = nullptr;

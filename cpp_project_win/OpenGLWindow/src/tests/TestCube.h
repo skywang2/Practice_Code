@@ -38,6 +38,7 @@ namespace tests {
 		glm::mat4 view;
 		glm::mat4 model;//模型变换
 		glm::mat4 mvp;
+		float zNear, zFar;
 
 		std::unique_ptr<VertexArray> vao;//vertex buffer内存布局
 		std::unique_ptr<VertexBuffer> vbo;

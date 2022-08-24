@@ -12,9 +12,9 @@ namespace tests {
 		, display_w(1280)
 		, display_h(720)
 		, model_trans(glm::vec3(0.0f))
-		, view_trans(glm::vec3(200.f, 200.f, 200.f))
-		, zCoord(glm::vec2(-50.0f, 50.0f))
-		//, proj()
+		, view_trans(glm::vec3(0.f, 0.f, 200.f))
+		, zCoord(glm::vec2(50.0f, -50.0f))
+		, proj(glm::mat4(1.0f))
 		//, view()
 		//, model()
 		//, mvp()
@@ -25,6 +25,7 @@ namespace tests {
 		, shader()
 		//, texture()
 		//, m_renderer()
+		, zNear(0.f), zFar(0.f)
 	{
 		//立方体
 		LoadVertexAttri<GLfloat>("res/model/cube01_VertexBuffer.txt", positions, 8 * 3);
@@ -61,7 +62,7 @@ namespace tests {
 		//}
 
 		//proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, zCoord.x, zCoord.y);//正交矩阵
-		proj = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, zCoord.x, zCoord.y);//透视投影
+		proj = glm::perspective(glm::radians(45.0f), (float)display_w / (float)display_h, zNear, zFar);//透视投影
 		//view = glm::translate(glm::mat4(1.0f), view_trans);
 		view = glm::lookAt(
 			view_trans, // Camera is at (4,3,3), in World Space
@@ -78,8 +79,8 @@ namespace tests {
 	void TestCube::OnRender()
 	{
 		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
-		glClearDepth(1.0f); 
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+		//glClearDepth(99999.f);
 
 		m_renderer.Draw(*vao, *ibo, *shader);
 		//glDrawArrays(GL_TRIANGLES, 0, 12 * 3);
@@ -96,6 +97,8 @@ namespace tests {
 		ImGui::SliderFloat("view_trans_x", &view_trans.x, -500.f, 500.f);
 		ImGui::SliderFloat("view_trans_y", &view_trans.y, -500.f, 500.f);
 		ImGui::SliderFloat("view_trans_z", &view_trans.z, -500.f, 500.f);
+		ImGui::SliderFloat("zNear", &zNear, -100.f, 100.f);
+		ImGui::SliderFloat("zFar", &zFar, -100.f, 100.f);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);//显示帧率
 		if (ImGui::Button("GL_NEVER")) { GLCall(glDepthFunc(GL_NEVER)); }ImGui::SameLine();
 		if (ImGui::Button("GL_ACCUM_BUFFER_BIT")) { GLCall(glDepthFunc(GL_ACCUM_BUFFER_BIT)); }
