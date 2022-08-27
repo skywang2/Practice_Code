@@ -108,6 +108,9 @@
     <ClCompile Include="src\LoadModel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\tests\TestCubeCoord1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fragmentShader.glsl">
@@ -125,6 +128,8 @@
     <None Include="res\shaders\shader_cube01_vertex.glsl">
       <Filter>源文件\shader\cube</Filter>
     </None>
+    <None Include="res\shaders\shader_cube02_fragment.glsl" />
+    <None Include="res\shaders\shader_cube02_vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
@@ -191,6 +196,9 @@
       <Filter>头文件\tests</Filter>
     </ClInclude>
     <ClInclude Include="src\LoadModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tests\TestCubeCoord1.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

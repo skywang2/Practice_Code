@@ -23,6 +23,7 @@
 #include "tests/TestClearColor.h"
 #include "tests/TestTexture2D.h"
 #include "tests/TestCube.h"
+#include "tests/TestCubeCoord1.h"
 
 using std::cout;
 using std::endl;
@@ -116,6 +117,7 @@ int main(int argc, char* argv[])
         menu->RegisterTest<tests::TestClearColor>("Clear Color");
         menu->RegisterTest<tests::TestTexture2D>("Texture2D");
         menu->RegisterTest<tests::TestCube>("TestCube");
+        menu->RegisterTest<tests::TestCubeCoord1>("TestCubeCoord1");
 
         //创建渲染器
         Renderer renderer;
@@ -127,8 +129,8 @@ int main(int argc, char* argv[])
             ProcessInput(window);//增加额外的按键（事件）处理，设置状态
             glfwGetFramebufferSize(window, &display_w, &display_h);
 
-            //glClearColor(0.f, 0.f, 0.f, 1.f);
-            //renderer.Clear();
+            glClearColor(0.f, 0.f, 0.f, 1.f);
+            renderer.Clear();
 
             //渲染imgui相关
             ImGui_ImplOpenGL3_NewFrame();
@@ -158,7 +160,7 @@ int main(int argc, char* argv[])
             //渲染imgui窗口
             ImGui::Render();            
             //如果点坐标用[-1,1]表示则需要用glViewport转换到窗口比例（相对坐标），否则使用绝对坐标（窗口变化，物体大小不变）
-            //glViewport(0, 0, display_w, display_h);//0.5*width*(x+1.0);0.5*height*(y+1.0)
+            glViewport(0, 0, display_w, display_h);//0.5*width*(x+1.0);0.5*height*(y+1.0)
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//真正的渲染函数
 
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区
