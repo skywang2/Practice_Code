@@ -26,7 +26,7 @@ namespace tests {
 		//, texture()
 		//, m_renderer()
 		, fov(45.f)
-		, zNear(0.f), zFar(0.f)
+		, zNear(1.f), zFar(100.f)
 	{
 		//Α’·½Με
 		LoadVertexAttri<GLfloat>("res/model/cube01_VertexBuffer.txt", positions, 8 * 3);

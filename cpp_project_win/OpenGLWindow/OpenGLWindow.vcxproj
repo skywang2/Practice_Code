@@ -149,7 +149,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="README.txt" />
-    <Text Include="res\model\cube01.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\LoadModel.cpp" />
@@ -210,6 +209,7 @@
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\TestCubeCoord1.png" />
     <Image Include="res\textures\texture01.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

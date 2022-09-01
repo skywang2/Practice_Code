@@ -13,17 +13,12 @@ namespace tests {
 		, display_h(720)
 		, model_trans(glm::vec3(0.0f))
 		, view_trans(glm::vec3(0.f, 0.f, 5.f))
-		, proj(glm::mat4(1.0f))
-		//, view()
-		//, model()
-		//, mvp()
 		, vao()
 		, vbo()
 		, layoutPosition()
 		, ibo()
 		, shader()
-		//, texture()
-		//, m_renderer()
+		, texture()
 		, fov(45.f)
 		, zNear(1.f), zFar(100.f)
 	{
@@ -35,15 +30,15 @@ namespace tests {
 		vbo.reset(new VertexBuffer(positions, 8 * 3 * sizeof(float)));
 		ibo.reset(new IndexBuffer(indices, idxLineNum * 3));
 		shader.reset(new Shader("res/shaders/shader_cube02_vertex.glsl", "res/shaders/shader_cube02_fragment.glsl"));
-		//texture.reset();
+		texture.reset(new Texture("res/textures/TestCubeCoord1.png"));
 
 		layoutPosition.Push<float>(3);//顶点坐标
-		//layoutPosition.Push<float>(2);//纹理坐标
+		layoutPosition.Push<float>(2);//纹理坐标
 		vao->AddBuffer(*vbo, layoutPosition);
 
-		//int texSlot = 0;//纹理槽的下标
-		//texture.Bind(texSlot);
-		//shader.SetUniform1i("u_texture", texSlot);
+		int texSlot = 0;//纹理槽的下标
+		texture->Bind(texSlot);
+		shader->SetUniform1i("u_texture", texSlot);
 	}
 
 	TestCubeCoord1::~TestCubeCoord1()
@@ -52,8 +47,6 @@ namespace tests {
 		vbo->Unbind();
 		ibo->Unbind();
 		shader->Unbind();
-		//GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
-		//GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 	}
 
 	void TestCubeCoord1::OnUpdate(float deltaTime)
