@@ -36,7 +36,7 @@ namespace tests {
 		layoutPosition.Push<float>(2);//纹理坐标
 		vao->AddBuffer(*vbo, layoutPosition);
 
-		int texSlot = 1;//纹理槽（纹理单元）的下标
+		int texSlot = 0;//纹理槽（纹理单元）的下标
 		texture->Bind(texSlot);
 		shader->SetUniform1i("u_texture", texSlot);
 	}
