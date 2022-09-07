@@ -36,9 +36,6 @@ namespace tests {
 		layoutPosition.Push<float>(2);//纹理坐标
 		vao->AddBuffer(*vbo, layoutPosition);
 
-		int texSlot = 0;//纹理槽（纹理单元）的下标
-		texture->Bind(texSlot);
-		shader->SetUniform1i("u_texture", texSlot);
 	}
 
 	TestCubeCoord1::~TestCubeCoord1()
@@ -69,6 +66,10 @@ namespace tests {
 		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		glClearDepth(99999.f);
+
+		int texSlot = 0;//纹理槽（纹理单元）的下标
+		texture->Bind(texSlot);
+		shader->SetUniform1i("u_texture", texSlot);//不能放在构造函数里，需要放在渲染循环中，避免因尚未被调用导致赋值异常
 
 		m_renderer.Draw(*vao, *ibo, *shader);
 	}
