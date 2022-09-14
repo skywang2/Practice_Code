@@ -29,8 +29,6 @@ namespace tests {
 		void OnImGuiRender() override;
 
 	private:
-		float positions[8 * 3];
-		unsigned int indices[12 * 3];
 		int display_w, display_h;
 
 		glm::vec3 model_trans;//模型变换平移

@@ -7,9 +7,7 @@ extern GLFWwindow* g_window;
 
 namespace tests {
 	TestCubeCoord1::TestCubeCoord1()
-		: positions{}
-		, indices{}
-		, display_w(1280)
+		: display_w(1280)
 		, display_h(720)
 		, model_trans(glm::vec3(0.0f))
 		, view_trans(glm::vec3(0.f, 0.f, 5.f))
@@ -22,12 +20,15 @@ namespace tests {
 		, fov(45.f)
 		, zNear(1.f), zFar(100.f)
 	{
+		const int valueCountPerPoint = 3 + 2;//顶点坐标3个值，纹理坐标2个值
+		float positions[8 * valueCountPerPoint];
+		unsigned int indices[12 * 3];
 		//立方体
-		LoadVertexAttri<GLfloat>("res/model/cube02_VertexBuffer.txt", positions, 8 * 3);
+		LoadVertexAttri<GLfloat>("res/model/cube02_VertexBuffer.txt", positions, 8 * valueCountPerPoint);
 		unsigned int idxLineNum = LoadVertexAttri<GLuint>("res/model/cube02_IndexBuffer.txt", indices, 12 * 3);
 
 		vao.reset(new VertexArray);
-		vbo.reset(new VertexBuffer(positions, 8 * 3 * sizeof(float)));
+		vbo.reset(new VertexBuffer(positions, 8 * valueCountPerPoint * sizeof(float)));
 		ibo.reset(new IndexBuffer(indices, idxLineNum * 3));
 		shader.reset(new Shader("res/shaders/shader_cube02_vertex.glsl", "res/shaders/shader_cube02_fragment.glsl"));
 		texture.reset(new Texture("res/textures/TestCubeCoord1.png"));
@@ -35,7 +36,7 @@ namespace tests {
 		layoutPosition.Push<float>(3);//顶点坐标
 		layoutPosition.Push<float>(2);//纹理坐标
 		vao->AddBuffer(*vbo, layoutPosition);
-
+		//glDisableVertexAttribArray(1);
 	}
 
 	TestCubeCoord1::~TestCubeCoord1()
