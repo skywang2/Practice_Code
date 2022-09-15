@@ -430,7 +430,7 @@ class SubClass : public Subject
 class Observer
 {
 public:
-	void Update() = 0;
+	virtual void Update() = 0;
 };
 class ObClassA : public Observer
 {
@@ -467,7 +467,7 @@ public:
 class IDepartment//抽象类，创建一张“部门”相关的数据表
 {
 public:
-	void Insert(string query);	
+	virtual void Insert(string query);	
 };
 class SqlserverDepartment : public IDepartment//Sqlserver数据库
 {
@@ -521,6 +521,52 @@ public:
 	id->Insert("xxxxxx");
 	ip->Insert("xxxxxx");
 }
+
+//状态模式
+//将与某一状态相关的操作封装到类中，得到多个状态类，通过增加新的状态类可以容易的增加新的状态相关操作和状态转换
+//状态模式通过把各类状态操作分布到State的子类中来减少相互依赖，减少使用if判断状态量的操作
+//适用场景：对象的行为取决于他的状态，并且对象会在运行时改变状态来改变行为
+class State
+{
+public:
+	virtual void WriteProgram(Work& w) = 0;
+};
+class Time01 : public State
+{
+public:
+	DoSomething(Worker& w)
+	{ 
+		cout << "动作01" << endl;
+		w.SetState(new TimeDefault());//从Time01状态转到TimeDefault状态
+	}
+};
+class Time02 : public State
+{
+public:
+	DoSomething(Worker& w)
+	{ 
+		cout << "动作02" << endl;
+		w.SetState(new TimeDefault());//从Time02状态转到TimeDefault状态
+	}
+};
+class TimeDefault : public State
+{
+public:
+	DoSomething(Work& w) { cout << "默认动作" << endl; }
+};
+class Worker
+{
+public:
+	void Worker() { currentState = new Time01; }//假设初始状态是Time01
+	void SetState(State* s) { currentState = s; }
+	void Do() { currentState->DoSomething(); }//调用状态对象实现操作，并转换状态
+private:
+	State* currentState;
+};
+
+
+
+
 
 
 
