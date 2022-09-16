@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+class GLFWwindow;
+
 namespace tests {
 
 	class Test
@@ -16,6 +18,7 @@ namespace tests {
 		virtual void OnUpdate(float deltaTime) {}//更新状态、变量
 		virtual void OnRender() {}//要渲染的图形
 		virtual void OnImGuiRender() {}//要渲染的imgui控件
+		virtual void ProcessInputClass(GLFWwindow*) {}//处理事件
 	};
 
 	class TestMenu : public Test

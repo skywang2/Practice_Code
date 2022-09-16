@@ -65,6 +65,13 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    // make sure the viewport matches the new window dimensions; note that width and 
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
+}
+
 int main(int argc, char* argv[])
 {
     glfwSetErrorCallback(glfw_error_callback);
@@ -85,6 +92,7 @@ int main(int argc, char* argv[])
         return -1;
     }
     glfwMakeContextCurrent(window);//创建opengl上下文
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);//窗口大小调整时调用回调函数
     glfwSwapInterval(1);//设置交换双缓冲的帧间隔，1表示渲染1帧交换一次
 
     IMGUI_CHECKVERSION();
@@ -127,7 +135,7 @@ int main(int argc, char* argv[])
         {
             glfwPollEvents();//检查触发事件，并调用对应的回调函数
             ProcessInput(window);//增加额外的按键（事件）处理，设置状态
-            glfwGetFramebufferSize(window, &display_w, &display_h);
+            //glfwGetFramebufferSize(window, &display_w, &display_h);
 
             glClearColor(0.f, 0.f, 0.f, 1.f);
             renderer.Clear();
@@ -139,6 +147,8 @@ int main(int argc, char* argv[])
 
             //创建菜单，添加测试项
             current = menu->GetCurrentTest();
+            //由class处理事件
+            current->ProcessInputClass(window);
             if (current)
             {
                 current->OnUpdate(0.f);//做一些渲染准备工作
@@ -160,7 +170,7 @@ int main(int argc, char* argv[])
             //渲染imgui窗口
             ImGui::Render();            
             //如果点坐标用[-1,1]表示则需要用glViewport转换到窗口比例（相对坐标），否则使用绝对坐标（窗口变化，物体大小不变）
-            glViewport(0, 0, display_w, display_h);//0.5*width*(x+1.0);0.5*height*(y+1.0)
+            //glViewport(0, 0, display_w, display_h);//0.5*width*(x+1.0);0.5*height*(y+1.0)，此处使用回调函数替代，可以不必自己获取宽高值
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());//真正的渲染函数
 
             glfwSwapBuffers(window);//双缓冲绘图，交换前后缓冲区

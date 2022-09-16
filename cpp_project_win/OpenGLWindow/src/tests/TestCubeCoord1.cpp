@@ -10,7 +10,6 @@ namespace tests {
 		: display_w(1280)
 		, display_h(720)
 		, model_trans(glm::vec3(0.0f))
-		, view_trans(glm::vec3(0.f, 0.f, 5.f))
 		, vao()
 		, vbo()
 		, layoutPosition()
@@ -19,6 +18,9 @@ namespace tests {
 		, texture()
 		, fov(45.f)
 		, zNear(1.f), zFar(100.f)
+		, cameraPos(glm::vec3(0.0f, 0.0f, 5.0f))
+		, cameraFront(glm::vec3(0.0f, 0.0f, -1.0f))
+		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
 	{
 		const int valueCountPerPoint = 3 + 2;//顶点坐标3个值，纹理坐标2个值
 		float positions[8 * valueCountPerPoint];
@@ -51,9 +53,9 @@ namespace tests {
 	{
 		proj = glm::perspective(glm::radians(fov), (float)display_w / (float)display_h, zNear, zFar);//透视投影
 		view = glm::lookAt(
-			view_trans, // Camera is at (4,3,3), in World Space
-			glm::vec3(0, 0, 0), // and looks at the origin
-			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+			cameraPos, //相机位置坐标, in World Space
+			cameraFront, //镜头朝向
+			cameraUp//相机上方向（FPS相机上方向默认vec(0.0, 1.0, 0.0)）
 		);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
 		mvp = proj * view * model;
@@ -81,9 +83,9 @@ namespace tests {
 		ImGui::SliderFloat("model_trans_x", &model_trans.x, -10.f, 10.f);
 		ImGui::SliderFloat("model_trans_y", &model_trans.y, -10.f, 10.f);
 		ImGui::SliderFloat("model_trans_z", &model_trans.z, -10.f, 10.f);
-		ImGui::SliderFloat("view_trans_x", &view_trans.x, -5.f, 5.f);
-		ImGui::SliderFloat("view_trans_y", &view_trans.y, -5.f, 5.f);
-		ImGui::SliderFloat("view_trans_z", &view_trans.z, -5.f, 5.f);
+		ImGui::SliderFloat("cameraPos_x", &cameraPos.x, -5.f, 5.f);
+		ImGui::SliderFloat("cameraPos_y", &cameraPos.y, -5.f, 5.f);
+		ImGui::SliderFloat("cameraPos_z", &cameraPos.z, -5.f, 5.f);
 		ImGui::SliderFloat("fov", &fov, 0.f, 360.f);
 		ImGui::SliderFloat("zNear", &zNear, 0.f, 100.f);
 		ImGui::SliderFloat("zFar", &zFar, 0.f, 100.f);
@@ -97,6 +99,27 @@ namespace tests {
 		if (ImGui::Button("GL_NOTEQUAL")) { GLCall(glDepthFunc(GL_NOTEQUAL)); }ImGui::SameLine();
 		if (ImGui::Button("GL_GEQUAL")) { GLCall(glDepthFunc(GL_GEQUAL)); }
 		if (ImGui::Button("GL_ALWAYS")) { GLCall(glDepthFunc(GL_ALWAYS)); }
+	}
+
+	void TestCubeCoord1::ProcessInputClass(GLFWwindow* window)
+	{
+		float cameraSpeed = 0.1f; // adjust accordingly
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			cameraPos += cameraSpeed * cameraFront;
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			cameraPos -= cameraSpeed * cameraFront;
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			cameraPos -= glm::cross(cameraFront, cameraUp) * cameraSpeed;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			cameraPos += glm::cross(cameraFront, cameraUp) * cameraSpeed;
+		}
 	}
 
 }
