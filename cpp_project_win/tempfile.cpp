@@ -1,5 +1,5 @@
 //练习设计模式
-//代码基本来自《大话设计模式》每篇的总结，代码使用C++
+//代码基本来自《大话设计模式》每篇的总结，代码使用C++，代码有部分省略可能需要求改才能编译过
 
 //简单工厂模式
 //用于类型多，但每个类型的实例对象很少的情况
@@ -534,30 +534,41 @@ public:
 class Time01 : public State
 {
 public:
-	DoSomething(Worker& w)
+	void DoSomething(Worker& w)
 	{ 
 		cout << "动作01" << endl;
+		w.Action01();
 		w.SetState(new TimeDefault());//从Time01状态转到TimeDefault状态
 	}
 };
 class Time02 : public State
 {
 public:
-	DoSomething(Worker& w)
+	void DoSomething(Worker& w)
 	{ 
 		cout << "动作02" << endl;
+		w.Action02();
 		w.SetState(new TimeDefault());//从Time02状态转到TimeDefault状态
 	}
 };
 class TimeDefault : public State
 {
 public:
-	DoSomething(Work& w) { cout << "默认动作" << endl; }
+	void DoSomething(Work& w)
+	{ 
+		cout << "默认动作" << endl;
+		w.ActionDefault();
+	}
 };
 class Worker
 {
 public:
 	void Worker() { currentState = new Time01; }//假设初始状态是Time01
+	
+	void Action01() { return; }//代表具体操作，由state对象调用
+	void Action02() { return; }
+	void ActionDefault() { return; }
+	
 	void SetState(State* s) { currentState = s; }
 	void Do() { currentState->DoSomething(); }//调用状态对象实现操作，并转换状态
 private:
