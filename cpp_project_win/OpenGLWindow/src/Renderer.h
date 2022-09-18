@@ -34,9 +34,9 @@ struct MouseParam
 
     MouseParam()
         : firstMove(true),
-        xsensitivity(0.05),
-        ysensitivity(0.09),
-        yaw(0.0),
+        xsensitivity(0.20),
+        ysensitivity(0.05),
+        yaw(-90.0),
         pitch(0.0),
         front()
     {

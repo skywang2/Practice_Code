@@ -21,7 +21,7 @@ namespace tests {
 		, fov(45.f)
 		, zNear(1.f), zFar(100.f)
 		, cameraPos(glm::vec3(0.0f, 0.0f, 5.0f))
-		, cameraFront(glm::vec3(0.0f, 0.0f, -1.0f))
+		, cameraFront(glm::vec3(0.0f, 0.0f, -0.1f))//使用g_mouseParam.front替代
 		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
 	{
 		const int valueCountPerPoint = 3 + 2;//顶点坐标3个值，纹理坐标2个值
@@ -90,9 +90,15 @@ namespace tests {
 		ImGui::SliderFloat("model_trans_x", &model_trans.x, -10.f, 10.f);
 		ImGui::SliderFloat("model_trans_y", &model_trans.y, -10.f, 10.f);
 		ImGui::SliderFloat("model_trans_z", &model_trans.z, -10.f, 10.f);
-		ImGui::SliderFloat("cameraPos_x", &cameraPos.x, -5.f, 5.f);
-		ImGui::SliderFloat("cameraPos_y", &cameraPos.y, -5.f, 5.f);
-		ImGui::SliderFloat("cameraPos_z", &cameraPos.z, -5.f, 5.f);
+		ImGui::SliderFloat("cameraPos_x", &cameraPos.x, -15.f, 15.f);
+		ImGui::SliderFloat("cameraPos_y", &cameraPos.y, -15.f, 15.f);
+		ImGui::SliderFloat("cameraPos_z", &cameraPos.z, -15.f, 15.f);
+		if (g_mouseParam)
+		{
+			ImGui::SliderFloat("front_x", &g_mouseParam->front.x, -15.f, 15.f);
+			ImGui::SliderFloat("front_y", &g_mouseParam->front.y, -15.f, 15.f);
+			ImGui::SliderFloat("front_z", &g_mouseParam->front.z, -15.f, 15.f);
+		}
 		ImGui::SliderFloat("fov", &fov, 0.f, 360.f);
 		ImGui::SliderFloat("zNear", &zNear, 0.f, 100.f);
 		ImGui::SliderFloat("zFar", &zFar, 0.f, 100.f);

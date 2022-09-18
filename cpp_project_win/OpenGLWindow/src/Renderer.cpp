@@ -61,8 +61,8 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos)
     double yoffset = -(ypos - g_mouseParam->lastY);
     g_mouseParam->lastX = xpos;
     g_mouseParam->lastY = ypos;
-    std::cout << "x offset:" << xoffset << ", xpos:" << xpos << ", lastX:" << g_mouseParam->lastX << std::endl;
-    std::cout << "y offset:" << yoffset << ", ypos:" << ypos << ", lastY:" << g_mouseParam->lastY << std::endl;
+    //std::cout << "x offset:" << xoffset << ", xpos:" << xpos << ", lastX:" << g_mouseParam->lastX << std::endl;
+    //std::cout << "y offset:" << yoffset << ", ypos:" << ypos << ", lastY:" << g_mouseParam->lastY << std::endl;
     //2
     g_mouseParam->yaw += xoffset * g_mouseParam->xsensitivity;
     g_mouseParam->pitch += yoffset * g_mouseParam->ysensitivity;
@@ -78,7 +78,7 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos)
 
 void MouseEnterCallback(GLFWwindow* window, int entered)
 {
-    std::cout << "entered:" << entered << std::endl;
+    //std::cout << "entered:" << entered << std::endl;
     if (!g_mouseParam) { return; }
     if (1 == entered) { g_mouseParam->firstMove = true; }
 }
