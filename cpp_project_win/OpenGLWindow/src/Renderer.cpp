@@ -4,6 +4,7 @@
 #include "GLFW/glfw3.h"
 
 GLFWwindow* g_window = nullptr;
+MouseParam* g_mouseParam = nullptr;
 
 void GLClearError()
 {
@@ -31,12 +32,58 @@ void ProcessInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 }
 
-void MouseCallback(GLFWwindow* window)
+void MouseCallback(GLFWwindow* window, double xpos, double ypos)
 {
+    /*===========
+    FPS风格相机，通过鼠标位置参数计算镜头方向
+    1.计算鼠标距上一帧的偏移量
+    2.把偏移量加到俯仰角和偏航角中
+    3.对偏航角、俯仰角设置上下限
+    4.计算方向向量
+    xoffset->yaw
+    yoffset->pitch
+    ===========*/
+    if (!g_mouseParam) 
+    {
+        g_mouseParam = new MouseParam;
+    }
 
+    //避免第一帧出现剧烈移动，使此时的鼠标位置为初始点
+    if (g_mouseParam->firstMove)
+    {
+        g_mouseParam->lastX = xpos;
+        g_mouseParam->lastY = ypos;
+        g_mouseParam->firstMove = false;
+    }
+
+    //1
+    double xoffset = xpos - g_mouseParam->lastX;
+    double yoffset = -(ypos - g_mouseParam->lastY);
+    g_mouseParam->lastX = xpos;
+    g_mouseParam->lastY = ypos;
+    std::cout << "x offset:" << xoffset << ", xpos:" << xpos << ", lastX:" << g_mouseParam->lastX << std::endl;
+    std::cout << "y offset:" << yoffset << ", ypos:" << ypos << ", lastY:" << g_mouseParam->lastY << std::endl;
+    //2
+    g_mouseParam->yaw += xoffset * g_mouseParam->xsensitivity;
+    g_mouseParam->pitch += yoffset * g_mouseParam->ysensitivity;
+    //3
+    if (g_mouseParam->pitch > 89.0f) { g_mouseParam->pitch = 89.0f; }
+    if (g_mouseParam->pitch < -89.0f) { g_mouseParam->pitch = -89.0f; }
+    //4
+    g_mouseParam->front.x = (float)cos(glm::radians(g_mouseParam->pitch)) * (float)cos(glm::radians(g_mouseParam->yaw));
+    g_mouseParam->front.y = (float)sin(glm::radians(g_mouseParam->pitch));
+    g_mouseParam->front.z = (float)cos(glm::radians(g_mouseParam->pitch)) * (float)sin(glm::radians(g_mouseParam->yaw));
+    g_mouseParam->front = glm::normalize(g_mouseParam->front);
 }
 
-void ScrollCallback(GLFWwindow* window)
+void MouseEnterCallback(GLFWwindow* window, int entered)
+{
+    std::cout << "entered:" << entered << std::endl;
+    if (!g_mouseParam) { return; }
+    if (1 == entered) { g_mouseParam->firstMove = true; }
+}
+
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
 }
 

@@ -4,6 +4,8 @@
 #include "../LoadModel.h"
 
 extern GLFWwindow* g_window;
+extern MouseParam* g_mouseParam;
+//float lastX = 640, lastY = 360;//鼠标在上一帧位置
 
 namespace tests {
 	TestCubeCoord1::TestCubeCoord1()
@@ -53,10 +55,13 @@ namespace tests {
 
 	void TestCubeCoord1::OnUpdate(float deltaTime)
 	{
+		const glm::vec3& mouseMove = (g_mouseParam) ? g_mouseParam->front : cameraFront;
+
 		proj = glm::perspective(glm::radians(fov), (float)display_w / (float)display_h, zNear, zFar);//透视投影
 		view = glm::lookAt(
 			cameraPos, //相机位置坐标, in World Space
-			cameraPos + cameraFront, //镜头朝向，用位置+朝向可以使相机移动时朝向固定方向而不是某一点
+			//cameraPos + cameraFront, //镜头朝向，用位置+朝向可以使相机移动时朝向固定方向而不是某一点
+			cameraPos + mouseMove,
 			cameraUp//相机上方向（FPS相机上方向默认vec(0.0, 1.0, 0.0)）
 		);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
@@ -105,22 +110,24 @@ namespace tests {
 
 	void TestCubeCoord1::ProcessInputClass(GLFWwindow* window)
 	{
+		glm::vec3& mouseMove = (g_mouseParam) ? g_mouseParam->front : cameraFront;
+
 		float cameraSpeed = 0.1f; // adjust accordingly
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
-			cameraPos += cameraSpeed * cameraFront;
+			cameraPos += cameraSpeed * mouseMove;
 		}
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 		{
-			cameraPos -= cameraSpeed * cameraFront;
+			cameraPos -= cameraSpeed * mouseMove;
 		}
 		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		{
-			cameraPos -= glm::cross(cameraFront, cameraUp) * cameraSpeed;
+			cameraPos -= glm::cross(mouseMove, cameraUp) * cameraSpeed;
 		}
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		{
-			cameraPos += glm::cross(cameraFront, cameraUp) * cameraSpeed;
+			cameraPos += glm::cross(mouseMove, cameraUp) * cameraSpeed;
 		}
 	}
 

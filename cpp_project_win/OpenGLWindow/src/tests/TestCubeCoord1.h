@@ -18,6 +18,7 @@ namespace tests {
 
 	//与TestCube类的区别是模型顶点坐标在[-1,1]
 	//对应顶点、索引、shader文件是cube02
+	//尝试生成一个带自制纹理的立方体，并且使用键盘wasd控制摄像机前后左右平移，以及鼠标平移控制偏航角yaw和俯仰角pitch
 	class TestCubeCoord1 : public Test
 	{
 	public:
@@ -28,6 +29,8 @@ namespace tests {
 		void OnRender() override;
 		void OnImGuiRender() override;
 		void ProcessInputClass(GLFWwindow*) override;
+		friend void MouseCallback(GLFWwindow* window, double xpos, double ypos);//鼠标事件处理函数
+		friend void ScrollCallback(GLFWwindow* window);//滚轮事件处理函数
 
 	private:
 		int display_w, display_h;

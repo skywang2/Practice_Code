@@ -94,6 +94,8 @@ int main(int argc, char* argv[])
     glfwMakeContextCurrent(window);//创建opengl上下文
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);//窗口大小调整时调用回调函数
     glfwSwapInterval(1);//设置交换双缓冲的帧间隔，1表示渲染1帧交换一次
+    glfwSetCursorPosCallback(window, MouseCallback);
+    glfwSetCursorEnterCallback(window, MouseEnterCallback);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();//创建imgui的上下文
