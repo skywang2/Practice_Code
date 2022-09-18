@@ -39,6 +39,8 @@ namespace tests {
 		layoutPosition.Push<float>(2);//纹理坐标
 		vao->AddBuffer(*vbo, layoutPosition);
 		//glDisableVertexAttribArray(1);
+
+		//glfwSetInputMode(g_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//不显示光标，焦点在窗口期间鼠标不能移除窗口
 	}
 
 	TestCubeCoord1::~TestCubeCoord1()
@@ -54,7 +56,7 @@ namespace tests {
 		proj = glm::perspective(glm::radians(fov), (float)display_w / (float)display_h, zNear, zFar);//透视投影
 		view = glm::lookAt(
 			cameraPos, //相机位置坐标, in World Space
-			cameraFront, //镜头朝向
+			cameraPos + cameraFront, //镜头朝向，用位置+朝向可以使相机移动时朝向固定方向而不是某一点
 			cameraUp//相机上方向（FPS相机上方向默认vec(0.0, 1.0, 0.0)）
 		);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵

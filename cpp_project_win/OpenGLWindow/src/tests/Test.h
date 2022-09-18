@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-class GLFWwindow;
+struct GLFWwindow;
 
 namespace tests {
 

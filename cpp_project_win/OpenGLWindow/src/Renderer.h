@@ -4,6 +4,9 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 
+struct GLFWwindow;
+extern GLFWwindow* g_window;//全局变量，窗口对象指针
+
 #ifdef _DEBUG
 #define ASSERT(x) if(!(x)) __debugbreak();
 #else
@@ -17,11 +20,12 @@
     ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 //glDebugMessageCallback//类似glGetError，可提供更多文本信息
 
-struct GLFWwindow;
-
 void GLClearError();//检查是否存在错误，如果有则阻塞
 bool GLLogCall(const char* function, const char* file, int line);//在每个函数后检查flag
-void ProcessInput(GLFWwindow* window);//按键状态处理函数
+void ProcessInput(GLFWwindow* window);//键盘事件处理函数
+void MouseCallback(GLFWwindow* window);//鼠标事件处理函数
+void ScrollCallback(GLFWwindow* window);//滚轮事件处理函数
+
 
 class Renderer
 {

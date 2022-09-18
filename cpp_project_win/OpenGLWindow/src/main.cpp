@@ -28,7 +28,7 @@
 using std::cout;
 using std::endl;
 
-extern GLFWwindow* g_window = nullptr;
+extern GLFWwindow* g_window;
 
 //创建菜单，添加测试项（使用过程式）
 inline void MyMenu(int& page, tests::Test* test)

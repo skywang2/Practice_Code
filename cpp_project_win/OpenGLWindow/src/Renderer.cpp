@@ -3,6 +3,8 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
+GLFWwindow* g_window = nullptr;
+
 void GLClearError()
 {
     //glGetError调用时会返回flag并将其置为GL_NO_ERROR，通过循环将所有flag置为GL_NO_ERROR
@@ -27,6 +29,15 @@ void ProcessInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+}
+
+void MouseCallback(GLFWwindow* window)
+{
+
+}
+
+void ScrollCallback(GLFWwindow* window)
+{
 }
 
 Renderer::Renderer()
