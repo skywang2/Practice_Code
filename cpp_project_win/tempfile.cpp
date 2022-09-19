@@ -29,13 +29,13 @@ public:
 class Strategy
 {
 public:
-  bool Algorithm() = 0;//纯虚函数，该类为纯虚类
+  virtual bool Algorithm() = 0;//纯虚函数，该类为纯虚类
 };
 
 class StrategyA : public Strategy
 {
 public:
-  bool Algorithm() override { cout << "hello world" << endl;}
+  virtual bool Algorithm() override { cout << "hello world" << endl;}
 };
 
 //1.经典策略模式，封装一套调用算法的统一接口类
