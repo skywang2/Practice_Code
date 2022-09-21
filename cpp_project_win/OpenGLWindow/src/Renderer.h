@@ -30,14 +30,16 @@ struct MouseParam
     double lastY;
     double yaw;
     double pitch;
+    double fov;
     glm::vec3 front;
 
     MouseParam()
         : firstMove(true),
-        xsensitivity(0.20),
+        xsensitivity(0.12),
         ysensitivity(0.05),
         yaw(-90.0),
         pitch(0.0),
+        fov(46.0),/*50mm镜头*/
         front()
     {
     }
@@ -48,7 +50,7 @@ void GLClearError();//检查是否存在错误，如果有则阻塞
 bool GLLogCall(const char* function, const char* file, int line);//在每个函数后检查flag
 void ProcessInput(GLFWwindow* window);//键盘事件处理函数
 void MouseCallback(GLFWwindow * window, double xpos, double ypos);//鼠标事件
-void MouseEnterCallback(GLFWwindow* window, int entered);
+void MouseEnterCallback(GLFWwindow* window, int entered);//鼠标进出窗口client区
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);//滚轮事件
 
 class Renderer

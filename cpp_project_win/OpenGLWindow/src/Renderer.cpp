@@ -85,6 +85,14 @@ void MouseEnterCallback(GLFWwindow* window, int entered)
 
 void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
+    //std::cout << "yoffset:" << yoffset << std::endl;
+    if (!g_mouseParam) { return; }
+    
+    double& fov = g_mouseParam->fov;
+    double fovMin = 5.0/*500mm¾µÍ·*/, fovMax = 114.0/*14mm¾µÍ·*/;
+    if (fov >= fovMin && fov <= fovMax) { fov -= yoffset; }
+    if (fov <= fovMin) { fov = fovMin; }
+    if (fov >= fovMax) { fov = fovMax; }
 }
 
 Renderer::Renderer()

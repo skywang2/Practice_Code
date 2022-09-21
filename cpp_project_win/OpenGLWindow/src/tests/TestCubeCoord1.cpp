@@ -23,6 +23,8 @@ namespace tests {
 		, cameraPos(glm::vec3(0.0f, 0.0f, 5.0f))
 		, cameraFront(glm::vec3(0.0f, 0.0f, -0.1f))//使用g_mouseParam.front替代
 		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
+		, m_lightColor(glm::vec3(1.0))
+		, m_toyColor(glm::vec3(1.0f, 0.5f, 0.31f))
 	{
 		const int valueCountPerPoint = 3 + 2;//顶点坐标3个值，纹理坐标2个值
 		float positions[8 * valueCountPerPoint];
@@ -42,6 +44,8 @@ namespace tests {
 		vao->AddBuffer(*vbo, layoutPosition);
 		//glDisableVertexAttribArray(1);
 
+		glm::vec3 result = m_lightColor * m_toyColor;
+
 		//glfwSetInputMode(g_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);//不显示光标，焦点在窗口期间鼠标不能移除窗口
 	}
 
@@ -55,6 +59,7 @@ namespace tests {
 
 	void TestCubeCoord1::OnUpdate(float deltaTime)
 	{
+		fov = (g_mouseParam) ? g_mouseParam->fov : fov;
 		const glm::vec3& mouseMove = (g_mouseParam) ? g_mouseParam->front : cameraFront;
 
 		proj = glm::perspective(glm::radians(fov), (float)display_w / (float)display_h, zNear, zFar);//透视投影

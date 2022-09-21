@@ -53,6 +53,8 @@ namespace tests {
 		VertexBufferLayout layoutPosition;
 		Renderer m_renderer;
 
+		glm::vec3 m_lightColor;
+		glm::vec3 m_toyColor;
 		ImVec4 m_clear_color;
 	};
 

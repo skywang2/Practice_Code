@@ -125,8 +125,12 @@
     <None Include="res\shaders\shader_cube01_vertex.glsl">
       <Filter>源文件\shader\cube</Filter>
     </None>
-    <None Include="res\shaders\shader_cube02_fragment.glsl" />
-    <None Include="res\shaders\shader_cube02_vertex.glsl" />
+    <None Include="res\shaders\shader_cube02_vertex.glsl">
+      <Filter>源文件\shader\cube</Filter>
+    </None>
+    <None Include="res\shaders\shader_cube02_fragment.glsl">
+      <Filter>源文件\shader\cube</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">

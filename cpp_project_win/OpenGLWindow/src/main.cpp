@@ -96,6 +96,7 @@ int main(int argc, char* argv[])
     glfwSwapInterval(1);//设置交换双缓冲的帧间隔，1表示渲染1帧交换一次
     glfwSetCursorPosCallback(window, MouseCallback);
     glfwSetCursorEnterCallback(window, MouseEnterCallback);
+    glfwSetScrollCallback(window, ScrollCallback);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();//创建imgui的上下文
