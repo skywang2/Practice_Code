@@ -29,13 +29,13 @@ public:
 class Strategy
 {
 public:
-  bool Algorithm() = 0;//纯虚函数，该类为纯虚类
+  virtual bool Algorithm() = 0;//纯虚函数，该类为纯虚类
 };
 
 class StrategyA : public Strategy
 {
 public:
-  bool Algorithm() override { cout << "hello world" << endl;}
+  virtual bool Algorithm() override { cout << "hello world" << endl;}
 };
 
 //1.经典策略模式，封装一套调用算法的统一接口类
@@ -575,9 +575,35 @@ private:
 	State* currentState;
 };
 
+//适配器模式
+//系统的数据和行为都正确，但是接口不符合，可以考虑适配器模式，这样可以快速复用已有类型
+class Target
+{
+public:
+	//描述客户端需要使用的接口形式
+	virtual void Request() { /*默认操作*/ };
+};
+class Adaptee
+{
+public:
+	void Do() { /*需要适配的操作*/ }
+};
+class Adapter : public Target
+{
+private:
+	Adaptee* ad;
+public:
+	Adapter() { ad = new Adaptee(); }
+	void Request()
+	{
+		ad->Do();
+	}
+};
 
-
-
+{
+	Target* t = new Adapter;
+	t->Request();//实际执行的是Adaptee的Do操作
+}
 
 
 
