@@ -129,6 +129,7 @@ int main(int argc, char* argv[])
         menu->RegisterTest<tests::TestTexture2D>("Texture2D");
         menu->RegisterTest<tests::TestCube>("TestCube");
         menu->RegisterTest<tests::TestCubeCoord1>("TestCubeCoord1");
+        menu->RegisterTest<tests::TestCubeCoord1>("TestCubeLight");
 
         //´´½¨äÖÈ¾Æ÷
         Renderer renderer;

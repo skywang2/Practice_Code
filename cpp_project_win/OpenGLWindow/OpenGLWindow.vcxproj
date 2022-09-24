@@ -168,6 +168,7 @@
     <ClCompile Include="src\tests\TestClearColor.cpp" />
     <ClCompile Include="src\tests\TestCube.cpp" />
     <ClCompile Include="src\tests\TestCubeCoord1.cpp" />
+    <ClCompile Include="src\tests\TestCubeLight.cpp" />
     <ClCompile Include="src\tests\TestTexture2D.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
     <ClCompile Include="src\VertexArray.cpp" />
@@ -181,6 +182,10 @@
     <None Include="res\shaders\shader_cube01_vertex.glsl" />
     <None Include="res\shaders\shader_cube02_fragment.glsl" />
     <None Include="res\shaders\shader_cube02_vertex.glsl" />
+    <None Include="res\shaders\shader_cube03_fragment_light.glsl" />
+    <None Include="res\shaders\shader_cube03_fragment_object.glsl" />
+    <None Include="res\shaders\shader_cube03_vertex_light.glsl" />
+    <None Include="res\shaders\shader_cube03_vertex_object.glsl" />
     <None Include="res\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +207,7 @@
     <ClInclude Include="src\tests\TestClearColor.h" />
     <ClInclude Include="src\tests\TestCube.h" />
     <ClInclude Include="src\tests\TestCubeCoord1.h" />
+    <ClInclude Include="src\tests\TestCubeLight.h" />
     <ClInclude Include="src\tests\TestTexture2D.h" />
     <ClInclude Include="src\VertexBuffer.h" />
     <ClInclude Include="src\VertexArray.h" />
