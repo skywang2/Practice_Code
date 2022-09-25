@@ -44,9 +44,11 @@ namespace tests {
 		glm::vec3 cameraUp;
 		
 		std::unique_ptr<VertexArray> vao;//vertex buffer内存布局
+		std::unique_ptr<VertexArray> vaoLight;//光源
 		std::unique_ptr<VertexBuffer> vbo;
 		std::unique_ptr<IndexBuffer> ibo;
 		std::unique_ptr<Shader> shader;
+		std::unique_ptr<Shader> shaderLight;
 		std::unique_ptr<Texture> texture;
 		VertexBufferLayout layoutPosition;
 		Renderer m_renderer;

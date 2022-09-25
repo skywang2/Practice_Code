@@ -33,18 +33,19 @@ namespace tests {
 		LoadVertexAttri<GLfloat>("res/model/cube03_VertexBuffer_TestCubeLight.txt", positions, 8 * valueCountPerPoint);
 		unsigned int idxLineNum = LoadVertexAttri<GLuint>("res/model/cube03_IndexBuffer_TestCubeLight.txt", indices, 12 * 3);
 
-		vao.reset(new VertexArray);
+		vao.reset(new VertexArray);//背照射物体
 		vbo.reset(new VertexBuffer(positions, 8 * valueCountPerPoint * sizeof(float)));
 		ibo.reset(new IndexBuffer(indices, idxLineNum * 3));
-		shader.reset(new Shader("res/shaders/shader_cube03_vertex_light.glsl", "res/shaders/shader_cube03_fragment_light.glsl"));
+		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object.glsl"));
 		texture.reset(new Texture("res/textures/TestCubeCoord1.png"));
 
-		layoutPosition.Push<float>(3);//顶点坐标
-		layoutPosition.Push<float>(2);//纹理坐标
+		layoutPosition.Push<float>(3);
 		vao->AddBuffer(*vbo, layoutPosition);
-		//glDisableVertexAttribArray(1);
 
-		glm::vec3 result = m_lightColor * m_toyColor;
+		vaoLight.reset(new VertexArray);//光源
+		shaderLight.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl"/*使用与背照射物体相同的vertex shader*/
+			, "res/shaders/shader_cube03_fragment_light.glsl"));
+		vaoLight->AddBuffer(*vbo, layoutPosition);
 	}
 
 	TestCubeLight::~TestCubeLight()
@@ -57,6 +58,14 @@ namespace tests {
 
 	void TestCubeLight::OnUpdate(float deltaTime)
 	{
+	}
+
+	void TestCubeLight::OnRender()
+	{
+		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
+		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+		glClearDepth(99999.f);
+
 		fov = (g_mouseParam) ? g_mouseParam->fov : fov;
 		const glm::vec3& mouseMove = (g_mouseParam) ? g_mouseParam->front : cameraFront;
 
@@ -68,17 +77,18 @@ namespace tests {
 			cameraUp//相机上方向（FPS相机上方向默认vec(0.0, 1.0, 0.0)）
 		);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
-		mvp = proj * view * model;
-		shader->Bind();
-		shader->SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
-		//GL_INVALID_VALUE
-	}
 
-	void TestCubeLight::OnRender()
-	{
-		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
-		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-		glClearDepth(99999.f);
+		shader->Bind();
+		shader->SetUniformMat4f("u_model", model);
+		shader->SetUniformMat4f("u_view", view);
+		shader->SetUniformMat4f("u_projection", proj);
+		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));
+
+		shaderLight->Bind();
+		shaderLight->SetUniformMat4f("u_model", model);
+		shaderLight->SetUniformMat4f("u_view", view);
+		shaderLight->SetUniformMat4f("u_projection", proj);
 
 		int texSlot = 0;//纹理槽（纹理单元）的下标
 		texture->Bind(texSlot);

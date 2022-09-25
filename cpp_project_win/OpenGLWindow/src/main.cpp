@@ -24,6 +24,7 @@
 #include "tests/TestTexture2D.h"
 #include "tests/TestCube.h"
 #include "tests/TestCubeCoord1.h"
+#include "tests/TestCubeLight.h"
 
 using std::cout;
 using std::endl;
@@ -129,7 +130,7 @@ int main(int argc, char* argv[])
         menu->RegisterTest<tests::TestTexture2D>("Texture2D");
         menu->RegisterTest<tests::TestCube>("TestCube");
         menu->RegisterTest<tests::TestCubeCoord1>("TestCubeCoord1");
-        menu->RegisterTest<tests::TestCubeCoord1>("TestCubeLight");
+        menu->RegisterTest<tests::TestCubeLight>("TestCubeLight");
 
         //´´½¨äÖÈ¾Æ÷
         Renderer renderer;

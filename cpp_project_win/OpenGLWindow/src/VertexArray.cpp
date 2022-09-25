@@ -36,12 +36,12 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 	for (unsigned int i = 0; i < elements.size(); ++i)
 	{
 		const auto& element = elements[i];
-		GLCall(glEnableVertexAttribArray(i));//启用顶点属性数组，index为属性的索引
 		////关联绑定的VAO与VBO，并定义buffer中的属性布局
 		//i：索引为i的顶点属性，与shader中location一致；
 		//count：当前属性有几个数（固定填1、2、3、4）；
 		//offset：当前属性的偏移地址（字节）
 		GLCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride()/*一个点所有属性总长度*/, reinterpret_cast<const void*>(offset)/*当前属性偏移地址*/));
 		offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
+		GLCall(glEnableVertexAttribArray(i));//启用顶点属性数组，index为属性的索引
 	}
 } 
