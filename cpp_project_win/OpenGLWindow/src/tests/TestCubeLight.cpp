@@ -85,16 +85,18 @@ namespace tests {
 		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));
 
-		shaderLight->Bind();
-		shaderLight->SetUniformMat4f("u_model", model);
+		glm::mat4 modelLight = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f));
+		shaderLight->Bind();//光源的shader
+		shaderLight->SetUniformMat4f("u_model", modelLight);
 		shaderLight->SetUniformMat4f("u_view", view);
 		shaderLight->SetUniformMat4f("u_projection", proj);
 
-		int texSlot = 0;//纹理槽（纹理单元）的下标
-		texture->Bind(texSlot);
-		shader->SetUniform1i("u_texture", texSlot);//不能放在构造函数里，需要放在渲染循环中，避免因尚未被调用导致赋值异常
+		//int texSlot = 0;//纹理槽（纹理单元）的下标
+		//texture->Bind(texSlot);
+		//shader->SetUniform1i("u_texture", texSlot);//不能放在构造函数里，需要放在渲染循环中，避免因尚未被调用导致赋值异常
 
 		m_renderer.Draw(*vao, *ibo, *shader);
+		m_renderer.Draw(*vaoLight, *ibo, *shaderLight);
 	}
 
 	void TestCubeLight::OnImGuiRender()

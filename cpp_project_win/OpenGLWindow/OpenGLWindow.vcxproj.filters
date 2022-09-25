@@ -136,7 +136,6 @@
     </None>
     <None Include="res\shaders\shader_cube03_fragment_light.glsl" />
     <None Include="res\shaders\shader_cube03_fragment_object.glsl" />
-    <None Include="res\shaders\shader_cube03_vertex_light.glsl" />
     <None Include="res\shaders\shader_cube03_vertex_object.glsl" />
   </ItemGroup>
   <ItemGroup>
