@@ -55,7 +55,7 @@ namespace tests {
 		shader->Unbind();
 	}
 
-	void TestCube::OnUpdate(float deltaTime)
+	void TestCube::OnUpdate()
 	{
 		//if (g_window)
 		//{

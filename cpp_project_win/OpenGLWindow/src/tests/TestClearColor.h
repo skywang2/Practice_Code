@@ -9,7 +9,7 @@ namespace tests {
 		TestClearColor();
 		~TestClearColor();
 
-		void OnUpdate(float deltaTime) override;
+		void OnUpdate() override;
 		void OnRender() override;
 		void OnImGuiRender() override;
 	private:

@@ -11,6 +11,8 @@ namespace tests {
 	TestCubeLight::TestCubeLight()
 		: display_w(1280)
 		, display_h(720)
+		, deltaTime(0.0)
+		, lastFrame(0.0)
 		, model_trans(glm::vec3(0.0f))
 		, vao()
 		, vbo()
@@ -56,8 +58,15 @@ namespace tests {
 		shader->Unbind();
 	}
 
-	void TestCubeLight::OnUpdate(float deltaTime)
+	void TestCubeLight::OnUpdate()
 	{
+		float currentFrame = static_cast<float>(glfwGetTime());
+		deltaTime = currentFrame - lastFrame;
+		if (g_mouseParam) { g_mouseParam->deltaTime = deltaTime; }
+		lastFrame = currentFrame;
+		//std::cout << "currentFrame:" << currentFrame << std::endl;
+		//std::cout << "deltaTime:" << deltaTime << std::endl;
+		//std::cout << "lastFrame:" << lastFrame << std::endl;
 	}
 
 	void TestCubeLight::OnRender()
@@ -85,7 +94,7 @@ namespace tests {
 		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));
 
-		glm::mat4 modelLight = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, 3.0f));
+		glm::mat4 modelLight = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, -3.0f));
 		shaderLight->Bind();//¹âÔ´µÄshader
 		shaderLight->SetUniformMat4f("u_model", modelLight);
 		shaderLight->SetUniformMat4f("u_view", view);
@@ -124,7 +133,8 @@ namespace tests {
 	{
 		glm::vec3& mouseMove = (g_mouseParam) ? g_mouseParam->front : cameraFront;
 
-		float cameraSpeed = 0.1f; // adjust accordingly
+		double delta = (g_mouseParam) ? g_mouseParam->deltaTime : deltaTime;
+		float cameraSpeed = 10.0f * delta; // adjust accordingly
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
 			cameraPos += cameraSpeed * mouseMove;

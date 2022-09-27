@@ -15,7 +15,7 @@ namespace tests {
 
 	}
 
-	void TestClearColor::OnUpdate(float deltaTime)
+	void TestClearColor::OnUpdate()
 	{
 
 	}

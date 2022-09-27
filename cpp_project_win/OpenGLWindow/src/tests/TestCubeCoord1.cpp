@@ -57,7 +57,7 @@ namespace tests {
 		shader->Unbind();
 	}
 
-	void TestCubeCoord1::OnUpdate(float deltaTime)
+	void TestCubeCoord1::OnUpdate()
 	{
 		fov = (g_mouseParam) ? g_mouseParam->fov : fov;
 		const glm::vec3& mouseMove = (g_mouseParam) ? g_mouseParam->front : cameraFront;

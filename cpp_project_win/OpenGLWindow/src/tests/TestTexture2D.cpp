@@ -44,7 +44,7 @@ namespace tests {
 		shader.Unbind();
 	}
 
-	void TestTexture2D::OnUpdate(float deltaTime)
+	void TestTexture2D::OnUpdate()
 	{
 		proj = glm::ortho(0.0f, (float)display_w, 0.0f, (float)display_h, -1.0f, 1.0f);//Õý½»¾ØÕó
 		view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));

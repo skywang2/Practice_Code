@@ -32,6 +32,7 @@ struct MouseParam
     double pitch;
     double fov;
     glm::vec3 front;
+    double deltaTime;
 
     MouseParam()
         : firstMove(true),
@@ -40,7 +41,8 @@ struct MouseParam
         yaw(-90.0),
         pitch(0.0),
         fov(46.0),/*50mm¾µÍ·*/
-        front()
+        front(),
+        deltaTime(0.0)
     {
     }
 };

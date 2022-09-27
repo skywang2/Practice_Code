@@ -25,13 +25,14 @@ namespace tests {
 		TestCubeLight();
 		~TestCubeLight();
 
-		void OnUpdate(float deltaTime) override;
+		void OnUpdate() override;
 		void OnRender() override;
 		void OnImGuiRender() override;
 		void ProcessInputClass(GLFWwindow*) override;
 
 	private:
 		int display_w, display_h;
+		double deltaTime, lastFrame;//当前帧与上一帧所消耗时间差；上一帧消耗时间
 
 		glm::vec3 model_trans;//模型变换平移
 		glm::mat4 proj;

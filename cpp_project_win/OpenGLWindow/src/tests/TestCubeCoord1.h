@@ -25,7 +25,7 @@ namespace tests {
 		TestCubeCoord1();
 		~TestCubeCoord1();
 
-		void OnUpdate(float deltaTime) override;
+		void OnUpdate() override;
 		void OnRender() override;
 		void OnImGuiRender() override;
 		void ProcessInputClass(GLFWwindow*) override;

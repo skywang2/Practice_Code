@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
             current->ProcessInputClass(window);
             if (current)
             {
-                current->OnUpdate(0.f);//做一些渲染准备工作
+                current->OnUpdate();//做一些渲染准备工作
                 current->OnRender();//渲染图形
                 ImGui::Begin("Test");
                 do

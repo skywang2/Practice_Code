@@ -48,7 +48,7 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos)
         g_mouseParam = new MouseParam;
     }
 
-    //避免第一帧出现剧烈移动，使此时的鼠标位置为初始点
+    //避免鼠标进入窗口第一帧出现剧烈移动，使此时的鼠标位置为初始点
     if (g_mouseParam->firstMove)
     {
         g_mouseParam->lastX = xpos;
