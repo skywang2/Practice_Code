@@ -605,5 +605,53 @@ public:
 	t->Request();//实际执行的是Adaptee的Do操作
 }
 
+//备忘录模式
+//在不破坏封装性的前提下，在对象外保存对象内部状态，用于后续恢复对象原有状态
+class GameRole
+{
+public:
+	GameRole()
+	{
+		data.push_back(1);//插入数据
+		data.push_back(2);
+	}
+	Memento SaveData()
+	{
+		return Memento(data);
+	}
+	void LoadData(Memnto m)
+	{
+		data = m.data;//让设置成员变量的操作在函数内进行，保证封装性
+	}
+private:
+	std::vector<int> data;
+};
+class Memento
+{
+public:
+	Memento(std::vector<int> data) { this->data = data; }
+
+	std::vector<int> data;//该类型取决于要保存的数据，可以考虑使用模板类
+};
+class MementoManager//负责保存管理Memento对象
+{
+public:
+	void SetMemento(Memento m) { holder = m; }
+	Memento GetMemento() { return holder; }
+private:
+	Memento holder;
+};
+
+{
+	GameRole player;
+	
+	MementoManager manager;
+	manager.SetMemento(player.SaveData());//保存数据
+	
+	//此处player内的数据被修改
+	
+	player.LoadData(manager.GetMemento());//加载数据
+}
+
 
 
