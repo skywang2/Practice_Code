@@ -607,6 +607,7 @@ public:
 
 //备忘录模式
 //在不破坏封装性的前提下，在对象外保存对象内部状态，用于后续恢复对象原有状态
+//适用于功能复杂，需要记录历史数据的类
 class GameRole
 {
 public:
@@ -653,5 +654,62 @@ private:
 	player.LoadData(manager.GetMemento());//加载数据
 }
 
+//组合模式
+//特点：由很多同类对象组成树状结构；整体与部分可以被一致对待
+class Component//定义所有类共有接口
+{
+private:
+	std::string m_objectName;
+public:
+	Component(std::string name) { m_objectName = name; }
+	virtual void Add(Component* com) = 0;
+	virtual void Remove(Component* com) = 0;
+	virtual void DoSomething() = 0;
+};
+class Leaf : public Component//叶节点
+{
+public:
+	Leaf(std::string name)
+		: Component(name)
+	{ return; }
+	
+	void Add(Component* com) override { return; }
+	void Remove(Component* com) override { return; }
+	void DoSomething()
+	{
+		//进行一些操作
+	}
+};
+class Composite : public Component//枝节点
+{
+private:
+	std::List<Component*> children;
+public:
+	Composite(std::string name)
+		: Component(name)
+	{ return; }
+	
+	void Add(Component* com) override { children.push_back(com); }
+	void Remove(Component* com) override { children.remove(com); }
+	void DoSomething()
+	{
+		//进行一些操作
+		for(auto& child : children)
+		{
+			child->DoSomething();
+		}
+	}
+};
 
+{
+	Composite* root = new Composite("root");
+	root->Add(new Leaf("Leaf A"));//增加叶节点
+	
+	Composite* branch1 = new Composite("branch1");
+	branch1->Add(new Leaf("Leaf A"));
+	root->Add(branch1);//增加枝节点
+	
+	root->DoSomething();
+	root->Remove(branch1);
+}
 
