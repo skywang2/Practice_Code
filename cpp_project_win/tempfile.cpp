@@ -717,3 +717,69 @@ public:
 	root->Remove(branch1);
 }
 
+//迭代器模式
+//将遍历操作抽象并封装成Iterator类，该模式普遍存在与各种面向对象语言的标准库中，即容器遍历
+//C++中一般使用模板类实现通用迭代器
+//本例中迭代器为C++风格，简单描述vector数组迭代器
+template<typename T>
+class Iterator
+{
+public:
+	virtual T begin();
+	virtual T end();
+	virtual T next();
+	virtual void pop_back();
+};
+class Aggregate
+{
+public:
+	virtual Iterator* CreateIterator();
+};
+template<typename T>
+class ConcreteIterator : Iterator
+{
+private:
+	ConcreteAggregate* dataSet;
+	int currentIndex;
+public:
+	ConcreteIterator(ConcreteAggregate* data)
+		: dataSet(data),
+		currentIndex(0)
+	{}
+	T begin()
+	{
+		return (*dataSet)[0];
+	}
+	T next()
+	{
+		current++;
+		if(current < dataSet.Count())
+		{
+			return (*dataSet)[current];
+		}
+	}
+};
+template<typename T>
+class ConcreteAggregate
+{
+private:
+	T[100] data;//假设容器大小固定
+public:
+	Iterator* CreateIterator()
+	{
+		return new ConcreteIterator(this);
+	}
+	int Count() { return 100; }
+	T operator[](int index)
+	{
+		return data[index];
+	}
+};
+
+
+
+
+
+
+
+
