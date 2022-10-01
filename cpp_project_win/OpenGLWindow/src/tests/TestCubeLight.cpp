@@ -95,6 +95,7 @@ namespace tests {
 		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));
 
 		glm::mat4 modelLight = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, -3.0f));
+		//glm::mat4 modelLight = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f * glm::cos(glfwGetTime()), 3.0f, -3.0f * glm::sin(glfwGetTime())));//在xz平面做圆周运动
 		shaderLight->Bind();//光源的shader
 		shaderLight->SetUniformMat4f("u_model", modelLight);
 		shaderLight->SetUniformMat4f("u_view", view);
