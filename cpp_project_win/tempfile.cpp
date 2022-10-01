@@ -607,6 +607,7 @@ public:
 
 //备忘录模式
 //在不破坏封装性的前提下，在对象外保存对象内部状态，用于后续恢复对象原有状态
+//适用于功能复杂，需要记录历史数据的类
 class GameRole
 {
 public:
@@ -652,6 +653,133 @@ private:
 	
 	player.LoadData(manager.GetMemento());//加载数据
 }
+
+//组合模式
+//特点：由很多同类对象组成树状结构；整体与部分可以被一致对待
+//适用场景：需要体现部分与整体层次，并且需要部分与整体操作方式统一的时候可用组合模式
+//在实现时存在两种方式：透明方式；安全方式，两者各有优势
+//透明方式：Leaf节点也实现Add、Remove等方法，使得所有类都有统一的接口
+//安全方式：Leaf节点不实现Add、Remove等方法，需要在使用时进行额外判断，相对麻烦
+class Component//定义所有类共有接口
+{
+private:
+	std::string m_objectName;
+public:
+	Component(std::string name) { m_objectName = name; }
+	virtual void Add(Component* com) = 0;
+	virtual void Remove(Component* com) = 0;
+	virtual void DoSomething() = 0;
+};
+class Leaf : public Component//叶节点
+{
+public:
+	Leaf(std::string name)
+		: Component(name)
+	{ return; }
+	
+	void Add(Component* com) override { return; }
+	void Remove(Component* com) override { return; }
+	void DoSomething()
+	{
+		//进行一些操作
+	}
+};
+class Composite : public Component//枝节点
+{
+private:
+	std::List<Component*> children;
+public:
+	Composite(std::string name)
+		: Component(name)
+	{ return; }
+	
+	void Add(Component* com) override { children.push_back(com); }
+	void Remove(Component* com) override { children.remove(com); }
+	void DoSomething()
+	{
+		//进行一些操作
+		for(auto& child : children)
+		{
+			child->DoSomething();
+		}
+	}
+};
+
+{
+	Composite* root = new Composite("root");
+	root->Add(new Leaf("Leaf A"));//增加叶节点
+	
+	Composite* branch1 = new Composite("branch1");
+	branch1->Add(new Leaf("Leaf A"));
+	root->Add(branch1);//增加枝节点
+	
+	root->DoSomething();
+	root->Remove(branch1);
+}
+
+//迭代器模式
+//将遍历操作抽象并封装成Iterator类，该模式普遍存在与各种面向对象语言的标准库中，即容器遍历
+//C++中一般使用模板类实现通用迭代器
+//本例中迭代器为C++风格，简单描述vector数组迭代器
+template<typename T>
+class Iterator
+{
+public:
+	virtual T begin();
+	virtual T end();
+	virtual T next();
+	virtual void pop_back();
+};
+class Aggregate
+{
+public:
+	virtual Iterator* CreateIterator();
+};
+template<typename T>
+class ConcreteIterator : Iterator
+{
+private:
+	ConcreteAggregate* dataSet;
+	int currentIndex;
+public:
+	ConcreteIterator(ConcreteAggregate* data)
+		: dataSet(data),
+		currentIndex(0)
+	{}
+	T begin()
+	{
+		return (*dataSet)[0];
+	}
+	T next()
+	{
+		current++;
+		if(current < dataSet.Count())
+		{
+			return (*dataSet)[current];
+		}
+	}
+};
+template<typename T>
+class ConcreteAggregate
+{
+private:
+	T[100] data;//假设容器大小固定
+public:
+	Iterator* CreateIterator()
+	{
+		return new ConcreteIterator(this);
+	}
+	int Count() { return 100; }
+	T operator[](int index)
+	{
+		return data[index];
+	}
+};
+
+
+
+
+
 
 
 
