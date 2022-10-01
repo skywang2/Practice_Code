@@ -114,6 +114,7 @@
   <ItemGroup>
     <ClCompile Include="include\Circular_Queue.hpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="TestMemberData.cpp" />
     <ClCompile Include="Tree1.cpp" />
     <ClCompile Include="include\Queue.hpp" />
     <ClCompile Include="include\Queue_cpp_built-in.hpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="include\Regex.hpp" />
     <ClInclude Include="include\main.h" />
     <ClInclude Include="include\MyLocker.hpp" />
+    <ClInclude Include="TestMemberData.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />

@@ -6,6 +6,7 @@
 #include "MyLocker.hpp"
 #include "Tree1.cpp"
 #include "Regex.hpp"
+#include "TestMemberData.h"
 
 std::mutex g_mtx;
 
@@ -23,7 +24,7 @@ public:
 		m_i = t.m_i;
 		std::cout << __FUNCTION__ << " copy" << std::endl;
 	}
-	TestEmplace(const TestEmplace&& t) noexcept
+	TestEmplace(TestEmplace&& t) noexcept
 		: m_s(std::move(t.m_s)), m_i(t.m_i)
 	{
 		std::cout << __FUNCTION__ << " move" << std::endl;
@@ -161,6 +162,11 @@ int main(int argc, char* argv[]) {
 		}
 
 		//static_assert
+
+		//9.pImpl
+		{
+			TestMemberData mData(0);
+		}
 	}
 	catch (exception e)
 	{

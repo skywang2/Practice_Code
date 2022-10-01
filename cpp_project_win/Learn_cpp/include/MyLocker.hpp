@@ -18,7 +18,7 @@ class MyLockerUncopy
 
 public:
 	explicit MyLockerUncopy(std::mutex* mtx)
-		:m_pMtx(mtx, m_deleter)
+		:m_pMtx(mtx, m_deleter)//指定删除器
 	{
 		m_pMtx.get()->lock();
 		std::cout << "locked" << std::endl;
@@ -26,7 +26,7 @@ public:
 
 	~MyLockerUncopy()
 	{
-		m_deleter(m_pMtx.get());
+		//m_pMtx.get()->unlock();//m_pMtx初始化时已经赋予了删除器，无需自己手动调用
 		std::cout << "unlocked" << std::endl;
 	}
 
