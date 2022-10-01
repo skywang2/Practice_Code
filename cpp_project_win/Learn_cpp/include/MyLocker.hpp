@@ -26,6 +26,7 @@ public:
 
 	~MyLockerUncopy()
 	{
+		m_deleter(m_pMtx.get());
 		std::cout << "unlocked" << std::endl;
 	}
 
