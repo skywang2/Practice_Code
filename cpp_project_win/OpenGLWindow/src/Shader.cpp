@@ -57,7 +57,7 @@ void Shader::SetUniform1i(const std::string& varible, int v1)
     GLint var = GetUniformLocation(varible);
     //glUniform1i(var, v1);
     GLCall(glUniform1i(var, v1));
-    GL_INVALID_OPERATION;
+    //GL_INVALID_OPERATION;
 }
 
 void Shader::SetUniform4f(const std::string& varible, float v1, float v2, float v3, float v4)

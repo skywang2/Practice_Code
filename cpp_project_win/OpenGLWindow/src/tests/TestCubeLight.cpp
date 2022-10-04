@@ -27,22 +27,36 @@ namespace tests {
 		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
 		, m_lightColor(glm::vec3(1.0))
 		, m_toyColor(glm::vec3(1.0f, 0.5f, 0.31f))
+		, m_isRoundMove(false)
 	{
-		const int valueCountPerPoint = 3 + 2;//顶点坐标3个值，纹理坐标2个值
-		float positions[8 * valueCountPerPoint];
-		unsigned int indices[12 * 3];
+		const int positionValueCountPerPoint = 3;//顶点坐标3个float
+		const int textureValueCountPerPoint = 2;//纹理坐标2个float
+		const int normalValueCountPerPoint = 3;//顶点坐标3个float
+		const int valueCountPerPoint = positionValueCountPerPoint + textureValueCountPerPoint + normalValueCountPerPoint;//每组顶点数据总float个数
+		const int vertexSetCount = 24;//VertexBuffer行数，同一个顶点可能因为纹理坐标、法线坐标不同而独立生成一组
+		const int indexSetCount = 12;//IndexBuffer行数
+
+		const int positionCount = vertexSetCount * valueCountPerPoint;
+		const int indicesCount = indexSetCount * positionValueCountPerPoint;
+		float positions[positionCount];
+		unsigned int indices[indicesCount];
+
 		//立方体
-		LoadVertexAttri<GLfloat>("res/model/cube03_VertexBuffer_TestCubeLight.txt", positions, 8 * valueCountPerPoint);
-		unsigned int idxLineNum = LoadVertexAttri<GLuint>("res/model/cube03_IndexBuffer_TestCubeLight.txt", indices, 12 * 3);
+		LoadVertexAttri<GLfloat>("res/model/cube03_VertexBuffer_TestCubeLight.txt", positions, positionCount);
+		unsigned int idxLineNum = LoadVertexAttri<GLuint>("res/model/cube03_IndexBuffer_TestCubeLight.txt", indices, indicesCount);
 
 		vao.reset(new VertexArray);//背照射物体
-		vbo.reset(new VertexBuffer(positions, 8 * valueCountPerPoint * sizeof(float)));
-		ibo.reset(new IndexBuffer(indices, idxLineNum * 3));
+		vbo.reset(new VertexBuffer(positions, positionCount * sizeof(float)));
+		ibo.reset(new IndexBuffer(indices, indicesCount));
 		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object.glsl"));
 		texture.reset(new Texture("res/textures/TestCubeCoord1.png"));
 
-		layoutPosition.Push<float>(3);
+		layoutPosition.Push<float>(positionValueCountPerPoint);
+		layoutPosition.Push<float>(textureValueCountPerPoint);
+		layoutPosition.Push<float>(normalValueCountPerPoint);
 		vao->AddBuffer(*vbo, layoutPosition);
+		//glDisableVertexAttribArray(1);
+		//glDisableVertexAttribArray(2);
 
 		vaoLight.reset(new VertexArray);//光源
 		shaderLight.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl"/*使用与背照射物体相同的vertex shader*/
@@ -87,17 +101,29 @@ namespace tests {
 		);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
 
+		glm::vec3 lightPos;
+		glm::mat4 lightModel;
+		if (m_isRoundMove)
+		{
+			lightPos = glm::vec3(3.0f * glm::cos(glfwGetTime()), 3.0f, -3.0f * glm::sin(glfwGetTime()));//光源在xz平面做圆周运动
+		}
+		else
+		{
+			lightPos = glm::vec3(3.0f, 3.0f, -3.0f);//光源位置
+		}
+		lightModel = glm::translate(glm::mat4(1.0f), lightPos);//光源model矩阵
+
 		shader->Bind();
 		shader->SetUniformMat4f("u_model", model);
 		shader->SetUniformMat4f("u_view", view);
 		shader->SetUniformMat4f("u_projection", proj);
-		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));//立方体颜色
 		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));
+		shader->SetUniformVec3f("u_lightPos", lightPos);
+		shader->SetUniformVec3f("u_viewPos", cameraPos);
 
-		glm::mat4 modelLight = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 3.0f, -3.0f));
-		//glm::mat4 modelLight = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f * glm::cos(glfwGetTime()), 3.0f, -3.0f * glm::sin(glfwGetTime())));//在xz平面做圆周运动
 		shaderLight->Bind();//光源的shader
-		shaderLight->SetUniformMat4f("u_model", modelLight);
+		shaderLight->SetUniformMat4f("u_model", lightModel);
 		shaderLight->SetUniformMat4f("u_view", view);
 		shaderLight->SetUniformMat4f("u_projection", proj);
 
@@ -128,6 +154,7 @@ namespace tests {
 		ImGui::SliderFloat("zNear", &zNear, 0.f, 100.f);
 		ImGui::SliderFloat("zFar", &zFar, 0.f, 100.f);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);//显示帧率
+		if (ImGui::Button("round move")) { m_isRoundMove = !m_isRoundMove; }
 	}
 
 	void TestCubeLight::ProcessInputClass(GLFWwindow* window)
