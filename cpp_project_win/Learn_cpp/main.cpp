@@ -7,6 +7,7 @@
 #include "Tree1.cpp"
 #include "Regex.hpp"
 #include "TestMemberData.h"
+#include "forward.hpp"
 
 std::mutex g_mtx;
 
@@ -166,6 +167,17 @@ int main(int argc, char* argv[]) {
 		//9.pImpl
 		{
 			TestMemberData mData(0);
+		}
+
+		//10.forward
+		{
+			std::cout << std::endl << "10.forward" << std::endl;
+			std::string val("1234");
+
+			std::cout << "using std::string" << std::endl;
+			MoreThanProcess(val);
+			std::cout << "using std::move(std::string)" << std::endl;
+			MoreThanProcess(std::move(val));
 		}
 	}
 	catch (exception e)

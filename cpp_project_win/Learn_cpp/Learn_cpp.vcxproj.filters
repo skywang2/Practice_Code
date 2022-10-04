@@ -47,6 +47,9 @@
     <ClInclude Include="TestMemberData.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="forward.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />

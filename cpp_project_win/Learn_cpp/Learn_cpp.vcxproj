@@ -120,6 +120,7 @@
     <ClCompile Include="include\Queue_cpp_built-in.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="forward.hpp" />
     <ClInclude Include="include\Regex.hpp" />
     <ClInclude Include="include\main.h" />
     <ClInclude Include="include\MyLocker.hpp" />
