@@ -54,9 +54,11 @@ namespace tests {
 		VertexBufferLayout layoutPosition;
 		Renderer m_renderer;
 
+		glm::vec3 m_lightPos;//光源位置，模型坐标
 		glm::vec3 m_lightColor;
 		glm::vec3 m_toyColor;
 		Material m_material;
+		Material m_lightMaterial;
 		ImVec4 m_clear_color;
 
 		bool m_isRoundMove;

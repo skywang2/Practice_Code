@@ -25,6 +25,7 @@ namespace tests {
 		, cameraPos(glm::vec3(0.0f, 0.0f, 5.0f))
 		, cameraFront(glm::vec3(0.0f, 0.0f, -0.1f))//使用g_mouseParam.front替代
 		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
+		, m_lightPos(glm::vec3(3.0f, 3.0f, -3.0f))
 		, m_lightColor(glm::vec3(1.0))
 		, m_toyColor(glm::vec3(1.0f, 0.5f, 0.31f))
 		, m_isRoundMove(false)
@@ -64,6 +65,7 @@ namespace tests {
 		vaoLight->AddBuffer(*vbo, layoutPosition);
 
 		//材质/纹理
+		//物体
 		float initAmbient[3] = { 1.0f, 0.5f, 0.31f };
 		float initDiffuse[3] = { 1.0f, 0.5f, 0.31f };
 		float initSpecular[3] = { 0.5f, 0.5f, 0.5f };
@@ -72,6 +74,14 @@ namespace tests {
 		memcpy_s(&m_material.diffuse, 3 * sizeof(float), initDiffuse, 3 * sizeof(float));
 		memcpy_s(&m_material.specular, 3 * sizeof(float), initSpecular, 3 * sizeof(float));
 		m_material.shininess = 32.0f;
+		//光源
+		float initLightAmbient[3] = { 0.2f, 0.2f, 0.2f };
+		float initLightDiffuse[3] = { 0.5f, 0.5f, 0.5f };
+		float initLightSpecular[3] = { 1.0f, 1.0f, 1.0f };
+		memset(&m_lightMaterial, 0, sizeof(m_lightMaterial));
+		memcpy_s(&m_lightMaterial.ambient, 3 * sizeof(float), initLightAmbient, 3 * sizeof(float));
+		memcpy_s(&m_lightMaterial.diffuse, 3 * sizeof(float), initLightDiffuse, 3 * sizeof(float));
+		memcpy_s(&m_lightMaterial.specular, 3 * sizeof(float), initLightSpecular, 3 * sizeof(float));
 	}
 
 	TestCubeLight::~TestCubeLight()
@@ -111,17 +121,12 @@ namespace tests {
 		);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
 
-		glm::vec3 lightPos;
 		glm::mat4 lightModel;
 		if (m_isRoundMove)
 		{
-			lightPos = glm::vec3(3.0f * glm::cos(glfwGetTime()), 3.0f, -3.0f * glm::sin(glfwGetTime()));//光源在xz平面做圆周运动
+			m_lightPos = glm::vec3(3.0f * glm::cos(glfwGetTime()), 3.0f, -3.0f * glm::sin(glfwGetTime()));//光源在xz平面做圆周运动
 		}
-		else
-		{
-			lightPos = glm::vec3(3.0f, 3.0f, -3.0f);//光源位置
-		}
-		lightModel = glm::translate(glm::mat4(1.0f), lightPos);//光源model矩阵
+		lightModel = glm::translate(glm::mat4(1.0f), m_lightPos);//光源model矩阵
 		lightModel = glm::scale(lightModel, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		shader->Bind();
@@ -130,12 +135,15 @@ namespace tests {
 		shader->SetUniformMat4f("u_projection", proj);
 		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));//立方体颜色
 		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));
-		shader->SetUniformVec3f("u_lightPos", lightPos);
+		shader->SetUniformVec3f("u_lightPos", m_lightPos);
 		shader->SetUniformVec3f("u_viewPos", cameraPos);
 		shader->SetUniform3f("u_material.ambient", m_material.ambient[0], m_material.ambient[1], m_material.ambient[2]);
 		shader->SetUniform3f("u_material.diffuse", m_material.diffuse[0], m_material.diffuse[1], m_material.diffuse[2]);
 		shader->SetUniform3f("u_material.specular", m_material.specular[0], m_material.specular[1], m_material.specular[2]);
 		shader->SetUniform1f("u_material.shininess", m_material.shininess);
+		shader->SetUniform3f("u_lightMaterial.ambient", m_lightMaterial.ambient[0], m_lightMaterial.ambient[1], m_lightMaterial.ambient[2]);
+		shader->SetUniform3f("u_lightMaterial.diffuse", m_lightMaterial.diffuse[0], m_lightMaterial.diffuse[1], m_lightMaterial.diffuse[2]);
+		shader->SetUniform3f("u_lightMaterial.specular", m_lightMaterial.specular[0], m_lightMaterial.specular[1], m_lightMaterial.specular[2]);
 
 		shaderLight->Bind();//光源的shader
 		shaderLight->SetUniformMat4f("u_model", lightModel);
@@ -174,6 +182,10 @@ namespace tests {
 		ImGui::ColorEdit3("diffuse color", m_material.diffuse);
 		ImGui::ColorEdit3("specular color", m_material.specular);
 		ImGui::SliderFloat("shininess", &m_material.shininess, 0.f, 255.f);
+		ImGui::ColorEdit3("light ambient color", m_lightMaterial.ambient);
+		ImGui::ColorEdit3("light diffuse color", m_lightMaterial.diffuse);
+		ImGui::ColorEdit3("light specular color", m_lightMaterial.specular);
+
 	}
 
 	void TestCubeLight::ProcessInputClass(GLFWwindow* window)
