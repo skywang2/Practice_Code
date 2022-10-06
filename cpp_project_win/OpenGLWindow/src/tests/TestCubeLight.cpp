@@ -135,6 +135,7 @@ namespace tests {
 		shader->SetUniform3f("u_material.ambient", m_material.ambient[0], m_material.ambient[1], m_material.ambient[2]);
 		shader->SetUniform3f("u_material.diffuse", m_material.diffuse[0], m_material.diffuse[1], m_material.diffuse[2]);
 		shader->SetUniform3f("u_material.specular", m_material.specular[0], m_material.specular[1], m_material.specular[2]);
+		shader->SetUniform1f("u_material.shininess", m_material.shininess);
 
 		shaderLight->Bind();//¹âÔ´µÄshader
 		shaderLight->SetUniformMat4f("u_model", lightModel);

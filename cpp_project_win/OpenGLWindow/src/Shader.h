@@ -32,6 +32,7 @@ public:
 
     //uniform
     void SetUniform1i(const std::string& varible, int v1);
+    void SetUniform1f(const std::string& varible, float v1);
     void SetUniform3f(const std::string& varible, float v1, float v2, float v3);
     void SetUniform4f(const std::string& varible, float v1, float v2, float v3, float v4);
     void SetUniformVec3f(const std::string& varible, const glm::vec3& matrix);
