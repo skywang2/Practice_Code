@@ -41,8 +41,8 @@ namespace tests {
 		glm::mat4 mvp;
 		float fov, zNear, zFar;
 		glm::vec3 cameraPos;//视图变换平移
-		glm::vec3 cameraFront;
-		glm::vec3 cameraUp;
+		glm::vec3 cameraFront;//镜头方向
+		glm::vec3 cameraUp;//相机头顶方向
 		
 		std::unique_ptr<VertexArray> vao;//vertex buffer内存布局
 		std::unique_ptr<VertexArray> vaoLight;//光源
@@ -56,6 +56,7 @@ namespace tests {
 
 		glm::vec3 m_lightColor;
 		glm::vec3 m_toyColor;
+		Material m_material;
 		ImVec4 m_clear_color;
 
 		bool m_isRoundMove;

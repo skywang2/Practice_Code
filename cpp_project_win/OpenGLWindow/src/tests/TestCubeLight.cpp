@@ -62,6 +62,16 @@ namespace tests {
 		shaderLight.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl"/*使用与背照射物体相同的vertex shader*/
 			, "res/shaders/shader_cube03_fragment_light.glsl"));
 		vaoLight->AddBuffer(*vbo, layoutPosition);
+
+		//材质/纹理
+		float initAmbient[3] = { 1.0f, 0.5f, 0.31f };
+		float initDiffuse[3] = { 1.0f, 0.5f, 0.31f };
+		float initSpecular[3] = { 0.5f, 0.5f, 0.5f };
+		memset(&m_material, 0, sizeof(m_material));
+		memcpy_s(&m_material.ambient, 3 * sizeof(float), initAmbient, 3 * sizeof(float));
+		memcpy_s(&m_material.diffuse, 3 * sizeof(float), initDiffuse, 3 * sizeof(float));
+		memcpy_s(&m_material.specular, 3 * sizeof(float), initSpecular, 3 * sizeof(float));
+		m_material.shininess = 32.0f;
 	}
 
 	TestCubeLight::~TestCubeLight()
@@ -112,6 +122,7 @@ namespace tests {
 			lightPos = glm::vec3(3.0f, 3.0f, -3.0f);//光源位置
 		}
 		lightModel = glm::translate(glm::mat4(1.0f), lightPos);//光源model矩阵
+		lightModel = glm::scale(lightModel, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		shader->Bind();
 		shader->SetUniformMat4f("u_model", model);
@@ -121,6 +132,9 @@ namespace tests {
 		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));
 		shader->SetUniformVec3f("u_lightPos", lightPos);
 		shader->SetUniformVec3f("u_viewPos", cameraPos);
+		shader->SetUniform3f("u_material.ambient", m_material.ambient[0], m_material.ambient[1], m_material.ambient[2]);
+		shader->SetUniform3f("u_material.diffuse", m_material.diffuse[0], m_material.diffuse[1], m_material.diffuse[2]);
+		shader->SetUniform3f("u_material.specular", m_material.specular[0], m_material.specular[1], m_material.specular[2]);
 
 		shaderLight->Bind();//光源的shader
 		shaderLight->SetUniformMat4f("u_model", lightModel);
@@ -155,6 +169,10 @@ namespace tests {
 		ImGui::SliderFloat("zFar", &zFar, 0.f, 100.f);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);//显示帧率
 		if (ImGui::Button("round move")) { m_isRoundMove = !m_isRoundMove; }
+		ImGui::ColorEdit3("ambient color", m_material.ambient);
+		ImGui::ColorEdit3("diffuse color", m_material.diffuse);
+		ImGui::ColorEdit3("specular color", m_material.specular);
+		ImGui::SliderFloat("shininess", &m_material.shininess, 0.f, 255.f);
 	}
 
 	void TestCubeLight::ProcessInputClass(GLFWwindow* window)

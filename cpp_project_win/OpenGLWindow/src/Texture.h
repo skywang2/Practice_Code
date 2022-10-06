@@ -1,5 +1,14 @@
 #pragma once
 #include "Renderer.h"
+#include "glm/vec3.hpp"
+
+struct Material
+{
+	float ambient[3];
+	float diffuse[3];
+	float specular[3];
+	float shininess;
+};
 
 class Texture
 {
