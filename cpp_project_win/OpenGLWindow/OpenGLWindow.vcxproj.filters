@@ -134,9 +134,18 @@
     <None Include="res\shaders\shader_cube02_fragment.glsl">
       <Filter>源文件\shader\cube</Filter>
     </None>
-    <None Include="res\shaders\shader_cube03_fragment_light.glsl" />
-    <None Include="res\shaders\shader_cube03_fragment_object.glsl" />
-    <None Include="res\shaders\shader_cube03_vertex_object.glsl" />
+    <None Include="res\shaders\shader_cube03_fragment_light.glsl">
+      <Filter>源文件\shader\cube</Filter>
+    </None>
+    <None Include="res\shaders\shader_cube03_fragment_object.glsl">
+      <Filter>源文件\shader\cube</Filter>
+    </None>
+    <None Include="res\shaders\shader_cube03_fragment_object_diffuse_map.glsl">
+      <Filter>源文件\shader\cube</Filter>
+    </None>
+    <None Include="res\shaders\shader_cube03_vertex_object.glsl">
+      <Filter>源文件\shader\cube</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
@@ -217,6 +226,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\textures\TestCubeCoord1.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\textures\container2.png">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

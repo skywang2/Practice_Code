@@ -49,8 +49,9 @@ namespace tests {
 		vao.reset(new VertexArray);//背照射物体
 		vbo.reset(new VertexBuffer(positions, positionCount * sizeof(float)));
 		ibo.reset(new IndexBuffer(indices, indicesCount));
-		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object.glsl"));
-		texture.reset(new Texture("res/textures/TestCubeCoord1.png"));
+		//shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object.glsl"));//使用自定义物体颜色
+		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_diffuse_map.glsl.glsl"));//使用漫反射贴图，diffuse map
+		texture.reset(new Texture("res/textures/container2.png"));
 
 		layoutPosition.Push<float>(positionValueCountPerPoint);
 		layoutPosition.Push<float>(textureValueCountPerPoint);
@@ -145,14 +146,14 @@ namespace tests {
 		shader->SetUniform3f("u_lightMaterial.diffuse", m_lightMaterial.diffuse[0], m_lightMaterial.diffuse[1], m_lightMaterial.diffuse[2]);
 		shader->SetUniform3f("u_lightMaterial.specular", m_lightMaterial.specular[0], m_lightMaterial.specular[1], m_lightMaterial.specular[2]);
 
+		int texSlot = 0;//纹理槽（纹理单元）的下标
+		texture->Bind(texSlot);
+		shader->SetUniform1i("u_material.diffuseMap", texSlot);//不能放在构造函数里，需要放在渲染循环中，避免因尚未被调用导致赋值异常
+
 		shaderLight->Bind();//光源的shader
 		shaderLight->SetUniformMat4f("u_model", lightModel);
 		shaderLight->SetUniformMat4f("u_view", view);
 		shaderLight->SetUniformMat4f("u_projection", proj);
-
-		//int texSlot = 0;//纹理槽（纹理单元）的下标
-		//texture->Bind(texSlot);
-		//shader->SetUniform1i("u_texture", texSlot);//不能放在构造函数里，需要放在渲染循环中，避免因尚未被调用导致赋值异常
 
 		m_renderer.Draw(*vao, *ibo, *shader);
 		m_renderer.Draw(*vaoLight, *ibo, *shaderLight);
