@@ -55,8 +55,8 @@ namespace tests {
 		Renderer m_renderer;
 
 		glm::vec3 m_lightPos;//光源位置，模型坐标
-		glm::vec3 m_lightColor;
-		glm::vec3 m_toyColor;
+		//glm::vec3 m_lightColor;//光源颜色
+		//glm::vec3 m_objectColor;//物体颜色
 		Material m_material;
 		Material m_lightMaterial;
 		ImVec4 m_clear_color;

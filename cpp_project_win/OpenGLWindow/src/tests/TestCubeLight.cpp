@@ -26,8 +26,8 @@ namespace tests {
 		, cameraFront(glm::vec3(0.0f, 0.0f, -0.1f))//使用g_mouseParam.front替代
 		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
 		, m_lightPos(glm::vec3(3.0f, 3.0f, -3.0f))
-		, m_lightColor(glm::vec3(1.0))
-		, m_toyColor(glm::vec3(1.0f, 0.5f, 0.31f))
+		//, m_lightColor(glm::vec3(1.0))
+		//, m_objectColor(glm::vec3(1.0f, 0.5f, 0.31f))
 		, m_isRoundMove(false)
 	{
 		const int positionValueCountPerPoint = 3;//顶点坐标3个float
@@ -133,8 +133,8 @@ namespace tests {
 		shader->SetUniformMat4f("u_model", model);
 		shader->SetUniformMat4f("u_view", view);
 		shader->SetUniformMat4f("u_projection", proj);
-		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));//立方体颜色
-		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));
+		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));//立方体颜色，被m_material替代
+		shader->SetUniformVec3f("u_lightColor", glm::vec3(1.0f));//光源颜色，被m_lightMaterial替代
 		shader->SetUniformVec3f("u_lightPos", m_lightPos);
 		shader->SetUniformVec3f("u_viewPos", cameraPos);
 		shader->SetUniform3f("u_material.ambient", m_material.ambient[0], m_material.ambient[1], m_material.ambient[2]);
