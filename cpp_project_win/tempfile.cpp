@@ -770,15 +770,24 @@ public:
 		return new ConcreteIterator(this);
 	}
 	int Count() { return 100; }
-	T operator[](int index)
+	T& operator[](int index)//返回引用
 	{
 		return data[index];
 	}
 };
 
+{
+	ConcreteAggregate set;
+	
+	set[0] = 0;
+	set[1] = 1;
+	
+	Iterator* it = set.CreateIterator();
+	std::cout << it->begin() << std::endl;
+	std::cout << it->next() << std::endl;
+}
 
-
-
+//单例模式
 
 
 
