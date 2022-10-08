@@ -19,7 +19,7 @@ namespace tests {
 		, layoutPosition()
 		, ibo()
 		, shader()
-		, texture()
+		, m_diffuseMap()
 		, fov(45.f)
 		, zNear(1.f), zFar(100.f)
 		, cameraPos(glm::vec3(0.0f, 0.0f, 5.0f))
@@ -51,7 +51,8 @@ namespace tests {
 		ibo.reset(new IndexBuffer(indices, indicesCount));
 		//shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object.glsl"));//使用自定义物体颜色
 		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_diffuse_map.glsl"));//使用漫反射贴图，diffuse map
-		texture.reset(new Texture("res/textures/container2.png"));
+		m_diffuseMap.reset(new Texture("res/textures/container2.png"));
+		m_specularMap.reset(new Texture("res/textures/container2_specular.png"));
 
 		layoutPosition.Push<float>(positionValueCountPerPoint);
 		layoutPosition.Push<float>(textureValueCountPerPoint);
@@ -147,8 +148,11 @@ namespace tests {
 		shader->SetUniform3f("u_lightMaterial.specular", m_lightMaterial.specular[0], m_lightMaterial.specular[1], m_lightMaterial.specular[2]);
 
 		int texSlot = 0;//纹理槽（纹理单元）的下标
-		texture->Bind(texSlot);
+		m_diffuseMap->Bind(texSlot);
 		shader->SetUniform1i("u_material.diffuseMap", texSlot);//不能放在构造函数里，需要放在渲染循环中，避免因尚未被调用导致赋值异常
+		int texSlotSpecular = 1;//高光贴图
+		m_specularMap->Bind(texSlotSpecular);
+		shader->SetUniform1i("u_material.specularMap", texSlotSpecular);//不能放在构造函数里，需要放在渲染循环中，避免因尚未被调用导致赋值异常
 
 		shaderLight->Bind();//光源的shader
 		shaderLight->SetUniformMat4f("u_model", lightModel);

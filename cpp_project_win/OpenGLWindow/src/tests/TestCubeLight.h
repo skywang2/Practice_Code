@@ -50,7 +50,8 @@ namespace tests {
 		std::unique_ptr<IndexBuffer> ibo;
 		std::unique_ptr<Shader> shader;
 		std::unique_ptr<Shader> shaderLight;
-		std::unique_ptr<Texture> texture;
+		std::unique_ptr<Texture> m_diffuseMap;
+		std::unique_ptr<Texture> m_specularMap;
 		VertexBufferLayout layoutPosition;
 		Renderer m_renderer;
 

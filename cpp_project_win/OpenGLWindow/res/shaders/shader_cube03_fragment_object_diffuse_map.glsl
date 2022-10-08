@@ -7,6 +7,7 @@ struct Material
 	vec3 specular;
 	float shininess;
 	sampler2D diffuseMap;//纹理槽下标
+	sampler2D specularMap;//高光槽下标
 };
 
 out vec4 FragColor;
@@ -44,8 +45,10 @@ void main()
 	vec3 reflectDir = reflect(-lightDir, norm);//reflect是shader中计算反射方向的
 //	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);//1.使用反射方向与相机方向，与games101中使用半程向量不同
 //	vec3 specular = u_lightColor * specularStrength * spec;//1.
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0),  u_material.shininess);//2.
-	vec3 specular = u_lightMaterial.specular * (spec * u_material.specular);//2.使用material
+//	float spec = pow(max(dot(viewDir, reflectDir), 0.0),  u_material.shininess);//2.
+//	vec3 specular = u_lightMaterial.specular * (spec * u_material.specular);//2.使用material
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0),  u_material.shininess);//3.
+	vec3 specular = u_lightMaterial.specular * (spec * vec3(texture(u_material.specularMap, v_texCoord)));//3.使用specular map
 	
 	//u_objectColor相当于公式里的反射率k
 //	vec3 result = u_objectColor * (ambient + diffuse + specular);//1.光作用在物体上，用wise product表示，这只是数学上的一种表示，只是一种近似
