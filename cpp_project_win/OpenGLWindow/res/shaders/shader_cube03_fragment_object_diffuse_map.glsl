@@ -52,6 +52,5 @@ void main()
 	vec3 result = ambient + diffuse + specular;//2.使用material物体颜色已经包含在material中
 	FragColor = vec4(result, 1.0);
 
-	//FragColor = texture(u_material.diffuseMap, v_texCoord);	//槽，纹理坐标
-	FragColor = vec4(1.0);
+//	FragColor = texture(u_material.diffuseMap, v_texCoord);	//只使用纹理坐标，测试用
 }

@@ -50,7 +50,7 @@ namespace tests {
 		vbo.reset(new VertexBuffer(positions, positionCount * sizeof(float)));
 		ibo.reset(new IndexBuffer(indices, indicesCount));
 		//shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object.glsl"));//使用自定义物体颜色
-		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_diffuse_map.glsl.glsl"));//使用漫反射贴图，diffuse map
+		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_diffuse_map.glsl"));//使用漫反射贴图，diffuse map
 		texture.reset(new Texture("res/textures/container2.png"));
 
 		layoutPosition.Push<float>(positionValueCountPerPoint);
@@ -106,7 +106,7 @@ namespace tests {
 
 	void TestCubeLight::OnRender()
 	{
-		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
+		GLCall(glClearColor(m_clear_color.x, m_clear_color.y, m_clear_color.z, 1.f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		glClearDepth(99999.f);
 
