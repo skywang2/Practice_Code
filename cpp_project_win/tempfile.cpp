@@ -788,6 +788,93 @@ public:
 }
 
 //单例模式
+//C++实现中可以有静态成员变量或指针变量，在多线程程序中需要加锁以及双重判空
+//懒汉模式：用到时才初始化
+//饿汉模式：定义变量时即初始化
+//非线程安全+懒汉
+class Singleton
+{
+public:
+	static Singleton* GetInstance();
+	~Singleton() {}
+private:
+	Singleton() {}//隐藏默认构造
+	Singleton(const Singleton& obj) = delete;//删除拷贝构造
+	Singleton& operator=(const Singleton& obj) = delete;//删除赋值构造
+	
+	static Singleton* m_pSingle;
+};
+Singleton* Singleton::m_pSingle = nullptr;//静态成员要在类外定义
+Singleton* GetInstance()
+{
+	if(!m_pSingle)
+	{
+		m_pSingle = new Singleton;
+	}
+	return m_pSingle;
+}
+//线程安全+懒汉
+std::mutex mtx;//互斥量
+class Singleton
+{
+public:
+	static Singleton* GetInstance();
+	~Singleton() {}
+private:
+	Singleton() {}//隐藏默认构造
+	Singleton(const Singleton& obj) = delete;//删除拷贝构造
+	Singleton& operator=(const Singleton& obj) = delete;//删除赋值构造
+	
+	static Singleton* m_pSingle;
+};
+Singleton* Singleton::m_pSingle = nullptr;//静态成员要在类外定义
+Singleton* GetInstance()
+{
+	if(!m_pSingle)//双重判空
+	{
+		std::lock_guard<std::mutex> lck(mtx);
+		if(!m_pSingle)
+		{
+			m_pSingle = new Singleton;
+		}
+	}
+	return m_pSingle;
+}
+//静态局部变量（懒汉）
+//缺点：最好在单线程启动阶段调用并初始化
+class Singleton
+{
+public:
+    static Singleton& getInstance();
+private:
+    Singleton(){}
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+};
+
+Singleton& Singleton::getInstance()
+{
+    static Singleton singleton;
+    return singleton;
+}
+//饿汉，定义变量时即初始化
+class Singleton
+{
+public:
+    static Singleton& getInstance();
+private:
+    Singleton(){}
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+	
+	static Singleton* m_pSingle;
+};
+Singleton* Singleton::m_pSingle = new Singleton();
+Singleton* GetInstance()
+{
+	return m_pSingle;
+}
+
 
 
 
