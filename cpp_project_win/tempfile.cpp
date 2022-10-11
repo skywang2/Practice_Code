@@ -788,6 +788,137 @@ public:
 }
 
 //单例模式
+//C++实现中可以有静态成员变量或指针变量，在多线程程序中需要加锁以及双重判空
+//懒汉模式：用到时才初始化
+//饿汉模式：定义变量时即初始化
+//非线程安全+懒汉
+class Singleton
+{
+public:
+	static Singleton* GetInstance();
+	~Singleton() {}
+private:
+	Singleton() {}//隐藏默认构造
+	Singleton(const Singleton& obj) = delete;//删除拷贝构造
+	Singleton& operator=(const Singleton& obj) = delete;//删除赋值构造
+	
+	static Singleton* m_pSingle;
+};
+Singleton* Singleton::m_pSingle = nullptr;//静态成员要在类外定义
+Singleton* GetInstance()
+{
+	if(!m_pSingle)
+	{
+		m_pSingle = new Singleton;
+	}
+	return m_pSingle;
+}
+//线程安全+懒汉
+std::mutex mtx;//互斥量
+class Singleton
+{
+public:
+	static Singleton* GetInstance();
+	~Singleton() {}
+private:
+	Singleton() {}//隐藏默认构造
+	Singleton(const Singleton& obj) = delete;//删除拷贝构造
+	Singleton& operator=(const Singleton& obj) = delete;//删除赋值构造
+	
+	static Singleton* m_pSingle;
+};
+Singleton* Singleton::m_pSingle = nullptr;//静态成员要在类外定义
+Singleton* GetInstance()
+{
+	if(!m_pSingle)//双重判空
+	{
+		std::lock_guard<std::mutex> lck(mtx);
+		if(!m_pSingle)
+		{
+			m_pSingle = new Singleton;
+		}
+	}
+	return m_pSingle;
+}
+//静态局部变量（懒汉）
+//缺点：最好在单线程启动阶段调用并初始化
+class Singleton
+{
+public:
+    static Singleton& getInstance();
+private:
+    Singleton(){}
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+};
+
+Singleton& Singleton::getInstance()
+{
+    static Singleton singleton;
+    return singleton;
+}
+//饿汉，定义变量时即初始化
+class Singleton
+{
+public:
+    static Singleton& getInstance();
+private:
+    Singleton(){}
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+	
+	static Singleton* m_pSingle;
+};
+Singleton* Singleton::m_pSingle = new Singleton();
+Singleton* GetInstance()
+{
+	return m_pSingle;
+}
+
+//桥接模式
+//将抽象与实现分离，意思是运用聚合、组合将B类作为A类的成员变量（A、B均为抽象类、接口），在A中定义调用B的方法，然后定义A、B类的子类并实现，这样由父类定义调用行为，子类定义具体实现
+//适用场景：子类需要大量修改和扩展子类数量时，可以依赖抽象而不是具体实现，满足依赖倒转原则
+//类似于策略模式，策略模式针对函数，桥接模式针对类型
+class App
+{
+public:
+	virtual void run() = 0;
+};
+class Phone
+{
+public:
+	virtual void UseApp() { app->run(); }
+private:
+	App* app;
+};
+//此时要拓展子类数量，不会影响父类调用逻辑
+class GameApp
+{
+public:
+	void run() { std::cout << __FUNCTION__ << std::endl; }
+};
+class ApplePhone
+{
+public:
+	ApplePhone(App* p) : app(p) { return; }
+	virtual void UseApp() { app->run(); }
+private:
+	App* app;
+};
+
+{
+	App* app = new GameApp();
+	ApplePhone aphone(app);
+	aphone.UseApp();
+}
+
+
+
+
+
+
+
+
 
 
 
