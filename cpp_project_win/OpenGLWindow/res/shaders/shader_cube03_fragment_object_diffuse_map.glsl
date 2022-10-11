@@ -14,7 +14,7 @@ out vec4 FragColor;
 
 uniform vec3 u_objectColor;
 uniform vec3 u_lightColor;
-uniform vec3 u_lightPos;
+uniform vec3 u_lightPos;//直接定义lightDir可以实现平行光效果
 uniform vec3 u_viewPos;
 uniform Material u_material;
 uniform Material u_lightMaterial;

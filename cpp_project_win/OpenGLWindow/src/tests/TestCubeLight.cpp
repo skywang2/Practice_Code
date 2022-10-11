@@ -8,6 +8,20 @@ extern MouseParam* g_mouseParam;
 //float lastX = 640, lastY = 360;//鼠标在上一帧位置
 
 namespace tests {
+	glm::vec3 g_cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-5.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -5.4f, -3.5f),
+		glm::vec3(-5.7f,  3.0f, -7.5f),
+		glm::vec3(3.3f, -2.0f, -6.5f),
+		glm::vec3(3.5f,  2.0f, -4.5f),
+		glm::vec3(3.5f,  -5.2f, -1.5f),
+		glm::vec3(-1.3f,  -6.0f, -1.5f)
+	};
+	int g_cubesCount = sizeof(g_cubePositions) / sizeof(glm::vec3);
+
 	TestCubeLight::TestCubeLight()
 		: display_w(1280)
 		, display_h(720)
@@ -121,7 +135,7 @@ namespace tests {
 			cameraPos + mouseMove,
 			cameraUp//相机上方向（FPS相机上方向默认vec(0.0, 1.0, 0.0)）
 		);
-		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
+		//model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵，单个立方体使用这个model
 
 		glm::mat4 lightModel;
 		if (m_isRoundMove)
@@ -132,7 +146,7 @@ namespace tests {
 		lightModel = glm::scale(lightModel, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		shader->Bind();
-		shader->SetUniformMat4f("u_model", model);
+		//shader->SetUniformMat4f("u_model", model);//单个立方体使用这个model
 		shader->SetUniformMat4f("u_view", view);
 		shader->SetUniformMat4f("u_projection", proj);
 		shader->SetUniformVec3f("u_objectColor", glm::vec3(1.0f, 0.5f, 0.31f));//立方体颜色，被m_material替代
@@ -159,8 +173,17 @@ namespace tests {
 		shaderLight->SetUniformMat4f("u_view", view);
 		shaderLight->SetUniformMat4f("u_projection", proj);
 
-		m_renderer.Draw(*vao, *ibo, *shader);
-		m_renderer.Draw(*vaoLight, *ibo, *shaderLight);
+		m_renderer.Draw(*vaoLight, *ibo, *shaderLight);//绘制一个代表光源的立方体
+
+		shader->Bind();
+		for (int i = 0; i < g_cubesCount; i++)
+		{
+			//model = glm::translate(glm::mat4(1.0f), model_trans);//多个箱子重叠，看起来很炫酷
+			model = glm::translate(glm::mat4(1.0f), g_cubePositions[i]);//多个立方体使用这个model
+			model = glm::rotate(model, glm::radians(20.f * i), glm::vec3(1.0f, 0.3f, 0.5f));
+			shader->SetUniformMat4f("u_model", model);
+			m_renderer.Draw(*vao, *ibo, *shader);
+		}
 	}
 
 	void TestCubeLight::OnImGuiRender()
