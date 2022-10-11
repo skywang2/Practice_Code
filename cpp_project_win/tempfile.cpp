@@ -875,6 +875,50 @@ Singleton* GetInstance()
 	return m_pSingle;
 }
 
+//桥接模式
+//将抽象与实现分离，意思是运用聚合、组合将B类作为A类的成员变量（A、B均为抽象类、接口），在A中定义调用B的方法，然后定义A、B类的子类并实现，这样由父类定义调用行为，子类定义具体实现
+//适用场景：子类需要大量修改和扩展子类数量时，可以依赖抽象而不是具体实现，满足依赖倒转原则
+//类似于策略模式，策略模式针对函数，桥接模式针对类型
+class App
+{
+public:
+	virtual void run() = 0;
+};
+class Phone
+{
+public:
+	virtual void UseApp() { app->run(); }
+private:
+	App* app;
+};
+//此时要拓展子类数量，不会影响父类调用逻辑
+class GameApp
+{
+public:
+	void run() { std::cout << __FUNCTION__ << std::endl; }
+};
+class ApplePhone
+{
+public:
+	ApplePhone(App* p) : app(p) { return; }
+	virtual void UseApp() { app->run(); }
+private:
+	App* app;
+};
+
+{
+	App* app = new GameApp();
+	ApplePhone aphone(app);
+	aphone.UseApp();
+}
+
+
+
+
+
+
+
+
 
 
 
