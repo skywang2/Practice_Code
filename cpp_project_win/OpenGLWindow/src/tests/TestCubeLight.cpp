@@ -160,6 +160,9 @@ namespace tests {
 		shader->SetUniform3f("u_lightMaterial.ambient", m_lightMaterial.ambient[0], m_lightMaterial.ambient[1], m_lightMaterial.ambient[2]);
 		shader->SetUniform3f("u_lightMaterial.diffuse", m_lightMaterial.diffuse[0], m_lightMaterial.diffuse[1], m_lightMaterial.diffuse[2]);
 		shader->SetUniform3f("u_lightMaterial.specular", m_lightMaterial.specular[0], m_lightMaterial.specular[1], m_lightMaterial.specular[2]);
+		shader->SetUniform1f("u_light.constant", 1.0f);//点光源，按距离衰减系数，最大距离选50
+		shader->SetUniform1f("u_light.linear", 0.09f);
+		shader->SetUniform1f("u_light.quadratic", 0.032f);
 
 		int texSlot = 0;//纹理槽（纹理单元）的下标
 		m_diffuseMap->Bind(texSlot);
