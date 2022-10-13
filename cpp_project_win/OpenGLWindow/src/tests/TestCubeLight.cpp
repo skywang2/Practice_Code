@@ -64,7 +64,7 @@ namespace tests {
 		vbo.reset(new VertexBuffer(positions, positionCount * sizeof(float)));
 		ibo.reset(new IndexBuffer(indices, indicesCount));
 		//shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object.glsl"));//使用自定义物体颜色
-		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_diffuse_map.glsl"));//使用漫反射贴图，diffuse map
+		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_diffuse_map.glsl"));//使用漫反射贴图，diffuse map，以及带衰减的点光源、聚光
 		m_diffuseMap.reset(new Texture("res/textures/container2.png"));
 		m_specularMap.reset(new Texture("res/textures/container2_specular.png"));
 
@@ -163,6 +163,8 @@ namespace tests {
 		shader->SetUniform1f("u_light.constant", 1.0f);//点光源，按距离衰减系数，最大距离选50
 		shader->SetUniform1f("u_light.linear", 0.09f);
 		shader->SetUniform1f("u_light.quadratic", 0.032f);
+		shader->SetUniformVec3f("u_flashLight.direction", g_mouseParam->front);//聚光，手电筒方向
+		shader->SetUniform1f("u_flashLight.cutOff", glm::cos(glm::radians(12.5f)));//用cos值表示可视角度
 
 		int texSlot = 0;//纹理槽（纹理单元）的下标
 		m_diffuseMap->Bind(texSlot);

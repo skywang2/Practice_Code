@@ -20,6 +20,14 @@ struct Light
 	float quadratic;//二次项
 };
 
+//聚光效果，手电筒
+struct FlashLight
+{
+	vec3 position;//光源位置，好像没啥用
+	vec3 direction;
+	float cutOff;//用cos值表示可视角度
+};
+
 out vec4 FragColor;
 
 uniform vec3 u_objectColor;
@@ -28,7 +36,8 @@ uniform vec3 u_lightPos;//直接定义lightDir可以实现平行光效果
 uniform vec3 u_viewPos;
 uniform Material u_material;
 uniform Material u_lightMaterial;
-uniform Light u_light;//平行光、点光源、聚光
+uniform Light u_light;//平行光、点光源
+uniform FlashLight u_flashLight;//4.聚光
 
 in vec3 v_fragPos;
 in vec3 v_normal;
@@ -65,10 +74,23 @@ void main()
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0),  u_material.shininess);//3.
 	vec3 specular = u_lightMaterial.specular * attenuation * (spec * vec3(texture(u_material.specularMap, v_texCoord)));//3.使用specular map
 	
+	//聚光效果，角度范围内有正常光照，角度范围外只有环境光
+//	float theta = dot(lightDir, normalize(-u_flashLight.direction));//4.1实际光照(光线从白色立方体出发)与聚光方向夹角的cos
+	float theta = dot(normalize(u_viewPos - v_fragPos), normalize(-u_flashLight.direction));//4.2实际光照(光线从镜头方向出发)与聚光方向夹角的cos
+	//4.2由于夹角只限制显示范围，且相机并不是真正光源，没有参与三种反射的计算，所以物体靠近相机而光源远离相机时，物体靠近相机的一侧是暗的
+
 	//u_objectColor相当于公式里的反射率k
 //	vec3 result = u_objectColor * (ambient + diffuse + specular);//1.光作用在物体上，用wise product表示，这只是数学上的一种表示，只是一种近似
-	vec3 result = ambient + diffuse + specular;//2.使用material物体颜色已经包含在material中
-	FragColor = vec4(result, 1.0);
+//	vec3 result = ambient + diffuse + specular;//2.使用material物体颜色已经包含在material中；3.使用高光纹理
+	vec3 result;
+	if(theta > u_flashLight.cutOff)//4.使用聚光
+	{
+		result = ambient + diffuse + specular;
+	}
+	else
+	{
+		result = ambient;
+	}
 
-//	FragColor = texture(u_material.diffuseMap, v_texCoord);	//只使用纹理坐标，测试用
+	FragColor = vec4(result, 1.0);
 }
