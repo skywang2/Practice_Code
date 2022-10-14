@@ -912,6 +912,48 @@ private:
 	aphone.UseApp();
 }
 
+//命令模式
+//将命令和执行者封装成一个请求对象，由Invoker负责管理请求（命令），实现了命令与执行者的低耦合
+class Receiver//执行命令对象
+{
+public:
+	void Process() { std::cout << "processing command" << std::endl; }//真正的处理函数
+};
+class Command
+{
+protected:
+	Receiver* receiver;
+public:
+	Command(Receiver* r) : receiver(r) { return; }
+	virtual void Execute() = 0;//命令类知道命令和执行对象的关联关系
+};
+class ConcreteCommand : public Command
+{
+public:
+	ConcreteCommand(Receiver* r) : Command(r) { return; }
+	void Execute() { receiver->Process(); }
+};
+class Invoker//传递命令对象
+{
+private:
+	std::vector<Command*> cmds;
+public:
+	void SetCommand(Command* pCmd) { cmds.push_back(pCmd); }
+	void CancelCommand(Command* pCmd) { cmds.erase(std::remove(cmds.begin(), cmds.end(), pCmd), cmds.end()); }
+	void ExecuteCommand() { for (auto& cmd : cmds) { cmd->Execute(); } }
+};
+
+{
+	Receiver* receiver = new Receiver;
+	ConcreteCommand* cmd1 = new ConcreteCommand(receiver);
+	Invoker ivk;
+
+	ivk.SetCommand(cmd1);
+	ivk.ExecuteCommand();
+
+	delete cmd1;
+	delete receiver;
+}
 
 
 
