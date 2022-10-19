@@ -146,6 +146,9 @@
     <None Include="res\shaders\shader_cube03_vertex_object.glsl">
       <Filter>源文件\shader\cube</Filter>
     </None>
+    <None Include="res\shaders\shader_cube03_fragment_object_multiply_light.glsl">
+      <Filter>源文件\shader\cube</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">

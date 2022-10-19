@@ -64,7 +64,8 @@ namespace tests {
 		vbo.reset(new VertexBuffer(positions, positionCount * sizeof(float)));
 		ibo.reset(new IndexBuffer(indices, indicesCount));
 		//shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object.glsl"));//使用自定义物体颜色
-		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_diffuse_map.glsl"));//使用漫反射贴图，diffuse map，以及带衰减的点光源、聚光
+		//shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_diffuse_map.glsl"));//使用漫反射贴图，diffuse map，以及带衰减的点光源、聚光
+		shader.reset(new Shader("res/shaders/shader_cube03_vertex_object.glsl", "res/shaders/shader_cube03_fragment_object_multiply_light.glsl"));//使用多光源
 		m_diffuseMap.reset(new Texture("res/textures/container2.png"));
 		m_specularMap.reset(new Texture("res/textures/container2_specular.png"));
 

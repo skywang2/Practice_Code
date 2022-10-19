@@ -23,7 +23,7 @@ struct Light
 //聚光效果，手电筒
 struct FlashLight
 {
-	vec3 position;//光源位置，好像没啥用
+	vec3 position;//光源位置，如果用这个替换u_lightPos光源位置将改变
 	vec3 direction;
 	float cutOff;//用cos值表示可视角度
 };
