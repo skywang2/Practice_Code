@@ -955,6 +955,72 @@ public:
 	delete receiver;
 }
 
+//职责链模式
+//让每个处理节点都保存下一个节点的指针或引用，使得当前节点处理不了的请求可以送给下一个节点处理，过程类似递归
+//减少通过if来区分处理事件或处理者，降低耦合
+//职责链模式
+class HandlerChain
+{
+protected:
+	HandlerChain* successor;
+public:
+	void SetSuccessor(HandlerChain* p) { successor = p; }//设置下一个处理节点
+	virtual void HandleRequest(int request) = 0;
+};
+class Handler20 : public HandlerChain//处理[0,20)
+{
+public:
+	void HandleRequest(int request)
+	{
+		if (request >= 0 && request < 20) { std::cout << __FUNCTION__ << " handle request:" << request << std::endl; }
+		else { (successor) ? successor->HandleRequest(request) : nullptr; }
+	}
+};
+class Handler60 : public HandlerChain//处理[20,60)
+{
+public:
+	void HandleRequest(int request)
+	{
+		if (request >= 20 && request < 60) { std::cout << __FUNCTION__ << " handle request:" << request << std::endl; }
+		else { (successor) ? successor->HandleRequest(request) : nullptr; }
+	}
+};
+class Handler100 : public HandlerChain//处理[60,100]
+{
+public:
+	void HandleRequest(int request)
+	{
+		if (request >= 60 && request <= 100) { std::cout << __FUNCTION__ << " handle request:" << request << std::endl; }
+		else { (successor) ? successor->HandleRequest(request) : nullptr; }
+	}
+};
+
+//职责链模式
+{
+	int request = 70;//请求可以根据业务需要改成类的形式
+	Handler20* h20 = new Handler20;
+	Handler60* h60 = new Handler60;
+	Handler100* h100 = new Handler100;
+	h20->SetSuccessor(h60);
+	h60->SetSuccessor(h100);
+	h100->SetSuccessor(nullptr);
+
+	h20->HandleRequest(request);//从最初的节点开始尝试处理请求
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
