@@ -166,6 +166,19 @@ namespace tests {
 		shader->SetUniform1f("u_light.quadratic", 0.032f);
 		shader->SetUniformVec3f("u_flashLight.direction", g_mouseParam->front);//聚光，手电筒方向
 		shader->SetUniform1f("u_flashLight.cutOff", glm::cos(glm::radians(12.5f)));//用cos值表示可视角度
+		//==========multiply light==========1个平行光+1个点光源
+		shader->SetUniformVec3f("u_dirLight.direction", glm::vec3(1.0f, 0.f, 0.f));
+		shader->SetUniform3f("u_dirLight.ambient", m_lightMaterial.ambient[0] / 3, m_lightMaterial.ambient[1] / 3, m_lightMaterial.ambient[2] / 3);
+		shader->SetUniform3f("u_dirLight.diffuse", m_lightMaterial.diffuse[0] / 3, m_lightMaterial.diffuse[1] / 3, m_lightMaterial.diffuse[2] / 3);
+		shader->SetUniform3f("u_dirLight.specular", m_lightMaterial.specular[0] / 3, m_lightMaterial.specular[1] / 3, m_lightMaterial.specular[2] / 3);//镜面反射均匀，不真实
+		shader->SetUniformVec3f("u_pointLights[0].position", m_lightPos);
+		shader->SetUniform3f("u_pointLights[0].ambient", m_lightMaterial.ambient[0], m_lightMaterial.ambient[1], m_lightMaterial.ambient[2]);
+		shader->SetUniform3f("u_pointLights[0].diffuse", m_lightMaterial.diffuse[0], m_lightMaterial.diffuse[1], m_lightMaterial.diffuse[2]);
+		shader->SetUniform3f("u_pointLights[0].specular", m_lightMaterial.specular[0], m_lightMaterial.specular[1], m_lightMaterial.specular[2]);
+		shader->SetUniform1f("u_pointLights[0].constant", 1.0f);//点光源衰减系数
+		shader->SetUniform1f("u_pointLights[0].linear", 0.09f);
+		shader->SetUniform1f("u_pointLights[0].quadratic", 0.032f);
+
 
 		int texSlot = 0;//纹理槽（纹理单元）的下标
 		m_diffuseMap->Bind(texSlot);

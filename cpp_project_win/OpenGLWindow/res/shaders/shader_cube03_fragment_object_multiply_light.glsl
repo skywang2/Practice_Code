@@ -56,8 +56,8 @@ uniform vec3 u_objectColor;//纯色，物体颜色
 uniform vec3 u_lightColor;//纯色，灯光颜色
 uniform vec3 u_lightPos;//直接定义lightDir可以实现平行光效果
 uniform vec3 u_viewPos;
-uniform Material u_material;
-uniform Material u_lightMaterial;//光源，自定义颜色
+uniform Material u_material;//物体纹理
+uniform Material u_lightMaterial;//光源，自定义颜色、纹理
 uniform Light u_light;//平行光、点光源
 uniform FlashLight u_flashLight;//4.聚光
 
@@ -109,7 +109,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
 	//三种反射
 	vec3 ambient = light.ambient * vec3(texture(u_material.diffuseMap, v_texCoord));
 	vec3 diffuse = light.diffuse * diff * vec3(texture(u_material.diffuseMap, v_texCoord));
-	vec3 specular = u_lightMaterial.specular * (spec * vec3(texture(u_material.specularMap, v_texCoord)));
+	vec3 specular = light.specular * (spec * vec3(texture(u_material.specularMap, v_texCoord)));
 
 	return (ambient + diffuse + specular);
 }
@@ -123,7 +123,7 @@ param[in] vec3 fragPos，片元的世界坐标
 param[in] vec3 viewDir，视线方向
 return vec3
 */
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir, vec3 fragPos)
 {
 	vec3 lightDir = normalize(light.position - fragPos);//片元指向光源
 	//漫反射参数
