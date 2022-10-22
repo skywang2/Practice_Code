@@ -958,7 +958,6 @@ public:
 //职责链模式
 //让每个处理节点都保存下一个节点的指针或引用，使得当前节点处理不了的请求可以送给下一个节点处理，过程类似递归
 //减少通过if来区分处理事件或处理者，降低耦合
-//职责链模式
 class HandlerChain
 {
 protected:
@@ -995,7 +994,6 @@ public:
 	}
 };
 
-//职责链模式
 {
 	int request = 70;//请求可以根据业务需要改成类的形式
 	Handler20* h20 = new Handler20;
@@ -1012,6 +1010,72 @@ public:
 //将对象之间的交互行为提取出来封装到中介者类中
 //缺点：中介者类可能会非常复杂
 //当类型很多中介者类维护困难或类之间的交互是多对多时，需要考虑是否系统设计的有问题
+class Colleague;
+class ConcreteColleague1;
+class ConcreteColleague2;
+class Mediator//抽象中介者
+{
+public:
+	virtual void transmit(const std::string& json, Colleague* const colleague) = 0;//转发数据
+};
+class Colleague
+{
+protected:
+	Mediator* mediator;
+public:
+	Colleague(Mediator* m) { mediator = m; }
+};
+class ConcreteColleague1 : public Colleague
+{
+public:
+	ConcreteColleague1(Mediator* m) : Colleague(m) {}
+	void Send(const std::string& json) { mediator->transmit(json, this); }//发送数据
+	void Receive(const std::string& json) { std::cout << __FUNCTION__ << ", receive:" << json << std::endl; }//处理接收数据
+};
+class ConcreteColleague2 : public Colleague
+{
+public:
+	ConcreteColleague2(Mediator* m) : Colleague(m) {}
+	void Send(const std::string& json) { mediator->transmit(json, this); }//发送数据
+	void Receive(const std::string& json) { std::cout << __FUNCTION__ << ", receive:" << json << std::endl; }//处理接收数据
+};
+class ConcreteMediator : public Mediator
+{
+private:
+	//为了让交互类对象不耦合，而将复杂度集中到中介者类
+	ConcreteColleague1* colleague1;
+	ConcreteColleague2* colleague2;
+public:
+	void SetColleague1(ConcreteColleague1* c) { colleague1 = c; }
+	void SetColleague2(ConcreteColleague2* c) { colleague2 = c; }
+
+	void transmit(const std::string& json, Colleague* const sender)//具体转发函数
+	{
+		if (sender == colleague1)//ConcreteColleague1、ConcreteColleague2虽然有前向定义，但任然要在使用前进行实现，例如在使用前定义或调用include
+		{
+			colleague2->Receive(json);
+		}
+		else if (sender == colleague2)
+		{
+			colleague1->Receive(json);
+		}
+	}
+};
+
+{
+	ConcreteMediator* m = new ConcreteMediator;
+	ConcreteColleague1* colleague1 = new ConcreteColleague1(m);
+	ConcreteColleague2* colleague2 = new ConcreteColleague2(m);
+	m->SetColleague1(colleague1);
+	m->SetColleague2(colleague2);
+
+	colleague1->Send("this is colleague1");
+	colleague2->Send("this is colleague2");
+
+	delete colleague2;
+	delete colleague1;
+	delete m;
+}
 
 
 
