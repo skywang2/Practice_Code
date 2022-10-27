@@ -151,7 +151,7 @@
     <Text Include="README.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\LoadModel.cpp" />
     <ClCompile Include="src\include\imgui\imgui.cpp" />
     <ClCompile Include="src\include\imgui\imgui_demo.cpp" />
@@ -192,7 +192,7 @@
     <None Include="res\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\LoadModel.h" />
     <ClInclude Include="src\include\imgui\imconfig.h" />
     <ClInclude Include="src\include\imgui\imgui.h" />

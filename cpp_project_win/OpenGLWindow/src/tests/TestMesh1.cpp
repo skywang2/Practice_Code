@@ -31,17 +31,9 @@ namespace tests {
 		const glm::vec3& mouseMove = (g_mouseParam) ? g_mouseParam->front : cameraFront;
 
 		proj = glm::perspective(glm::radians(fov), (float)display_w / (float)display_h, zNear, zFar);//透视投影
-		view = glm::lookAt(
-			cameraPos, //相机位置坐标, in World Space
-			//cameraPos + cameraFront, //镜头朝向，用位置+朝向可以使相机移动时朝向固定方向而不是某一点
-			cameraPos + mouseMove,
-			cameraUp//相机上方向（FPS相机上方向默认vec(0.0, 1.0, 0.0)）
-		);
+		view = glm::lookAt(cameraPos, cameraPos + mouseMove, cameraUp);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
 		mvp = proj * view * model;
-		//shader->Bind();
-		//shader->SetUniformMat4f("u_MVP", mvp);//传入MVP矩阵
-		//GL_INVALID_VALUE
 	}
 
 	void TestMesh1::OnRender()

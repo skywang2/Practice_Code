@@ -111,11 +111,11 @@
     <ClCompile Include="src\tests\TestCubeLight.cpp">
       <Filter>源文件\tests</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\tests\TestMesh1.cpp">
       <Filter>源文件\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -229,11 +229,11 @@
     <ClInclude Include="src\tests\TestCubeLight.h">
       <Filter>头文件\tests</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\tests\TestMesh1.h">
       <Filter>头文件\tests</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

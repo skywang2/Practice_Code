@@ -15,7 +15,6 @@
 #include "../Texture.h"
 
 namespace tests {
-
 	//使用assimp读取模型数据
 	//使用自定义Mesh类存储、渲染网格对象
 	class TestMesh1 : public Test
@@ -28,8 +27,6 @@ namespace tests {
 		void OnRender() override;
 		void OnImGuiRender() override;
 		void ProcessInputClass(GLFWwindow*) override;
-		friend void MouseCallback(GLFWwindow* window, double xpos, double ypos);//鼠标事件处理函数
-		friend void ScrollCallback(GLFWwindow* window);//滚轮事件处理函数
 
 	private:
 		int display_w, display_h;
