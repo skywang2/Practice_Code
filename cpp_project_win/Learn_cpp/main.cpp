@@ -179,6 +179,16 @@ int main(int argc, char* argv[]) {
 			std::cout << "using std::move(std::string)" << std::endl;
 			MoreThanProcess(std::move(val));
 		}
+
+		//11.计算vector长度
+		{
+			std::vector<float> ff;
+			ff.push_back(1.0);
+			ff.push_back(1.0);
+			ff.push_back(1.0);
+			size_t size_float = sizeof(float);
+			size_t size_vector = sizeof(ff);//注意这不是3*sizeof(float)
+		}
 	}
 	catch (exception e)
 	{
