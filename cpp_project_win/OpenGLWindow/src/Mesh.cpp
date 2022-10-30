@@ -35,7 +35,7 @@ void Mesh::Draw(Shader& shader)
         shader.SetUniform1i("material." + type + num, i);//给shader的纹理采样器赋值
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
-    //glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

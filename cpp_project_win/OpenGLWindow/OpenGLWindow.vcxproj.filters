@@ -117,6 +117,9 @@
     <ClCompile Include="src\Mesh.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fragmentShader.glsl">
@@ -235,6 +238,9 @@
     <ClInclude Include="src\Mesh.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\Model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\texture01.png">
@@ -244,6 +250,9 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="res\textures\container2.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\textures\container2_specular.png">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>
