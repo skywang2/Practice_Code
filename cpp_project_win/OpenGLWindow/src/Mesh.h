@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "glm/glm.hpp"
+#include "assimp/types.h"
 
 #include "Shader.h"
 
@@ -17,6 +18,7 @@ struct MeshTexture
 {
 	unsigned int id;
 	std::string type;
+    aiString path;//纹理文件路径
 };
 
 
