@@ -37,6 +37,9 @@
     <Filter Include="源文件\shader\cube">
       <UniqueIdentifier>{0ca45797-44c8-4c1c-ba83-445bbbfabf30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\shader\myModel">
+      <UniqueIdentifier>{d30f4be1-b7e5-4628-876a-feab07c3ac58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
@@ -157,6 +160,12 @@
     </None>
     <None Include="res\shaders\shader_cube03_fragment_object_multiply_light.glsl">
       <Filter>源文件\shader\cube</Filter>
+    </None>
+    <None Include="res\shaders\shader_model04_fragment.glsl">
+      <Filter>源文件\shader\myModel</Filter>
+    </None>
+    <None Include="res\shaders\shader_model04_vertex.glsl">
+      <Filter>源文件\shader\myModel</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

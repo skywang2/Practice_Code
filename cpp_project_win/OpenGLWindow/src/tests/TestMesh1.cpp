@@ -17,8 +17,10 @@ namespace tests {
 		, cameraPos(glm::vec3(0.0f, 0.0f, 5.0f))
 		, cameraFront(glm::vec3(0.0f, 0.0f, -0.1f))//使用g_mouseParam.front替代
 		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
+		, m_3DModel("res/model/nanosuit/nanosuit.obj")
 	{
-
+		shader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment.glsl"));
+		
 	}
 
 	TestMesh1::~TestMesh1()
@@ -33,7 +35,11 @@ namespace tests {
 		proj = glm::perspective(glm::radians(fov), (float)display_w / (float)display_h, zNear, zFar);//透视投影
 		view = glm::lookAt(cameraPos, cameraPos + mouseMove, cameraUp);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
-		mvp = proj * view * model;
+
+		shader->Bind();
+		shader->SetUniformMat4f("u_model", model);//单个立方体使用这个model
+		shader->SetUniformMat4f("u_view", view);
+		shader->SetUniformMat4f("u_projection", proj);
 	}
 
 	void TestMesh1::OnRender()
@@ -42,6 +48,8 @@ namespace tests {
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		glClearDepth(99999.f);
 
+		shader->Bind();
+		m_3DModel.Draw(*shader);
 	}
 
 	void TestMesh1::OnImGuiRender()

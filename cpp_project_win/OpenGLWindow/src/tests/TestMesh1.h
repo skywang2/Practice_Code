@@ -13,6 +13,7 @@
 #include "../VertexBufferLayout.h"
 #include "../Shader.h"
 #include "../Texture.h"
+#include "../Model.h"
 
 namespace tests {
 	//使用assimp读取模型数据
@@ -41,14 +42,8 @@ namespace tests {
 		glm::vec3 cameraFront;
 		glm::vec3 cameraUp;
 		
-		//std::unique_ptr<VertexArray> vao;//vertex buffer内存布局
-		//std::unique_ptr<VertexBuffer> vbo;
-		//std::unique_ptr<IndexBuffer> ibo;
-		//std::unique_ptr<Shader> shader;
-		//std::unique_ptr<Texture> texture;
-		//VertexBufferLayout layoutPosition;
-		Renderer m_renderer;
-
+		std::unique_ptr<Shader> shader;
+		Model m_3DModel;
 	};
 
 }
