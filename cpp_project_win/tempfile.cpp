@@ -1077,14 +1077,52 @@ public:
 	delete m;
 }
 
+//享元模式
+//如果大量对象使用公共操作、公共存储，使用享元模式减少开销，减少实例对象数量
+//内部状态：可以公共使用的信息；外部状态：不可共享的信息
+class User//外部数据
+{
+private:
+	std::string name;
+public:
+	User(std::string n) : name(n) { return; }
+	std::string GetName() { return name; }
+};
+class WebSite//享元，父类
+{
+public:
+	virtual void Use(User& user) { return; };
+};
+class ConcreteWebSite : public WebSite
+{
+private:
+	std::string name;//共享的内部数据
+public:
+	ConcreteWebSite(std::string n) : name(n) { return; }
+	void Use(User& user) { std::cout << "website:" << name << ", user:" << user.GetName() << std::endl; }//使用外部数据
+};
+class WebSiteFactory//享元对象工厂
+{
+private:
+	std::map<std::string, WebSite*> flyweights;
+public:
+	WebSite* GetWebSite(std::string key)
+	{
+		if (flyweights.find(key) == flyweights.end())
+		{
+			flyweights.insert(std::make_pair(key, new ConcreteWebSite(key)));
+		}
+		return flyweights[key];
+	}
+};
 
+{
+	WebSiteFactory webFactory;
+	WebSite* site01 =  webFactory.GetWebSite("site01");
+	User user("wang");
 
-
-
-
-
-
-
+	site01->Use(user);
+}
 
 
 
