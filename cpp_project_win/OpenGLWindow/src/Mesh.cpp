@@ -38,7 +38,7 @@ void Mesh::Draw(Shader& shader)
     glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);//此处会崩溃
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);//此处会崩溃，原因可能是vertex shader中location的顺序写错了导致传值异常
     glBindVertexArray(0);
 }
 
