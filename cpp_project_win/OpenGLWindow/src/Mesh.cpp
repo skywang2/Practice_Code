@@ -35,11 +35,12 @@ void Mesh::Draw(Shader& shader)
         shader.SetUniform1i(/*"material." + */type + num, i);//给shader的纹理采样器赋值
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
-    glActiveTexture(GL_TEXTURE0);
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);//此处会崩溃，原因可能是vertex shader中location的顺序写错了导致传值异常
     glBindVertexArray(0);
+
+    glActiveTexture(GL_TEXTURE0);//设置已激活纹理为默认槽
 }
 
 void Mesh::setupMesh()
@@ -62,10 +63,10 @@ void Mesh::setupMesh()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*)offsetof(MeshVertex, position));
     //法线
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*)offsetof(MeshVertex, normal));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*)offsetof(MeshVertex, normal));
     //纹理坐标
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*)offsetof(MeshVertex, texcoords));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*)offsetof(MeshVertex, texcoords));
 
     glBindVertexArray(0);
 }
