@@ -32,7 +32,7 @@ void Mesh::Draw(Shader& shader)
             num = std::to_string(spec++);
         }
         //shader中有变量名为material的结构体
-        shader.SetUniform1i("material." + type + num, i);//给shader的纹理采样器赋值
+        shader.SetUniform1i(/*"material." + */type + num, i);//给shader的纹理采样器赋值
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
     glActiveTexture(GL_TEXTURE0);

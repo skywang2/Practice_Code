@@ -151,6 +151,7 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 	glGenTextures(1, &textureID);//创建id
 
 	int width, height, nrComponents;
+	stbi_set_flip_vertically_on_load(1);	//上下翻转图像，opengl从左下角开始加载
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
