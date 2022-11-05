@@ -1124,11 +1124,71 @@ public:
 	site01->Use(user);
 }
 
+//解释器模式
+//用于实现自定义脚本命令，如果语法等规则过于复杂需要使用语法分析器、编译器生成器等其他方法
+//由表达式类进行脚本字符串解析，由子类实现命令对应的操作
+//以下实现用于终结符表达式（其中的短语、词汇不可分割），而非终结符表达式（短语可分割）需要在研究一下
+//以下代码未实机测试
+class PlayContext
+{
+public:
+	std::string text;
+};
+//由子类继承后需要在客户端代码中解析字符串并判断需要使用哪种解释器类，这只是一种实现方式
+class Expression
+{
+public:
+	void Interpret(PlayContext context)
+	{
+		if(context.text.size() == 0)
+		{
+			return;
+		}
+		else
+		{
+			//解析并提取具体关键词
+			std::string key;
+			int value;
+			
+			Excute(key, value);
+		}
+	}
+	
+	virtual void Excute(std::string key, int value) { return; }//通过继承实现不同关键词的执行方式
+};
+//定义不同种类的解释器，可用于解释不同的关键词类型
+class Note : public Expression//音符关键词
+{
+public:
+	void Excute(std::string key, int value) { /*关键词具体执行方式*/ }
+};
+class Scale : public Expression//音阶关键词
+{
+public:
+	void Excute(std::string key, int value) { /*关键词具体执行方式*/ }
+};
 
-
-
-
-
+{
+	PlayContext context(/*一串关键词组成的表达式，表达式中可包含不同类型的关键词*/);
+	std::shared_ptr<Expression> exp;
+	while(context.text.size() > 0)
+	{
+		//解析当前关键词属于哪一类，该操作可以用反射+简单工厂实现简化
+		int type = 解析(context.text);
+		switch(type)
+		{
+			case Note:
+				exp.reset(new Note);
+				break;
+			case Scale:
+				exp.reset(new Scale);
+				break;
+			default:
+				break;
+		}
+		exp->Interpret(context);
+	}
+}
 
 
 
