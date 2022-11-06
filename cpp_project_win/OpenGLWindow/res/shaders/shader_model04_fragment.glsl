@@ -18,5 +18,6 @@ void main()
 
 	FragColor = diffuse + specular;
 //	FragColor = diffuse;
+//	FragColor = specular;
 //	FragColor = vec4(1.0);
 }

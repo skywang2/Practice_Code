@@ -18,25 +18,26 @@ void Mesh::Draw(Shader& shader)
 {
     unsigned int diff = 1;
     unsigned int spec = 1;
+    unsigned int norm = 1;
     for (int i = 0; i < textures.size(); ++i)
     {
         glActiveTexture(GL_TEXTURE0 + i);
-        std::string type = textures[i].type;
         std::string num;
-        if ("texture_diffuse" == type)
+        std::string name = textures[i].type;
+        if ("texture_diffuse" == name)
         {
             num = std::to_string(diff++);
         }
-        else if ("texture_specular" == type)
+        else if ("texture_specular" == name)
         {
             num = std::to_string(spec++);
         }
-        else if ("texture_normal" == type)
+        else if ("texture_normal" == name)
         {
-            num = std::to_string(spec++);
+            num = std::to_string(norm++);
         }
         //shader中有变量名为material的结构体
-        shader.SetUniform1i(/*"material." + */type + num, i);//给shader的纹理采样器赋值
+        shader.SetUniform1i(/*"material." + */name + num, i);//给shader的纹理采样器赋值
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
 

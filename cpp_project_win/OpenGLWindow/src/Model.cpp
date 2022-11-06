@@ -78,6 +78,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 			vec.x = mesh->mTextureCoords[0][i].x;//本例中只导入第一组纹理坐标，所以下标填0
 			vec.y = mesh->mTextureCoords[0][i].y;
 			vertex.texcoords = vec;
+			//此处还可读取tangent、bitangent等
 		}
 		else
 		{
@@ -108,7 +109,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());//在结尾连续插入vector
 		//法线纹理
 		std::vector<MeshTexture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());//在结尾连续插入vector
+		textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());//在结尾连续插入vector
 	}
 	return Mesh(vertices, indices, textures);
 }
