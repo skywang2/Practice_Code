@@ -44,7 +44,8 @@ namespace tests {
 
 	void TestMesh1::OnRender()
 	{
-		GLCall(glClearColor(0.437f, 0.585f, 0.808f, 1.f));
+		//GLCall(glClearColor(0.437f, 0.585f, 0.808f, 1.f));
+		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		glClearDepth(99999.f);
 

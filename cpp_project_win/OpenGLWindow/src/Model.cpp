@@ -100,9 +100,14 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	if (mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<MeshTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");//自定义提取纹理
+		//漫反射纹理
+		std::vector<MeshTexture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());//在结尾连续插入vector
-		std::vector<MeshTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");//自定义提取纹理
+		//镜面反射纹理
+		std::vector<MeshTexture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());//在结尾连续插入vector
+		//法线纹理
+		std::vector<MeshTexture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
 		textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());//在结尾连续插入vector
 	}
 	return Mesh(vertices, indices, textures);
@@ -117,6 +122,14 @@ std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureT
 		//假设了模型文件中纹理文件的路径是相对于模型文件的本地(Local)路径，比如说与模型文件处于同一目录下
 		aiString str;
 		mat->GetTexture(type, i, &str);
+		MeshTexture tex;
+#if 0
+		//不使用公共纹理图缓存
+		tex.id = TextureFromFile(str.C_Str(), directory);
+		tex.type = typeName;
+		tex.path = str;
+		textures.push_back(tex);
+#else
 		bool skip = false;
 		for (int j = 0; j < textures_loaded.size(); j++)
 		{
@@ -126,8 +139,7 @@ std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureT
 				skip = true;
 				break;
 			}
-		}
-		
+		}		
 		if (!skip)
 		{
 			MeshTexture tex;
@@ -137,6 +149,7 @@ std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureT
 			textures.push_back(tex);
 			textures_loaded.push_back(tex);
 		}
+#endif
 	}
 
 	return textures;
@@ -151,7 +164,7 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 	glGenTextures(1, &textureID);//创建id
 
 	int width, height, nrComponents;
-	stbi_set_flip_vertically_on_load(1);	//上下翻转图像，opengl从左下角开始加载
+	//stbi_set_flip_vertically_on_load(1);	//上下翻转图像，opengl从左下角开始加载
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{

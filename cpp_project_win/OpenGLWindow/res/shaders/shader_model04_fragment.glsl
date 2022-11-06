@@ -7,10 +7,16 @@ in vec3 v_normal;
 in vec2 v_texCoord;
 
 uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
+uniform sampler2D texture_normal1;
 
 void main()
 {
-	FragColor = texture(texture_diffuse1, v_texCoord);
-//	FragColor = texture(texture_diffuse1, vec2(10.0, 10.0));
+	vec4 diffuse = texture(texture_diffuse1, v_texCoord);
+	vec4 specular = texture(texture_specular1, v_texCoord);
+	vec4 normal = texture(texture_normal1, v_texCoord);
+
+	FragColor = diffuse + specular;
+//	FragColor = diffuse;
 //	FragColor = vec4(1.0);
 }
