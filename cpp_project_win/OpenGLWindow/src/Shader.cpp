@@ -55,9 +55,7 @@ void Shader::Unbind() const
 void Shader::SetUniform1i(const std::string& varible, int v1)
 {
     GLint var = GetUniformLocation(varible);
-    //glUniform1i(var, v1);
     GLCall(glUniform1i(var, v1));
-    //GL_INVALID_OPERATION;
 }
 
 void Shader::SetUniform1f(const std::string& varible, float v1)

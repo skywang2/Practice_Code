@@ -19,8 +19,9 @@ namespace tests {
 		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
 		, m_3DModel("res/model/nanosuit/nanosuit.obj")
 	{
-		shader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment.glsl"));
-		
+		GLCall(glDisable(GL_BLEND));
+
+		shader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment.glsl"));		
 	}
 
 	TestMesh1::~TestMesh1()

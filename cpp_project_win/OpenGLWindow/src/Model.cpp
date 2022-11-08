@@ -6,10 +6,17 @@
 
 void Model::Draw(Shader& shader)
 {
-	for (int i = 0; i < meshes.size(); i++)
-	{
-		meshes[i].Draw(shader);
-	}
+	//for (int i = 0; i < meshes.size(); i++)
+	//{
+	//	meshes[i].Draw(shader);
+	//}
+	meshes[0].Draw(shader);
+	meshes[1].Draw(shader);//glass
+	meshes[2].Draw(shader);
+	meshes[3].Draw(shader);//glass2
+	meshes[4].Draw(shader);
+	meshes[5].Draw(shader);//helmet
+	meshes[6].Draw(shader);//body
 }
 
 /*
