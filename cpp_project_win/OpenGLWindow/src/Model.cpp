@@ -6,17 +6,18 @@
 
 void Model::Draw(Shader& shader)
 {
-	//for (int i = 0; i < meshes.size(); i++)
-	//{
-	//	meshes[i].Draw(shader);
-	//}
-	meshes[0].Draw(shader);
-	meshes[1].Draw(shader);//glass
-	meshes[2].Draw(shader);
-	meshes[3].Draw(shader);//glass2
-	meshes[4].Draw(shader);
-	meshes[5].Draw(shader);//helmet
-	meshes[6].Draw(shader);//body
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].Draw(shader);
+	}
+
+	//meshes[0].Draw(shader);//glass
+	//meshes[1].Draw(shader);//leg
+	//meshes[2].Draw(shader);//hand
+	//meshes[3].Draw(shader);//glass2
+	//meshes[4].Draw(shader);//arm
+	//meshes[5].Draw(shader);//helmet
+	//meshes[6].Draw(shader);//body
 }
 
 /*
@@ -176,13 +177,13 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 	unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
-		GLenum format = GL_RGBA;//纹理文件的颜色格式
+		GLenum format = GL_RGB;//纹理文件的颜色格式
 		if (nrComponents == 1)
 			format = GL_RED;
 		else if (nrComponents == 3)
-			format = GL_RGB;
+			format = GL_RGB;//0x1907
 		else if (nrComponents == 4)
-			format = GL_RGBA;
+			format = GL_RGBA;//0x1908
 
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);

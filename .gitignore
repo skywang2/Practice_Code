@@ -25,3 +25,5 @@
 /cpp_project_win/OpenGLWindow/imgui.ini
 /cpp_project_win/qTestCase/x64
 /cpp_project_win/qTestCase/*.user
+/cpp_project_win/OpenGLLoadModel/*.user
+/cpp_project_win/OpenGLLoadModel/x64

@@ -16,9 +16,8 @@ void main()
 	vec4 specular = texture(texture_specular1, v_texCoord);
 	vec4 normal = texture(texture_normal1, v_texCoord);
 
-	FragColor = diffuse + specular;
-//	FragColor = diffuse;
+//	FragColor = diffuse + specular;
+	FragColor = diffuse;
 //	FragColor = specular;
 //	FragColor = normal;
-//	FragColor = vec4(1.0);
 }

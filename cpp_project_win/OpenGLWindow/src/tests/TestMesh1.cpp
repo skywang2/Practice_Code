@@ -19,7 +19,8 @@ namespace tests {
 		, cameraUp(glm::vec3(0.0f, 1.0f, 0.0f))
 		, m_3DModel("res/model/nanosuit/nanosuit.obj")
 	{
-		GLCall(glDisable(GL_BLEND));
+		GLCall(glDisable(GL_BLEND));//使得高光区域不透明
+		//GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
 
 		shader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment.glsl"));		
 	}
@@ -46,7 +47,8 @@ namespace tests {
 	void TestMesh1::OnRender()
 	{
 		//GLCall(glClearColor(0.437f, 0.585f, 0.808f, 1.f));
-		GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
+		//GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
+		GLCall(glClearColor(0.05f, 0.05f, 0.05f, 1.0f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 		glClearDepth(99999.f);
 
