@@ -12,7 +12,7 @@
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
 
-static std::vector<MeshTexture> textures_loaded;
+//static std::vector<MeshTexture> textures_loaded;
 
 class Model
 {
@@ -26,7 +26,7 @@ public:
 private:
     std::vector<Mesh> meshes;//模型数据
     std::string directory;
-    //std::vector<MeshTexture> textures_loaded;
+    std::vector<MeshTexture> textures_loaded;
 
     void loadModel(std::string path);//加载整个模型文件
     void processNode(aiNode* node, const aiScene* scene);
