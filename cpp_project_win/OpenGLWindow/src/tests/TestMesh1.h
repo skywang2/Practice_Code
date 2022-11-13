@@ -44,6 +44,7 @@ namespace tests {
 		
 		std::unique_ptr<Shader> shader;
 		Model m_3DModel;
+		Material m_lightMaterial;
 	};
 
 }
