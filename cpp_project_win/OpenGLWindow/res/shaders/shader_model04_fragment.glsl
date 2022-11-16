@@ -34,6 +34,16 @@ uniform Light u_directLight;//平行光源
 vec3 CalcDirLight(Light light, vec3 viewDir, Material material);//平行光
 //vec3 CalPointLight();//点光源
 
+float near = 0.1; 
+float far  = 100.0; 
+
+//将非线性深度值转为世界坐标下的z轴值
+float LinearizeDepth(float depth) 
+{
+    float z = depth * 2.0 - 1.0; // back to NDC 
+    return (2.0 * near * far) / (far + near - z * (far - near));    
+}
+
 void main()
 {
 	vec3 viewDir = normalize(u_viewPos - v_fragPos);//片元指向镜头
@@ -48,6 +58,11 @@ void main()
 //	FragColor = material.diffuse + material.specular;
 //	FragColor = vec4(material.diffuse, 1.0);
 	FragColor = vec4(CalcDirLight(u_directLight, viewDir, material), 1.0);
+
+//	FragColor = vec4(vec3(gl_FragCoord.z), 1.0);//使用gl_FragCoord.z深度值表示颜色，近处颜色变化快，远处颜色变化慢
+
+	float depth = LinearizeDepth(gl_FragCoord.z) / far;//转为线性深度值
+    FragColor = vec4(vec3(depth), 1.0);//使用线性深度值表示颜色，近处黑，远处白，颜色变化均匀
 }
 
 /*
