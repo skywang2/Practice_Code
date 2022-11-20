@@ -167,6 +167,9 @@
     <None Include="res\shaders\shader_model04_vertex.glsl">
       <Filter>源文件\shader\myModel</Filter>
     </None>
+    <None Include="res\shaders\shader_model04_fragment_StencilTesting.glsl">
+      <Filter>源文件\shader\myModel</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">

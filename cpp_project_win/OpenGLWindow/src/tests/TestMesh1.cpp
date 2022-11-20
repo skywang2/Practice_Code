@@ -3,6 +3,17 @@
 
 #include "../LoadModel.h"
 
+/*两种绘制轮廓中心对齐的方式：
+1.给轮廓的vertex shader的世界坐标加上法线坐标，即
+	gl_Position = u_projection * u_view * u_model * vec4(position + normal * scale, 1.0);//scale为缩放倍率
+该方式不需要重新计算model，但可能需要额外vertex shader以区分gl_Position
+2.使用glPolygonMode函数，在绘制轮廓时只绘制线段，并改变线段宽度
+该方式不需要重新计算model，也不需要额外vertex shader
+3.在绘制轮廓时重新计算其model
+该方式计算model会复杂一些，不需要额外vertex shader
+*/
+#define POLYGON_MODE
+
 extern GLFWwindow* g_window;
 extern MouseParam* g_mouseParam;
 //float lastX = 640, lastY = 360;//鼠标在上一帧位置
@@ -21,9 +32,12 @@ namespace tests {
 	{
 		GLCall(glDisable(GL_BLEND));//使得高光区域不透明
 		//GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
+		glEnable(GL_STENCIL_TEST);//开启模板测试
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置多边形填充模式
 
 		shader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment.glsl"));
-
+		outlingShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_StencilTesting.glsl"));
+		
 		//光源
 		float initLightAmbient[3] = { 0.2f, 0.2f, 0.2f };
 		float initLightDiffuse[3] = { 0.9f, 0.9f, 0.9f };
@@ -47,6 +61,7 @@ namespace tests {
 		view = glm::lookAt(cameraPos, cameraPos + mouseMove, cameraUp);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
 
+		//物体shader
 		shader->Bind();
 		//mvp矩阵
 		shader->SetUniformMat4f("u_model", model);//单个立方体使用这个model
@@ -60,16 +75,47 @@ namespace tests {
 		shader->SetUniform3f("u_directLight.diffuse", m_lightMaterial.diffuse[0], m_lightMaterial.diffuse[0], m_lightMaterial.diffuse[0]);
 		shader->SetUniform3f("u_directLight.specular", m_lightMaterial.specular[0], m_lightMaterial.specular[0], m_lightMaterial.specular[0]);
 
+		//轮廓shader
+#ifdef POLYGON_MODE
+		glm::mat4 outlingModel = model;
+#else
+		glm::mat4 outlingModel = glm::scale(glm::mat4(1.0f), glm::vec3(1.2f, 1.2f, 1.2f)) * model;//缩放
+#endif // POLYGON_MODE
+		outlingShader->Bind();
+		outlingShader->SetUniformMat4f("u_model", outlingModel);
+		outlingShader->SetUniformMat4f("u_view", view);
+		outlingShader->SetUniformMat4f("u_projection", proj);
 	}
 
 	void TestMesh1::OnRender()
 	{
-		GLCall(glClearColor(0.05f, 0.05f, 0.05f, 1.0f));
-		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+		GLCall(glClearColor(0.2f, 0.2f, 0.2f, 1.0f));
+		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 		glClearDepth(99999.f);
 
+		//绘制物体
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);//设置比较函数
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);//设置模板值更新策略，使得物体位置的模板值为1（ref）
+		glStencilMask(0xFF);//启用模板缓冲写入
 		shader->Bind();
 		m_3DModel.Draw(*shader);
+
+		//绘制轮廓
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);//模板值不为1的通过测试，轮廓比物体大，绘制扣掉物体的部分
+		glStencilMask(0x00);//禁止模板缓冲更新
+		glDisable(GL_DEPTH_TEST);//禁用深度测试
+#ifdef POLYGON_MODE
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glLineWidth(10);
+		outlingShader->Bind();
+		m_3DModel.Draw(*outlingShader);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#else
+		outlingShader->Bind();
+		m_3DModel.Draw(*outlingShader);
+#endif // POLYGON_MODE
+		glStencilMask(0xFF);//允许模板缓冲更新
+		glEnable(GL_DEPTH_TEST);//启用深度测试
 	}
 
 	void TestMesh1::OnImGuiRender()

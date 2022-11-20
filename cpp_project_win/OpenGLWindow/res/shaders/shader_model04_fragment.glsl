@@ -59,10 +59,12 @@ void main()
 //	FragColor = vec4(material.diffuse, 1.0);
 	FragColor = vec4(CalcDirLight(u_directLight, viewDir, material), 1.0);
 
-//	FragColor = vec4(vec3(gl_FragCoord.z), 1.0);//使用gl_FragCoord.z深度值表示颜色，近处颜色变化快，远处颜色变化慢
+	//1.使用gl_FragCoord.z深度值表示颜色，非线性，近处颜色变化快，远处颜色变化慢
+//	FragColor = vec4(vec3(gl_FragCoord.z), 1.0);
 
-	float depth = LinearizeDepth(gl_FragCoord.z) / far;//转为线性深度值
-    FragColor = vec4(vec3(depth), 1.0);//使用线性深度值表示颜色，近处黑，远处白，颜色变化均匀
+	//2.使用线性深度值表示颜色，近处黑，远处白，颜色变化均匀
+//	float depth = LinearizeDepth(gl_FragCoord.z) / far;//转为线性深度值
+//    FragColor = vec4(vec3(depth), 1.0);
 }
 
 /*

@@ -43,6 +43,7 @@ namespace tests {
 		glm::vec3 cameraUp;
 		
 		std::unique_ptr<Shader> shader;
+		std::unique_ptr<Shader> outlingShader;
 		Model m_3DModel;
 		Material m_lightMaterial;
 	};
