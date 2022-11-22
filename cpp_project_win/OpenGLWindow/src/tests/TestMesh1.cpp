@@ -18,6 +18,7 @@ extern GLFWwindow* g_window;
 extern MouseParam* g_mouseParam;
 //float lastX = 640, lastY = 360;//鼠标在上一帧位置
 
+
 namespace tests {
 	TestMesh1::TestMesh1()
 		: display_w(1280)
