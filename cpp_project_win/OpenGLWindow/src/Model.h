@@ -22,6 +22,7 @@ public:
         loadModel(path);
     }
     void Draw(Shader& shader);
+    void AddMesh(Mesh mesh) { meshes.push_back(mesh); }
 
 private:
     std::vector<Mesh> meshes;//模型数据
