@@ -18,6 +18,20 @@ extern GLFWwindow* g_window;
 extern MouseParam* g_mouseParam;
 //float lastX = 640, lastY = 360;//鼠标在上一帧位置
 
+static float planeVertices[] = {
+	// positions                // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
+	 5.0f, -0.5f,  5.0f, 0.0f, 1.0f, 0.0f,  2.0f, 0.0f,
+	-5.0f, -0.5f,  5.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f,
+	-5.0f, -0.5f, -5.0f, 0.0f, 1.0f, 0.0f,  0.0f, 2.0f,
+
+	 5.0f, -0.5f,  5.0f, 0.0f, 1.0f, 0.0f,  2.0f, 0.0f,
+	-5.0f, -0.5f, -5.0f, 0.0f, 1.0f, 0.0f,  0.0f, 2.0f,
+	 5.0f, -0.5f, -5.0f, 0.0f, 1.0f, 0.0f,  2.0f, 2.0f
+};
+static unsigned int planeIndices[] = {
+	0, 1, 2,
+	3, 4, 5
+};
 
 namespace tests {
 	TestMesh1::TestMesh1()
@@ -35,6 +49,8 @@ namespace tests {
 		//GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
 		glEnable(GL_STENCIL_TEST);//开启模板测试
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置多边形填充模式
+
+		LoadObjectMesh(planeVertices, planeIndices, "metal.png", "res/textures");
 
 		shader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment.glsl"));
 		outlingShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_StencilTesting.glsl"));

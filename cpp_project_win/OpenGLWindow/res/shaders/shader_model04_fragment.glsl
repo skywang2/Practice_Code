@@ -57,7 +57,7 @@ void main()
 
 //	FragColor = material.diffuse + material.specular;
 //	FragColor = vec4(material.diffuse, 1.0);
-	FragColor = vec4(CalcDirLight(u_directLight, viewDir, material), 1.0);
+	FragColor += vec4(CalcDirLight(u_directLight, viewDir, material), 1.0);
 
 	//1.使用gl_FragCoord.z深度值表示颜色，非线性，近处颜色变化快，远处颜色变化慢
 //	FragColor = vec4(vec3(gl_FragCoord.z), 1.0);

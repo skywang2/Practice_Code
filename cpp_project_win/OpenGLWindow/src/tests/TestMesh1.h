@@ -2,6 +2,7 @@
 #include "Test.h"
 #include <memory>
 #include <vector>
+#include <iostream>
 //#include "GL/glew.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -52,11 +53,11 @@ namespace tests {
     private:
         //加载立方体的顶点和着色器，顶点（pos，coords）
         template<typename T1, int N, typename T2, int M>
-        bool LoadObjectMesh(T1 vertices[N], T2 indices[M])
+        bool LoadObjectMesh(T1 (&vertices)[N], T2 (&indices)[M], const char* filename, const std::string& directory)
         {
-            if (N != M)
+            if (N != 8 * M)
             {
-                std::cout << "vertex&index count different" << std::cout;
+                //std::cout << "vertex&index count different" << std::cout;
                 return false;
             }
             
@@ -68,21 +69,26 @@ namespace tests {
             {
                 MeshVertex vertex;
                 unsigned int index;
+                MeshTexture tex;
 
                 memcpy(&vertex, vertices + 8 * N, 8 * sizeof(float));
-                index = indices[i];
                 vec_vertices.push_back(std::move(vertex));
+
+                index = indices[i];
                 vec_indices.push_back(index);
+
+                tex.id = TextureFromFile(filename, directory);
+                tex.type = "texture_diffuse";//只使用漫反射贴图
+                tex.path = "";
+                vec_textures.push_back(std::move(tex));
             }
-
-
             m_objects.push_back(std::move(Mesh(vec_vertices, vec_indices, vec_textures)));
             return true;
         }
 	};
 
 	//立方体顶点数据
-    float cubeVertices[] = {
+    static float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -125,19 +131,5 @@ namespace tests {
          0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-    float planeVertices[] = {
-        // positions                // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
-         5.0f, -0.5f,  5.0f, 0.0f, 1.0f, 0.0f,  2.0f, 0.0f,
-        -5.0f, -0.5f,  5.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f,
-        -5.0f, -0.5f, -5.0f, 0.0f, 1.0f, 0.0f,  0.0f, 2.0f,
-
-         5.0f, -0.5f,  5.0f, 0.0f, 1.0f, 0.0f,  2.0f, 0.0f,
-        -5.0f, -0.5f, -5.0f, 0.0f, 1.0f, 0.0f,  0.0f, 2.0f,
-         5.0f, -0.5f, -5.0f, 0.0f, 1.0f, 0.0f,  2.0f, 2.0f
-    };
-    unsigned int planeIndices[] = {
-        0, 1, 2,
-        3, 4, 5
     };
 }//namespace tests

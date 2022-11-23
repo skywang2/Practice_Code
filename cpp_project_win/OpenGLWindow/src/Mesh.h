@@ -21,6 +21,7 @@ struct MeshTexture
     aiString path;//纹理文件路径
 };
 
+unsigned int TextureFromFile(const char* path, const std::string& directory, unsigned int flip = 0, bool gamma = false);
 
 class Mesh
 {

@@ -10,10 +10,6 @@
 #include "Shader.h"
 #include "Mesh.h"
 
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
-
-//static std::vector<MeshTexture> textures_loaded;
-
 class Model
 {
 public:
