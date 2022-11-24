@@ -50,10 +50,14 @@ namespace tests {
 		glEnable(GL_STENCIL_TEST);//开启模板测试
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置多边形填充模式
 
-		LoadObjectMesh(planeVertices, planeIndices, "metal.png", "res/textures");
+		if (!LoadObjectMesh(planeVertices, planeIndices, "metal.png", "res/textures"))
+		{
+			std::cout << "load object mesh failed" << std::endl;
+		}
 
 		shader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment.glsl"));
 		outlingShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_StencilTesting.glsl"));
+		planeShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_plane.glsl"));
 		
 		//光源
 		float initLightAmbient[3] = { 0.2f, 0.2f, 0.2f };
@@ -78,7 +82,7 @@ namespace tests {
 		view = glm::lookAt(cameraPos, cameraPos + mouseMove, cameraUp);
 		model = glm::translate(glm::mat4(1.0f), model_trans);//模型矩阵
 
-		//物体shader
+		/*物体shader*/
 		shader->Bind();
 		//mvp矩阵
 		shader->SetUniformMat4f("u_model", model);//单个立方体使用这个model
@@ -92,7 +96,7 @@ namespace tests {
 		shader->SetUniform3f("u_directLight.diffuse", m_lightMaterial.diffuse[0], m_lightMaterial.diffuse[0], m_lightMaterial.diffuse[0]);
 		shader->SetUniform3f("u_directLight.specular", m_lightMaterial.specular[0], m_lightMaterial.specular[0], m_lightMaterial.specular[0]);
 
-		//轮廓shader
+		/*轮廓shader*/
 #ifdef POLYGON_MODE
 		glm::mat4 outlingModel = model;
 #else
@@ -102,6 +106,13 @@ namespace tests {
 		outlingShader->SetUniformMat4f("u_model", outlingModel);
 		outlingShader->SetUniformMat4f("u_view", view);
 		outlingShader->SetUniformMat4f("u_projection", proj);
+
+		/*地面shader*/
+		planeShader->Bind();
+		planeShader->SetUniformMat4f("u_model", model);
+		planeShader->SetUniformMat4f("u_view", view);
+		planeShader->SetUniformMat4f("u_projection", proj);
+
 	}
 
 	void TestMesh1::OnRender()
@@ -109,6 +120,13 @@ namespace tests {
 		GLCall(glClearColor(0.2f, 0.2f, 0.2f, 1.0f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 		glClearDepth(99999.f);
+
+		//绘制地面及方块
+		for (auto& obj : m_objects)
+		{
+			planeShader->Bind();
+			obj.Draw(*planeShader);
+		}
 
 		//绘制物体
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);//设置比较函数
@@ -133,6 +151,7 @@ namespace tests {
 #endif // POLYGON_MODE
 		glStencilMask(0xFF);//允许模板缓冲更新
 		glEnable(GL_DEPTH_TEST);//启用深度测试
+
 	}
 
 	void TestMesh1::OnImGuiRender()

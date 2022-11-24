@@ -191,6 +191,7 @@
     <None Include="res\shaders\shader_cube03_fragment_object_multiply_light.glsl" />
     <None Include="res\shaders\shader_cube03_vertex_object.glsl" />
     <None Include="res\shaders\shader_model04_fragment.glsl" />
+    <None Include="res\shaders\shader_model04_fragment_plane.glsl" />
     <None Include="res\shaders\shader_model04_fragment_StencilTesting.glsl" />
     <None Include="res\shaders\shader_model04_vertex.glsl" />
     <None Include="res\shaders\vertexShader.glsl" />
