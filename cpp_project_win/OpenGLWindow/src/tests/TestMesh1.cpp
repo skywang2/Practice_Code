@@ -49,6 +49,7 @@ namespace tests {
 		//GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
 		glEnable(GL_STENCIL_TEST);//开启模板测试
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置多边形填充模式
+		//glEnable(GL_CULL_FACE);//面剔除，剔除背面的三角形，其中默认顶点顺序逆时针为正面
 
 		if (!LoadObjectMesh(planeVertices, planeIndices, "metal.png", "res/textures"))
 		{
