@@ -8,6 +8,7 @@
 #include "Regex.hpp"
 #include "TestMemberData.h"
 #include "forward.hpp"
+#include "VisitorMode.hpp"
 
 std::mutex g_mtx;
 
@@ -188,6 +189,22 @@ int main(int argc, char* argv[]) {
 			ff.push_back(1.0);
 			size_t size_float = sizeof(float);
 			size_t size_vector = sizeof(ff);//注意这不是3*sizeof(float)
+		}
+
+		//12.访问者模式
+		{
+			ObjectStructure objects;
+			std::shared_ptr<ConcreteElementA> pA(new ConcreteElementA);
+			std::shared_ptr<ConcreteElementB> pB(new ConcreteElementB);
+
+			objects.Attach(pA);
+			objects.Attach(pB);
+
+			ConcreteVisitor1 v1;
+			ConcreteVisitor2 v2;
+
+			objects.Accept(&v1);//所有元素使用1号类中的处理方法
+			objects.Accept(&v2);//所有元素使用2号类中的处理方法
 		}
 	}
 	catch (exception e)

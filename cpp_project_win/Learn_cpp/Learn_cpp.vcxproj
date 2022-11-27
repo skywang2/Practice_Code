@@ -125,6 +125,7 @@
     <ClInclude Include="include\main.h" />
     <ClInclude Include="include\MyLocker.hpp" />
     <ClInclude Include="TestMemberData.h" />
+    <ClInclude Include="VisitorMode.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
