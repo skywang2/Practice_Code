@@ -13,6 +13,7 @@
 该方式计算model会复杂一些，不需要额外vertex shader
 */
 #define POLYGON_MODE
+#define USE_FRAMEBUFFER
 
 extern GLFWwindow* g_window;
 extern MouseParam* g_mouseParam;
@@ -32,6 +33,22 @@ static unsigned int planeIndices[] = {
 	0, 1, 2,
 	3, 4, 5
 };
+
+static float frameBufferVertices[] = {
+	// positions                // texture Coords 
+	0.5f, -0.5f,		1.0f, 0.0f,
+	-0.5f, 0.5f,		0.0f, 1.0f,
+	-0.5f, -0.5f,	0.0f, 0.0f,
+
+	0.5f, -0.5f,		1.0f, 0.0f,
+	0.5f, 0.5f,		1.0f, 1.0f,
+	-0.5f, 0.5f,		0.0f, 1.0f,
+};
+static unsigned int frameBufferIndices[] = {
+	0, 1, 2,
+	3, 4, 5
+};
+
 
 namespace tests {
 	TestMesh1::TestMesh1()
@@ -60,6 +77,51 @@ namespace tests {
 		outlingShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_StencilTesting.glsl"));
 		planeShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_plane.glsl"));
 		
+#ifdef USE_FRAMEBUFFER
+		/*
+		0.生成缓冲帧对象
+		1.生成空纹理，存储颜色
+		2.将空纹理作为颜色缓冲附加到帧缓冲对象
+		3.生成渲染缓冲对象，存储深度值和模板值
+		4.渲染缓冲对象内部格式设置为GL_DEPTH24_STENCIL8
+		5.将渲染缓冲对象附加到帧缓冲对象
+		6.检查帧缓冲是否完整
+		7.帧缓冲解绑
+		8.创建四边形覆盖屏幕，将之前生成的纹理作为四边形的纹理
+		9.绘制原画面
+		10.绘制四边形
+		*/
+		glfwGetFramebufferSize(g_window, &display_w, &display_h);
+		//0.生成缓冲帧对象
+		GLCall(glGenFramebuffers(1, &framebuffer));
+		GLCall(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
+		//1.生成空纹理，存储颜色
+		GLCall(glGenTextures(1, &texCololrBuffer));
+		GLCall(glBindTexture(GL_TEXTURE_2D, texCololrBuffer));
+		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, display_w, display_h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+		//2.将空纹理作为颜色缓冲附加到帧缓冲对象
+		GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texCololrBuffer, 0));
+		//3.生成渲染缓冲对象，存储深度值和模板值
+		glGenRenderbuffers(1, &rbo);
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+		//4.渲染缓冲对象内部格式设置为GL_DEPTH24_STENCIL8
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, display_w, display_h);
+		//5.将渲染缓冲对象附加到帧缓冲对象
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		//6.检查帧缓冲是否完整
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		{
+			std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+		}
+		//7.帧缓冲解绑
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);//不解绑的话，渲染时如果没有指定其他帧缓冲，则自动渲染到该帧缓冲
+		//8.创建四边形覆盖屏幕，将之前生成的纹理作为四边形的纹理
+
+#endif
+
 		//光源
 		float initLightAmbient[3] = { 0.2f, 0.2f, 0.2f };
 		float initLightDiffuse[3] = { 0.9f, 0.9f, 0.9f };
@@ -118,6 +180,11 @@ namespace tests {
 
 	void TestMesh1::OnRender()
 	{
+#ifdef USE_FRAMEBUFFER
+		//使用帧缓冲，第一阶段绘制
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);//渲染到纹理
+#endif // USE_FRAMEBUFFER
+
 		GLCall(glClearColor(0.2f, 0.2f, 0.2f, 1.0f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 		glClearDepth(99999.f);
@@ -152,6 +219,15 @@ namespace tests {
 #endif // POLYGON_MODE
 		glStencilMask(0xFF);//允许模板缓冲更新
 		glEnable(GL_DEPTH_TEST);//启用深度测试
+
+#ifdef USE_FRAMEBUFFER
+		//使用帧缓冲，第二阶段绘制
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);//渲染到默认帧缓冲
+		GLCall(glClearColor(1.0f, 1.0f, 1.0f, 1.0f));
+		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
+		glClearDepth(99999.f);
+
+#endif // USE_FRAMEBUFFER
 
 	}
 

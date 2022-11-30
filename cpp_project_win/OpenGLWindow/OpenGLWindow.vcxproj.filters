@@ -173,6 +173,8 @@
     <None Include="res\shaders\shader_model04_fragment_plane.glsl">
       <Filter>源文件\shader\myModel</Filter>
     </None>
+    <None Include="res\shaders\shader_model04_fragment_framebuffer.glsl" />
+    <None Include="res\shaders\shader_model04_vertex_framebuffer.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">

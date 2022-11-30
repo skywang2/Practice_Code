@@ -51,6 +51,11 @@ namespace tests {
 		Model m_3DModel;
 		Material m_lightMaterial;
 
+        //帧缓冲相关
+        unsigned int framebuffer;//帧缓冲对象
+        unsigned int texCololrBuffer;//空纹理对象
+        unsigned int rbo;//渲染缓冲对象
+
     private:
         //加载立方体的顶点和着色器，顶点（pos，coords）
         template<typename T1, int N, typename T2, int M>
