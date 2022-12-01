@@ -55,6 +55,11 @@ namespace tests {
         unsigned int framebuffer;//帧缓冲对象
         unsigned int texCololrBuffer;//空纹理对象
         unsigned int rbo;//渲染缓冲对象
+        unsigned int vao_f;
+        unsigned int vbo_f;
+        unsigned int ebo_f;
+        std::unique_ptr<Shader> framebufferShader;
+
 
     private:
         //加载立方体的顶点和着色器，顶点（pos，coords）

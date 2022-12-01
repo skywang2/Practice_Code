@@ -119,7 +119,23 @@ namespace tests {
 		//7.帧缓冲解绑
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);//不解绑的话，渲染时如果没有指定其他帧缓冲，则自动渲染到该帧缓冲
 		//8.创建四边形覆盖屏幕，将之前生成的纹理作为四边形的纹理
+		glGenVertexArrays(1, &vao_f);
+		glGenBuffers(1, &vbo_f);
+		glGenBuffers(1, &ebo_f);
 
+		glBindVertexArray(vao_f);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_f);
+		glBufferData(GL_ARRAY_BUFFER, 24 * sizeof(float), frameBufferVertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_f);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), frameBufferIndices, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);//顶点
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+		glEnableVertexAttribArray(1);//纹理
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+
+		framebufferShader.reset(new Shader("res/shaders/shader_model04_vertex_framebuffer.glsl", "res/shaders/shader_model04_fragment_framebuffer.glsl"));
+		
 #endif
 
 		//光源
@@ -227,6 +243,10 @@ namespace tests {
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 		glClearDepth(99999.f);
 
+		glBindVertexArray(vao_f);
+		glBindTexture(GL_TEXTURE_2D, texCololrBuffer);
+		framebufferShader->Bind();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 #endif // USE_FRAMEBUFFER
 
 	}
