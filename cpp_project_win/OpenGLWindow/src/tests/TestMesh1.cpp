@@ -132,7 +132,7 @@ namespace tests {
 		glEnableVertexAttribArray(0);//¶¥µã
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
 		glEnableVertexAttribArray(1);//ÎÆÀí
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
 		framebufferShader.reset(new Shader("res/shaders/shader_model04_vertex_framebuffer.glsl", "res/shaders/shader_model04_fragment_framebuffer.glsl"));
 		
@@ -243,9 +243,9 @@ namespace tests {
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 		glClearDepth(99999.f);
 
+		framebufferShader->Bind();
 		glBindVertexArray(vao_f);
 		glBindTexture(GL_TEXTURE_2D, texCololrBuffer);
-		framebufferShader->Bind();
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 #endif // USE_FRAMEBUFFER
 

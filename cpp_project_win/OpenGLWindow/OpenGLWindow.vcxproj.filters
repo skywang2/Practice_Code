@@ -40,6 +40,9 @@
     <Filter Include="源文件\shader\myModel">
       <UniqueIdentifier>{d30f4be1-b7e5-4628-876a-feab07c3ac58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\shader\myModel\framebuffer">
+      <UniqueIdentifier>{d4bbfc19-52e3-4d8f-a18d-ab224c649b30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
@@ -173,8 +176,12 @@
     <None Include="res\shaders\shader_model04_fragment_plane.glsl">
       <Filter>源文件\shader\myModel</Filter>
     </None>
-    <None Include="res\shaders\shader_model04_fragment_framebuffer.glsl" />
-    <None Include="res\shaders\shader_model04_vertex_framebuffer.glsl" />
+    <None Include="res\shaders\shader_model04_fragment_framebuffer.glsl">
+      <Filter>源文件\shader\myModel\framebuffer</Filter>
+    </None>
+    <None Include="res\shaders\shader_model04_vertex_framebuffer.glsl">
+      <Filter>源文件\shader\myModel\framebuffer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
