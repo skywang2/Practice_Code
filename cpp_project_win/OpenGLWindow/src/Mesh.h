@@ -22,6 +22,7 @@ struct MeshTexture
 };
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, unsigned int flip = 0, bool gamma = false);
+unsigned int TextureCubemap(std::vector<std::string> faces);
 
 class Mesh
 {

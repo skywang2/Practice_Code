@@ -193,9 +193,11 @@
     <None Include="res\shaders\shader_model04_fragment.glsl" />
     <None Include="res\shaders\shader_model04_fragment_framebuffer.glsl" />
     <None Include="res\shaders\shader_model04_fragment_plane.glsl" />
+    <None Include="res\shaders\shader_model04_fragment_skybox.glsl" />
     <None Include="res\shaders\shader_model04_fragment_StencilTesting.glsl" />
     <None Include="res\shaders\shader_model04_vertex.glsl" />
     <None Include="res\shaders\shader_model04_vertex_framebuffer.glsl" />
+    <None Include="res\shaders\shader_model04_vertex_skybox.glsl" />
     <None Include="res\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

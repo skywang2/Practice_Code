@@ -43,6 +43,9 @@
     <Filter Include="源文件\shader\myModel\framebuffer">
       <UniqueIdentifier>{d4bbfc19-52e3-4d8f-a18d-ab224c649b30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\shader\myModel\skybox">
+      <UniqueIdentifier>{2026a380-1734-477a-a1e4-0155fdc8664c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
@@ -182,6 +185,8 @@
     <None Include="res\shaders\shader_model04_vertex_framebuffer.glsl">
       <Filter>源文件\shader\myModel\framebuffer</Filter>
     </None>
+    <None Include="res\shaders\shader_model04_fragment_skybox.glsl" />
+    <None Include="res\shaders\shader_model04_vertex_skybox.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">

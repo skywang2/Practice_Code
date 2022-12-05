@@ -36,19 +36,74 @@ static unsigned int planeIndices[] = {
 
 static float frameBufferVertices[] = {
 	// positions                // texture Coords 
-	0.5f, -0.5f,		1.0f, 0.0f,
-	-0.5f, 0.5f,		0.0f, 1.0f,
-	-0.5f, -0.5f,	0.0f, 0.0f,
+	0.9f, -0.9f,		1.0f, 0.0f,
+	-0.9f, 0.9f,		0.0f, 1.0f,
+	-0.9f, -0.9f,	0.0f, 0.0f,
 
-	0.5f, -0.5f,		1.0f, 0.0f,
-	0.5f, 0.5f,		1.0f, 1.0f,
-	-0.5f, 0.5f,		0.0f, 1.0f,
+	0.9f, -0.9f,		1.0f, 0.0f,
+	0.9f, 0.9f,		1.0f, 1.0f,
+	-0.9f, 0.9f,		0.0f, 1.0f,
 };
 static unsigned int frameBufferIndices[] = {
 	0, 1, 2,
 	3, 4, 5
 };
 
+//不使用索引绘制天空盒
+float skyboxVertices[] = {
+	// positions          
+	-1.0f,  1.0f, -1.0f,
+	-1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+
+	-1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+
+	-1.0f, -1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+
+	-1.0f,  1.0f, -1.0f,
+	 1.0f,  1.0f, -1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f, -1.0f,
+
+	-1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	 1.0f, -1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f
+};
+
+std::vector<std::string> faces
+{
+	"right.jpg",
+	"left.jpg",
+	"top.jpg",
+	"bottom.jpg",
+	"front.jpg",
+	"back.jpg"
+};
 
 namespace tests {
 	TestMesh1::TestMesh1()
@@ -76,6 +131,7 @@ namespace tests {
 		shader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment.glsl"));
 		outlingShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_StencilTesting.glsl"));
 		planeShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_plane.glsl"));
+		skyboxShader.reset(new Shader("res/shaders/shader_model04_vertex_skybox.glsl", "res/shaders/shader_model04_fragment_skybox.glsl"));
 		
 #ifdef USE_FRAMEBUFFER
 		/*
@@ -137,6 +193,22 @@ namespace tests {
 		framebufferShader.reset(new Shader("res/shaders/shader_model04_vertex_framebuffer.glsl", "res/shaders/shader_model04_fragment_framebuffer.glsl"));
 		
 #endif
+
+		//加载天空盒
+		for (auto& filename : faces)
+		{
+			filename = "res/textures/skybox/" + filename;
+		}
+		skyboxBuffer = TextureCubemap(faces);
+		//天空盒顶点
+		glGenVertexArrays(1, &vao_f);
+		glGenBuffers(1, &vbo_f);
+
+		glBindVertexArray(vao_f);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_f);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);//顶点
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 
 		//光源
 		float initLightAmbient[3] = { 0.2f, 0.2f, 0.2f };
@@ -204,6 +276,18 @@ namespace tests {
 		GLCall(glClearColor(0.2f, 0.2f, 0.2f, 1.0f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
 		glClearDepth(99999.f);
+
+		//绘制天空盒
+		GLCall(glDepthMask(GL_FALSE));
+
+		GLCall(glBindVertexArray(vao_sky));
+		GLCall(glActiveTexture(GL_TEXTURE0));//shader中只有一个纹理图
+		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxBuffer));
+		GLCall(skyboxShader->Bind());
+		GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
+		GLCall(glBindVertexArray(0));
+
+		GLCall(glDepthMask(GL_TRUE));
 
 		//绘制地面及方块
 		for (auto& obj : m_objects)

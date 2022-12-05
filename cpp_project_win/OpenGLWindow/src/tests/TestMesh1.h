@@ -60,6 +60,11 @@ namespace tests {
         unsigned int ebo_f;
         std::unique_ptr<Shader> framebufferShader;
 
+        //天空盒
+        unsigned int skyboxBuffer;//纹理
+        unsigned int vao_sky;
+        unsigned int vbo_sky;
+        std::unique_ptr<Shader> skyboxShader;
 
     private:
         //加载立方体的顶点和着色器，顶点（pos，coords）
