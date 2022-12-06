@@ -201,11 +201,11 @@ namespace tests {
 		}
 		skyboxBuffer = TextureCubemap(faces);
 		//天空盒顶点
-		glGenVertexArrays(1, &vao_f);
-		glGenBuffers(1, &vbo_f);
+		glGenVertexArrays(1, &vao_sky);
+		glGenBuffers(1, &vbo_sky);
 
-		glBindVertexArray(vao_f);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_f);
+		glBindVertexArray(vao_sky);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_sky);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
 		glEnableVertexAttribArray(0);//顶点
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
@@ -264,6 +264,12 @@ namespace tests {
 		planeShader->SetUniformMat4f("u_view", view);
 		planeShader->SetUniformMat4f("u_projection", proj);
 
+		/*天空盒shader*/
+		glm::mat4 model_sky = glm::scale(glm::mat4(1.0f), glm::vec3(40, 40, 40));
+		skyboxShader->Bind();
+		skyboxShader->SetUniformMat4f("u_model", model_sky);
+		skyboxShader->SetUniformMat4f("u_view", view);
+		skyboxShader->SetUniformMat4f("u_projection", proj);
 	}
 
 	void TestMesh1::OnRender()
@@ -280,10 +286,10 @@ namespace tests {
 		//绘制天空盒
 		GLCall(glDepthMask(GL_FALSE));
 
+		skyboxShader->Bind();
 		GLCall(glBindVertexArray(vao_sky));
 		GLCall(glActiveTexture(GL_TEXTURE0));//shader中只有一个纹理图
 		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxBuffer));
-		GLCall(skyboxShader->Bind());
 		GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
 		GLCall(glBindVertexArray(0));
 
