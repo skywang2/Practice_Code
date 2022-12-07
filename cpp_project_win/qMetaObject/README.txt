@@ -1,0 +1,1 @@
+1.尝试使用qt中的QMetaObject及其反射机制
