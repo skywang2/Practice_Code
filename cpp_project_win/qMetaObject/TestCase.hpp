@@ -33,6 +33,7 @@ public:
 	Q_INVOKABLE TestCase01(QObject* parent = nullptr)
 		: TestCaseBase(parent)
 	{
+		qDebug() << QString("parent:0x%1").arg((unsigned int)parent, 0, 16);
 		return;
 	}
 
@@ -82,9 +83,17 @@ public:
 		int id = QMetaType::type(className);
 		if (id != QMetaType::UnknownType)
 		{
-			qDebug() << "typeName:" << QMetaType::typeName(id);
-			//const QMetaObject* mate = QMetaType::metaObjectForType(id);
-			//obj = dynamic_cast<TestCaseBase*>(mate->newInstance());
+			//qDebug() << "typeName:" << QMetaType::typeName(id);
+			try
+			{
+				const QMetaObject* mate = QMetaType::metaObjectForType(id);
+				qDebug() << "typeName:" << mate->className();
+				obj = dynamic_cast<TestCaseBase*>(mate->newInstance(Q_ARG(QObject*, parent)));
+			}
+			catch (std::bad_cast err)
+			{
+				qDebug() << err.what();
+			}
 		}
 		else
 		{
