@@ -38,6 +38,26 @@ Shader::Shader(const std::string& vertex, const std::string& fragment)
     m_programID = CreateShader(ss[0].str(), ss[1].str());
 }
 
+Shader::Shader(const std::string& vertex, const std::string& geometry, const std::string& fragment)
+{
+    std::vector<std::string> paths;
+    paths.push_back(vertex);
+    paths.push_back(geometry);
+    paths.push_back(fragment);
+
+    std::stringstream ss[3];
+    for (int i = 0; i < paths.size(); i++)
+    {
+        std::fstream file(paths[i]);
+        std::string line;
+        while (std::getline(file, line))
+        {
+            ss[i] << line << '\n';
+        }
+    }
+    m_programID = CreateShader(ss[0].str(), ss[1].str(), ss[2].str());
+}
+
 Shader::~Shader()
 {
 }
@@ -161,13 +181,22 @@ unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 
 unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
-    unsigned int program = glCreateProgram();
-    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
     int result = -1;
+    unsigned int program = glCreateProgram();
+    unsigned int vs = -1;
+    unsigned int fs = -1;
+    unsigned int gs = -1;
 
-    glAttachShader(program, vs);
-    glAttachShader(program, fs);
+    if (!vertexShader.empty())
+    {
+        vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+        glAttachShader(program, vs);
+    }
+    if (!fragmentShader.empty())
+    {
+        fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+        glAttachShader(program, fs);
+    }
 
     glLinkProgram(program);//将shader对象链接到program对象上，链接一个GPU（可编程顶点处理器）上的可执行对象
     glGetProgramiv(program, GL_LINK_STATUS, &result);
@@ -184,11 +213,74 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
     }
     glValidateProgram(program);//验证程序对象
 
-    glDetachShader(program, vs);
-    glDetachShader(program, fs);
+    if (!vertexShader.empty())
+    {
+        glDetachShader(program, vs);
+        glDeleteShader(vs);
+    }
+    if (!fragmentShader.empty())
+    {
+        glDetachShader(program, fs);
+        glDeleteShader(fs);
+    }
 
-    glDeleteShader(vs);
-    glDeleteShader(fs);
+    return program;
+}
+
+unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& geometryShader, const std::string& fragmentShader)
+{
+    int result = -1;
+    unsigned int program = glCreateProgram();
+    unsigned int vs = -1;
+    unsigned int fs = -1;
+    unsigned int gs = -1;
+
+    if (!vertexShader.empty())
+    {
+        vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+        glAttachShader(program, vs);
+    }
+    if (!geometryShader.empty())
+    {
+        gs = CompileShader(GL_GEOMETRY_SHADER, geometryShader);
+        glAttachShader(program, fs);
+    }
+    if (!fragmentShader.empty())
+    {
+        fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+        glAttachShader(program, fs);
+    }
+
+    glLinkProgram(program);//将shader对象链接到program对象上，链接一个GPU（可编程顶点处理器）上的可执行对象
+    glGetProgramiv(program, GL_LINK_STATUS, &result);
+    if (GL_FALSE == result)
+    {
+        int length = 0;
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+        char* message = (char*)alloca(length * sizeof(char));//alloca可以在栈上分配内存
+        memset(message, 0, length * sizeof(char));
+        glGetProgramInfoLog(program, length, &length, message);
+        std::cout << message << std::endl;
+        glDeleteProgram(program);
+        return false;
+    }
+    glValidateProgram(program);//验证程序对象
+
+    if (!vertexShader.empty())
+    {
+        glDetachShader(program, vs);
+        glDeleteShader(vs);
+    }
+    if (!geometryShader.empty())
+    {
+        glDetachShader(program, gs);
+        glDeleteShader(gs);
+    }
+    if (!fragmentShader.empty())
+    {
+        glDetachShader(program, fs);
+        glDeleteShader(fs);
+    }
 
     return program;
 }

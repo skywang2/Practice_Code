@@ -191,6 +191,15 @@
     <None Include="res\shaders\shader_model04_vertex_skybox.glsl">
       <Filter>源文件\shader\myModel\skybox</Filter>
     </None>
+    <None Include="res\shaders\shader_model04_Geometry_fragment.glsl">
+      <Filter>源文件\shader\myModel</Filter>
+    </None>
+    <None Include="res\shaders\shader_model04_Geometry_Geometry.glsl">
+      <Filter>源文件\shader\myModel</Filter>
+    </None>
+    <None Include="res\shaders\shader_model04_Geometry_vertex.glsl">
+      <Filter>源文件\shader\myModel</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">

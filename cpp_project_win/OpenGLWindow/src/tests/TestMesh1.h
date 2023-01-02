@@ -66,6 +66,9 @@ namespace tests {
         unsigned int vbo_sky;
         std::unique_ptr<Shader> skyboxShader;
 
+        //几何着色器绘制法线
+        std::unique_ptr<Shader> normalShader;
+
     private:
         //加载立方体的顶点和着色器，顶点（pos，coords）
         template<typename T1, int N, typename T2, int M>

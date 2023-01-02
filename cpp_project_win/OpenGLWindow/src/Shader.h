@@ -24,7 +24,8 @@ private:
 
 public:
 	Shader(const std::string& filepath);//all in one
-    Shader(const std::string& vertex, const std::string& fragment);
+    Shader(const std::string& vertex, const std::string& fragment);//vertex + fragment
+    Shader(const std::string& vertex, const std::string& geometry, const std::string& fragment);//vertex + geometry + fragment
 	~Shader();
 
     void Bind() const;
@@ -43,6 +44,6 @@ private:
     ShaderProgramSource ParseShader(const std::string& filepath);
     unsigned int CompileShader(unsigned int type, const std::string& source);
     unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);//传入shader源码字符串，构造着色器的公共代码
-
+    unsigned int CreateShader(const std::string& vertexShader, const std::string& geometryShader, const std::string& fragmentShader);//有几何着色器
 };
 

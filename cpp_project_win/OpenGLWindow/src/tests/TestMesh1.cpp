@@ -132,7 +132,10 @@ namespace tests {
 		outlingShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_StencilTesting.glsl"));
 		planeShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_plane.glsl"));
 		skyboxShader.reset(new Shader("res/shaders/shader_model04_vertex_skybox.glsl", "res/shaders/shader_model04_fragment_skybox.glsl"));
-		
+		normalShader.reset(new Shader("res/shaders/shader_model04_Geometry_vertex.glsl",
+			"res/shaders/shader_model04_Geometry_fragment.glsl",
+			"res/shaders/shader_model04_Geometry_Geometry.glsl"));
+
 #ifdef USE_FRAMEBUFFER
 		/*
 		0.生成缓冲帧对象
@@ -270,6 +273,12 @@ namespace tests {
 		skyboxShader->SetUniformMat4f("u_model", model_sky);
 		skyboxShader->SetUniformMat4f("u_view", view);
 		skyboxShader->SetUniformMat4f("u_projection", proj);
+
+		/*用几何着色器绘制法线*/
+		normalShader->Bind();
+		normalShader->SetUniformMat4f("u_model", model);
+		normalShader->SetUniformMat4f("u_view", view);
+		normalShader->SetUniformMat4f("u_projection", proj);
 	}
 
 	void TestMesh1::OnRender()
@@ -290,7 +299,7 @@ namespace tests {
 		GLCall(glBindVertexArray(vao_sky));
 		GLCall(glActiveTexture(GL_TEXTURE0));//shader中只有一个纹理图
 		GLCall(glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxBuffer));
-		GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));
+		//GLCall(glDrawArrays(GL_TRIANGLES, 0, 36));//绘制
 		GLCall(glBindVertexArray(0));
 
 		GLCall(glDepthMask(GL_TRUE));
@@ -319,12 +328,17 @@ namespace tests {
 		outlingShader->Bind();
 		m_3DModel.Draw(*outlingShader);
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glLineWidth(1);
 #else
 		outlingShader->Bind();
 		m_3DModel.Draw(*outlingShader);
 #endif // POLYGON_MODE
 		glStencilMask(0xFF);//允许模板缓冲更新
 		glEnable(GL_DEPTH_TEST);//启用深度测试
+
+		//绘制法线
+		normalShader->Bind();
+		m_3DModel.Draw(*normalShader);
 
 #ifdef USE_FRAMEBUFFER
 		//使用帧缓冲，第二阶段绘制
