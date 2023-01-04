@@ -133,8 +133,8 @@ namespace tests {
 		planeShader.reset(new Shader("res/shaders/shader_model04_vertex.glsl", "res/shaders/shader_model04_fragment_plane.glsl"));
 		skyboxShader.reset(new Shader("res/shaders/shader_model04_vertex_skybox.glsl", "res/shaders/shader_model04_fragment_skybox.glsl"));
 		normalShader.reset(new Shader("res/shaders/shader_model04_Geometry_vertex.glsl",
-			"res/shaders/shader_model04_Geometry_fragment.glsl",
-			"res/shaders/shader_model04_Geometry_Geometry.glsl"));
+			"res/shaders/shader_model04_Geometry_Geometry.glsl",
+			"res/shaders/shader_model04_Geometry_fragment.glsl"));
 
 #ifdef USE_FRAMEBUFFER
 		/*

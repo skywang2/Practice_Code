@@ -243,7 +243,7 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
     if (!geometryShader.empty())
     {
         gs = CompileShader(GL_GEOMETRY_SHADER, geometryShader);
-        glAttachShader(program, fs);
+        glAttachShader(program, gs);
     }
     if (!fragmentShader.empty())
     {

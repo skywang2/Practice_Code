@@ -10,7 +10,7 @@ in VS_OUT {
 
 uniform mat4 u_projection;
 
-const float MAGNITUDE = 0.4;//法线放大倍率，用于绘制
+const float MAGNITUDE = 0.2;//法线放大倍率，用于绘制
 
 void GenerateLine(int index)
 {
@@ -26,7 +26,7 @@ void GenerateLine(int index)
 
 void main()
 {
-    GenerateLine(0); // 第一个顶点法线
-    GenerateLine(1); // 第二个顶点法线
-    GenerateLine(2); // 第三个顶点法线
+    GenerateLine(0);//第一个顶点法线
+    GenerateLine(1);//第二个顶点法线
+    GenerateLine(2);//第三个顶点法线
 }
