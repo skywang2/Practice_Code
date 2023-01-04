@@ -119,6 +119,7 @@ namespace tests {
 	{
 		GLCall(glDisable(GL_BLEND));//使得高光区域不透明
 		//GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));//设置颜色混合方式
+		glEnable(GL_DEPTH_TEST);//启用深度测试
 		glEnable(GL_STENCIL_TEST);//开启模板测试
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//设置多边形填充模式
 		//glEnable(GL_CULL_FACE);//面剔除，剔除背面的三角形，其中默认顶点顺序逆时针为正面
@@ -290,7 +291,7 @@ namespace tests {
 
 		GLCall(glClearColor(0.2f, 0.2f, 0.2f, 1.0f));
 		GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT));
-		glClearDepth(99999.f);
+		glClearDepth(1.f);
 
 		//绘制天空盒
 		GLCall(glDepthMask(GL_FALSE));
@@ -311,6 +312,10 @@ namespace tests {
 			obj.Draw(*planeShader);
 		}
 
+		//绘制法线
+		normalShader->Bind();
+		m_3DModel.Draw(*normalShader);
+		
 		//绘制物体
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);//设置比较函数
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);//设置模板值更新策略，使得物体位置的模板值为1（ref）
@@ -335,10 +340,6 @@ namespace tests {
 #endif // POLYGON_MODE
 		glStencilMask(0xFF);//允许模板缓冲更新
 		glEnable(GL_DEPTH_TEST);//启用深度测试
-
-		//绘制法线
-		normalShader->Bind();
-		m_3DModel.Draw(*normalShader);
 
 #ifdef USE_FRAMEBUFFER
 		//使用帧缓冲，第二阶段绘制
