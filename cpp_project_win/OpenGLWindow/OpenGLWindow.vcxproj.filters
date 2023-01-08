@@ -46,6 +46,9 @@
     <Filter Include="源文件\shader\myModel\skybox">
       <UniqueIdentifier>{2026a380-1734-477a-a1e4-0155fdc8664c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\shader\planet">
+      <UniqueIdentifier>{fc3c449b-2e41-4126-9dd1-1d0099c2db2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="README.txt" />
@@ -129,6 +132,12 @@
     <ClCompile Include="src\Model.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\tests\TestPlanet.cpp">
+      <Filter>源文件\tests</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\fragmentShader.glsl">
@@ -199,6 +208,12 @@
     </None>
     <None Include="res\shaders\shader_model04_Geometry_vertex.glsl">
       <Filter>源文件\shader\myModel</Filter>
+    </None>
+    <None Include="res\shaders\shader_model05_fragment_planet.glsl">
+      <Filter>源文件\shader\planet</Filter>
+    </None>
+    <None Include="res\shaders\shader_model05_vertex_planet.glsl">
+      <Filter>源文件\shader\planet</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -281,6 +296,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\Model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tests\TestPlanet.h">
+      <Filter>头文件\tests</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

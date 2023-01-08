@@ -70,7 +70,7 @@ namespace tests {
         std::unique_ptr<Shader> normalShader;
 
     private:
-        //加载立方体的顶点和着色器，顶点（pos，coords）
+        //从数组加载立方体的顶点和着色器，顶点（pos，coords）
         template<typename T1, int N, typename T2, int M>
         bool LoadObjectMesh(T1 (&vertices)[N], T2 (&indices)[M], const char* filename, const std::string& directory)
         {
