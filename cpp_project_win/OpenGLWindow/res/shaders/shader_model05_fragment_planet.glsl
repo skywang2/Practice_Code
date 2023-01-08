@@ -29,25 +29,14 @@ uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
 uniform vec3 u_viewPos;//相机位置坐标
-uniform Light u_directLight;//平行光源
+//uniform Light u_directLight;//平行光源
 
 vec3 CalcDirLight(Light light, vec3 viewDir, Material material);//平行光
 //vec3 CalPointLight();//点光源
 
 void main()
 {
-	vec3 viewDir = normalize(u_viewPos - v_fragPos);//片元指向镜头
-
-	Material material;
-	material.ambient = vec3(texture(texture_diffuse1, v_texCoord));//与漫反射颜色相同，但使用较弱的环境光
-	material.diffuse = vec3(texture(texture_diffuse1, v_texCoord));
-	material.specular = vec3(texture(texture_specular1, v_texCoord));
-	material.normal = v_normal;//texture(texture_normal1, v_texCoord);//使用纹理采样会导致光线效果异常
-	material.shininess = 32.0;
-
-//	FragColor = material.diffuse + material.specular;
-//	FragColor = vec4(material.diffuse, 1.0);
-	FragColor += vec4(CalcDirLight(u_directLight, viewDir, material), 1.0);
+	FragColor = vec4(texture(texture_diffuse1, v_texCoord));
 }
 
 /*

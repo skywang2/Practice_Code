@@ -29,6 +29,7 @@
 #include "tests/TestCubeCoord1.h"
 #include "tests/TestCubeLight.h"
 #include "tests/TestMesh1.h"
+#include "tests/TestPlanet.h"
 
 using std::cout;
 using std::endl;
@@ -136,6 +137,7 @@ int main(int argc, char* argv[])
         menu->RegisterTest<tests::TestCubeCoord1>("TestCubeCoord1");
         menu->RegisterTest<tests::TestCubeLight>("TestCubeLight");
         menu->RegisterTest<tests::TestMesh1>("TestMesh1");
+        menu->RegisterTest<tests::TestPlanet>("TestPlanet");
 
         //´´½¨äÖÈ¾Æ÷
         Renderer renderer;

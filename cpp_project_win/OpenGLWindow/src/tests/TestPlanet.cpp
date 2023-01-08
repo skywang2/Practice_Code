@@ -1,7 +1,11 @@
 #include "TestPlanet.h"
-
 #include "GL/glew.h"
+#include "GLFW/glfw3.h"
+
 #include "../Renderer.h"
+
+extern GLFWwindow* g_window;
+extern MouseParam* g_mouseParam;
 
 namespace tests {
 
@@ -21,7 +25,7 @@ TestPlanet::TestPlanet()
 {
 	//GLCall(glDisable(GL_BLEND));//使得高光区域不透明
 	GLCall(glEnable(GL_DEPTH_TEST));//启用深度测试
-	GLCall(glEnable(GL_STENCIL_TEST));//开启模板测试
+	//GLCall(glEnable(GL_STENCIL_TEST));//开启模板测试
 
 	m_shaderPlanet.reset(new Shader("res/shaders/shader_model05_vertex_planet.glsl"
 		, "res/shaders/shader_model05_fragment_planet.glsl"));
@@ -55,10 +59,39 @@ void TestPlanet::OnUpdate()
 
 void TestPlanet::OnRender()
 {
+	GLCall(glClearColor(0.2f, 0.2f, 0.2f, 1.0f));
+	GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	GLCall(glClearDepth(1.f));
+
+	m_shaderPlanet->Bind();
+	m_modelPlanet.Draw(*m_shaderPlanet);
 }
 
 void TestPlanet::OnImGuiRender()
 {
+}
+
+void TestPlanet::ProcessInputClass(GLFWwindow* window)
+{
+	glm::vec3& mouseMove = (g_mouseParam) ? g_mouseParam->front : cameraFront;
+
+	float cameraSpeed = 0.1f; // adjust accordingly
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		cameraPos += cameraSpeed * mouseMove;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		cameraPos -= cameraSpeed * mouseMove;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		cameraPos -= glm::cross(mouseMove, cameraUp) * cameraSpeed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		cameraPos += glm::cross(mouseMove, cameraUp) * cameraSpeed;
+	}
 }
 
 }//namespace

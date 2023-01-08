@@ -19,7 +19,7 @@ namespace tests {
 		void OnUpdate() override;
 		void OnRender() override;
 		void OnImGuiRender() override;
-		void ProcessInputClass(GLFWwindow*) { return; }//使用camera类处理鼠标键盘对相机的操作
+		void ProcessInputClass(GLFWwindow*);//后续使用camera类处理鼠标键盘对相机的操作
 
 	private:
 		int display_w, display_h;//画面分辨率
