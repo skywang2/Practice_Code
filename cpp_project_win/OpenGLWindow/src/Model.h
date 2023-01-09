@@ -18,6 +18,7 @@ public:
         loadModel(path);
     }
     void Draw(Shader& shader);
+    void Draw(Shader& shader, int count);//实例化批量绘制
     void AddMesh(Mesh mesh) { meshes.push_back(mesh); }
 
 private:

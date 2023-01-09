@@ -20,6 +20,14 @@ void Model::Draw(Shader& shader)
 	//meshes[6].Draw(shader);//body
 }
 
+void Model::Draw(Shader& shader, int count)
+{
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].Draw(shader, count);
+	}
+}
+
 /*
 一些比较有用的选项
 aiProcess_GenNormals：如果模型不包含法向量的话，就为每个顶点创建法线。

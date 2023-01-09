@@ -1,5 +1,6 @@
 #pragma once
 #include "Test.h"
+#include <vector>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "../include/imgui/imgui.h"
@@ -35,5 +36,7 @@ namespace tests {
 		std::unique_ptr<Shader> m_shaderPlanet;
 		Model m_modelPlanet;
 		Model m_modelRock;
+	private:
+		void GenVertexPosition(std::vector<glm::mat4> modelMatrices, unsigned int count);//生成环状带中每个岩石的位置
 	};
 }

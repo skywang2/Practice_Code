@@ -55,6 +55,7 @@ void TestPlanet::OnUpdate()
 	//相机位置坐标
 	m_shaderPlanet->SetUniformVec3f("u_viewPos", cameraPos);
 
+	//岩石
 }
 
 void TestPlanet::OnRender()
@@ -64,7 +65,11 @@ void TestPlanet::OnRender()
 	GLCall(glClearDepth(1.f));
 
 	m_shaderPlanet->Bind();
-	m_modelPlanet.Draw(*m_shaderPlanet);
+	m_modelPlanet.Draw(*m_shaderPlanet);//行星
+
+#if 1
+	m_modelRock.Draw(*m_shaderPlanet/*使用行星的shader*/, 100);	//岩石
+#endif
 }
 
 void TestPlanet::OnImGuiRender()
@@ -92,6 +97,12 @@ void TestPlanet::ProcessInputClass(GLFWwindow* window)
 	{
 		cameraPos += glm::cross(mouseMove, cameraUp) * cameraSpeed;
 	}
+}
+
+void TestPlanet::GenVertexPosition(std::vector<glm::mat4> modelMatrices, unsigned int count)
+{
+	srand(glfwGetTime());//初始化随机种子
+
 }
 
 }//namespace

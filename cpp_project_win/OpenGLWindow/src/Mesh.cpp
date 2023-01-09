@@ -131,6 +131,40 @@ void Mesh::Draw(Shader& shader)
     glActiveTexture(GL_TEXTURE0);//设置已激活纹理为默认槽
 }
 
+void Mesh::Draw(Shader& shader, int count)
+{
+    unsigned int diff = 1;
+    unsigned int spec = 1;
+    unsigned int norm = 1;
+    for (int i = 0; i < textures.size(); ++i)
+    {
+        glActiveTexture(GL_TEXTURE0 + i);
+        std::string num;
+        std::string name = textures[i].type;
+        if ("texture_diffuse" == name)
+        {
+            num = std::to_string(diff++);
+        }
+        else if ("texture_specular" == name)
+        {
+            num = std::to_string(spec++);
+        }
+        else if ("texture_normal" == name)
+        {
+            num = std::to_string(norm++);
+        }
+        //shader中有变量名为material的结构体
+        shader.SetUniform1i(name + num, i);//给shader的纹理采样器赋值
+        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+    }
+
+    glBindVertexArray(VAO);
+    glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, count);
+    glBindVertexArray(0);
+
+    glActiveTexture(GL_TEXTURE0);//设置已激活纹理为默认槽
+}
+
 void Mesh::setupMesh()
 {
     glGenVertexArrays(1, &VAO);
