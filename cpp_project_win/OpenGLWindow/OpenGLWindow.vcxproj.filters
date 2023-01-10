@@ -215,6 +215,12 @@
     <None Include="res\shaders\shader_model05_vertex_planet.glsl">
       <Filter>源文件\shader\planet</Filter>
     </None>
+    <None Include="res\shaders\shader_model05_fragment_rock.glsl">
+      <Filter>源文件\shader\planet</Filter>
+    </None>
+    <None Include="res\shaders\shader_model05_vertex_rock.glsl">
+      <Filter>源文件\shader\planet</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">

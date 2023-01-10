@@ -204,7 +204,9 @@
     <None Include="res\shaders\shader_model04_vertex_framebuffer.glsl" />
     <None Include="res\shaders\shader_model04_vertex_skybox.glsl" />
     <None Include="res\shaders\shader_model05_fragment_planet.glsl" />
+    <None Include="res\shaders\shader_model05_fragment_rock.glsl" />
     <None Include="res\shaders\shader_model05_vertex_planet.glsl" />
+    <None Include="res\shaders\shader_model05_vertex_rock.glsl" />
     <None Include="res\shaders\vertexShader.glsl" />
   </ItemGroup>
   <ItemGroup>

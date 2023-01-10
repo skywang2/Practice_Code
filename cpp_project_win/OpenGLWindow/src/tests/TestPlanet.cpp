@@ -29,7 +29,10 @@ TestPlanet::TestPlanet()
 
 	m_shaderPlanet.reset(new Shader("res/shaders/shader_model05_vertex_planet.glsl"
 		, "res/shaders/shader_model05_fragment_planet.glsl"));
+	m_shaderRock.reset(new Shader("res/shaders/shader_model05_vertex_rock.glsl"
+		, "res/shaders/shader_model05_fragment_rock.glsl"));
 
+	GenVertexPosition(100, 50.0, 2.5, m_modelMatricesRock);
 
 }
 
@@ -55,7 +58,6 @@ void TestPlanet::OnUpdate()
 	//相机位置坐标
 	m_shaderPlanet->SetUniformVec3f("u_viewPos", cameraPos);
 
-	//岩石
 }
 
 void TestPlanet::OnRender()
@@ -68,7 +70,18 @@ void TestPlanet::OnRender()
 	m_modelPlanet.Draw(*m_shaderPlanet);//行星
 
 #if 1
-	m_modelRock.Draw(*m_shaderPlanet/*使用行星的shader*/, 100);	//岩石
+	//岩石
+	//先用uniform赋值方式测试偏移矩阵效果
+	for (unsigned int i = 0; i < m_modelMatricesRock.size(); i++)
+	{
+		m_shaderRock->SetUniformMat4f("u_model", model + m_modelMatricesRock[i]);
+		m_shaderRock->SetUniformMat4f("u_view", view);
+		m_shaderRock->SetUniformMat4f("u_projection", proj);
+
+		m_shaderRock->Bind();
+		m_modelRock.Draw(*m_shaderRock, 100);	//岩石
+	}
+	//再用顶点缓冲对象赋值，测试大量岩石渲染
 #endif
 }
 
@@ -99,10 +112,41 @@ void TestPlanet::ProcessInputClass(GLFWwindow* window)
 	}
 }
 
-void TestPlanet::GenVertexPosition(std::vector<glm::mat4> modelMatrices, unsigned int count)
+void TestPlanet::GenVertexPosition(unsigned int count, float radius, float offset, std::vector<glm::mat4>& modelMatrices)
 {
+	//检查入参
+	if (radius < 0 || offset < 0)
+	{
+		std::cout << "check input param" << std::endl;
+	}
+
 	srand(glfwGetTime());//初始化随机种子
 
+	for (unsigned int i = 0; i < count; i++)
+	{
+		glm::mat4 model(1.0f);
+		//1. 位移：分布在半径为 'radius' 的圆形上，偏移的范围是 [-offset, offset]
+		float angle = (float)i / (float)count * 360.0f;//计算当前对象所在角度
+		float displacement = 0.f;
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;//取余将rand()返回值范围缩小到0-(int)(2 * offset * 100)
+		float x = sin(angle) * radius + displacement;
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float y = displacement * 0.4f; // 让行星带的高度比x和z的宽度要小
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float z = cos(angle) * radius + displacement;
+		model = glm::translate(model, glm::vec3(x, y, z));
+
+		//2. 缩放：在 0.05 和 0.25f 之间缩放，将岩石缩小
+		float scale = (rand() % 20) / 100.0f + 0.05;
+		model = glm::scale(model, glm::vec3(scale));
+
+		//3. 旋转：绕着一个（半）随机选择的旋转轴向量进行随机的旋转，让每个岩石都有自己的飞行姿态
+		float rotAngle = (rand() % 360);
+		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f)/*旋转轴*/);
+		
+		//4. 添加到矩阵的数组中
+		modelMatrices.push_back(std::move(model));
+	}
 }
 
 }//namespace

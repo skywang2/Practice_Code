@@ -33,10 +33,19 @@ namespace tests {
 		glm::vec3 cameraFront;
 		glm::vec3 cameraUp;
 
-		std::unique_ptr<Shader> m_shaderPlanet;
 		Model m_modelPlanet;
+		std::unique_ptr<Shader> m_shaderPlanet;
+
 		Model m_modelRock;
+		std::unique_ptr<Shader> m_shaderRock;
+		std::vector<glm::mat4> m_modelMatricesRock;
+
 	private:
-		void GenVertexPosition(std::vector<glm::mat4> modelMatrices, unsigned int count);//生成环状带中每个岩石的位置
+		/*brief 生成偏移量数组（模型矩阵），环状带中每个岩石的位置
+		[in] count，生成偏移量个数
+		[in] radius，半径
+		[in] offset，围绕半径的偏移，使环状带有一定宽度
+		[out] modelMatrices，偏移量数组*/
+		void GenVertexPosition(unsigned int count, float radius, float offset, std::vector<glm::mat4>& modelMatrices);
 	};
 }
