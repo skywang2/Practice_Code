@@ -21,18 +21,14 @@ struct Light
 
 out vec4 FragColor;
 
-in vec3 v_fragPos;//片元坐标
-in vec3 v_normal;
 in vec2 v_texCoord;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
 uniform sampler2D texture_normal1;
 uniform vec3 u_viewPos;//相机位置坐标
-//uniform Light u_directLight;//平行光源
 
 vec3 CalcDirLight(Light light, vec3 viewDir, Material material);//平行光
-//vec3 CalPointLight();//点光源
 
 void main()
 {

@@ -21,6 +21,8 @@ public:
     void Draw(Shader& shader, int count);//实例化批量绘制
     void AddMesh(Mesh mesh) { meshes.push_back(mesh); }
 
+    std::vector<Mesh>& GetMeshes() { return meshes; }
+
 private:
     std::vector<Mesh> meshes;//模型数据
     std::string directory;
