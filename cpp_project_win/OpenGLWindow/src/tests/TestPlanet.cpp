@@ -34,16 +34,18 @@ TestPlanet::TestPlanet()
 	m_shaderRock.reset(new Shader("res/shaders/shader_model05_vertex_rock.glsl"
 		, "res/shaders/shader_model05_fragment_rock.glsl"));
 
-	int rockCount = 1000;
+	int rockCount = 1000000;
 	GenVertexPosition(rockCount, 50.0, 2.5, m_modelMatricesRock);
-	std::cout << m_modelMatricesRock.size();
+	std::cout << m_modelMatricesRock.size() << std::endl;
 
-	//使用
+	//使用顶点属性
 	unsigned int instanceVBO;
 	glGenBuffers(1, &instanceVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * m_modelMatricesRock.size(), &m_modelMatricesRock[0], GL_STATIC_DRAW);
 
+#ifdef USE_UNIFORM
+#else
 	auto rockMeshes = m_modelRock.GetMeshes();
 	for (unsigned int i = 0; i < rockMeshes.size(); i++)
 	{
@@ -51,6 +53,7 @@ TestPlanet::TestPlanet()
 		glBindVertexArray(VAO);
 		// 顶点属性
 		GLsizei vec4Size = sizeof(glm::vec4);
+		//===顶点属性最大允许的数据大小等于一个vec4。因为一个mat4本质上是4个vec4，我们需要为这个矩阵预留4个顶点属性===
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
 		glEnableVertexAttribArray(4);
@@ -67,6 +70,7 @@ TestPlanet::TestPlanet()
 
 		glBindVertexArray(0);
 	}
+#endif
 }
 
 TestPlanet::~TestPlanet()
@@ -94,10 +98,10 @@ void TestPlanet::OnUpdate()
 #ifdef USE_UNIFORM
 #else
 	//用顶点缓冲对象赋值，测试大量岩石渲染
+	m_shaderRock->Bind();
 	m_shaderRock->SetUniformMat4f("u_view", view);
 	m_shaderRock->SetUniformMat4f("u_projection", proj);
 #endif
-
 }
 
 void TestPlanet::OnRender()
@@ -119,12 +123,19 @@ void TestPlanet::OnRender()
 		m_shaderRock->SetUniformMat4f("u_projection", proj);
 
 		m_shaderRock->Bind();
-		m_modelRock.Draw(*m_shaderRock, 100);	//岩石
+		m_modelRock.Draw(*m_shaderRock, m_modelMatricesRock.size());	//岩石
 	}
 #else
 	//用顶点缓冲对象赋值，测试大量岩石渲染
 	m_shaderRock->Bind();
-	m_modelRock.Draw(*m_shaderPlanet);
+	m_modelRock.Draw(*m_shaderPlanet, m_modelMatricesRock.size());
+	//auto rockMeshes = m_modelRock.GetMeshes();
+	//for (unsigned int i = 0; i < rockMeshes.size(); i++)//绘制一个模型中的所有网格
+	//{
+	//	unsigned int VAO = rockMeshes[i].GetVAO();
+	//	glBindVertexArray(VAO);
+	//	glDrawElementsInstanced(GL_TRIANGLES, rockMeshes[i].indices.size(), GL_UNSIGNED_INT, 0, m_modelMatricesRock.size());
+	//}
 #endif
 }
 

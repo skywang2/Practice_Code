@@ -13,7 +13,7 @@ out vec2 v_texCoord;
 
 void main()
 {
+//	gl_Position = u_projection * u_view  * u_model * vec4(position, 1.0);//使用uniform方式传model
 	gl_Position = u_projection * u_view * offset * vec4(position, 1.0);
-
 	v_texCoord = texCoord;
 }
