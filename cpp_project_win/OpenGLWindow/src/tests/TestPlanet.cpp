@@ -34,8 +34,10 @@ TestPlanet::TestPlanet()
 	m_shaderRock.reset(new Shader("res/shaders/shader_model05_vertex_rock.glsl"
 		, "res/shaders/shader_model05_fragment_rock.glsl"));
 
-	int rockCount = 1000000;
-	GenVertexPosition(rockCount, 50.0, 2.5, m_modelMatricesRock);
+	int rockCount = 100000;
+	float radius = 50.0;
+	float offset = 3.5;//圆周靠近圆心或远离圆心的偏移量
+	GenVertexPosition(rockCount, radius, offset, m_modelMatricesRock);
 	std::cout << m_modelMatricesRock.size() << std::endl;
 
 	//使用顶点属性
