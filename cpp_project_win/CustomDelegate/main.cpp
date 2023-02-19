@@ -9,16 +9,18 @@
 //Execute();
 //ExecuteIfBound();
 
+//使用宏声明代理类型
+DECLARE_DELEGATE(MacroDelegate)
+
+DECLARE_DELEGATE_NOPARAM(NoParamDelegate)
+
+//定义一个全局函数
 int AddNum(int a, int b)
 {
 	const int tmp = a + b;
 	std::cout << "[" << __FUNCTION__ << "], " << tmp << std::endl;
 	return tmp;
 }
-
-//函数指针，两种方式
-typedef int (*FunMethod_t)(int, int);
-using FunMethod_u = int(*)(int, int);
 
 //定义一个测试类
 class TestA
@@ -65,6 +67,30 @@ int main()
 		delegate.BroadCast();
 	}
 
+	//使用宏声明代理类型
+	{
+		MyMacroDelegate delegate;
+		TestA a;
+		delegate.BindRaw(&a, &TestA::FunNoParam);
+		if (delegate.IsBound())
+		{
+			delegate.Execute();
+		}
+	}
+
+	//使用宏+模板声明代理类型
+	{
+		NoParamDelegate delegate;
+		TestA a;
+		delegate.BindRaw(&a, &TestA::FunNoParam);
+		if (delegate.IsBound())
+		{
+			delegate.Execute();
+		}
+	}
+
 	system("pause");
 	return 0;
 }
+
+
