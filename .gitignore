@@ -30,5 +30,7 @@
 /cpp_project_win/qMetaObject/*.user
 /cpp_project_win/qMetaObject/x64
 /cpp_project_win/qMetaObject/.vs
-
+/cpp_project_win/CustomDelegate/*.user
+/cpp_project_win/CustomDelegate/x64
+/cpp_project_win/CustomDelegate/.vs
 

@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGLLoadModel", "OpenGLLo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qMetaObject", "qMetaObject\qMetaObject.vcxproj", "{65F6D9BE-CF5A-4AE4-9374-68EC2A244B81}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomDelegate", "CustomDelegate\CustomDelegate.vcxproj", "{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -119,12 +121,20 @@ Global
 		{65F6D9BE-CF5A-4AE4-9374-68EC2A244B81}.Release|x64.ActiveCfg = Release|x64
 		{65F6D9BE-CF5A-4AE4-9374-68EC2A244B81}.Release|x64.Build.0 = Release|x64
 		{65F6D9BE-CF5A-4AE4-9374-68EC2A244B81}.Release|x86.ActiveCfg = Release|x64
+		{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}.Debug|x64.ActiveCfg = Debug|x64
+		{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}.Debug|x64.Build.0 = Debug|x64
+		{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}.Debug|x86.ActiveCfg = Debug|Win32
+		{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}.Debug|x86.Build.0 = Debug|Win32
+		{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}.Release|x64.ActiveCfg = Release|x64
+		{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}.Release|x64.Build.0 = Release|x64
+		{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}.Release|x86.ActiveCfg = Release|Win32
+		{D76B56E2-2CEF-4612-BE8B-6F3321E2FF07}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = msvc2015_64
 		SolutionGuid = {3483F0AD-9B26-40E3-BC0E-5B91A2591B8B}
+		Qt5Version = msvc2015_64
 	EndGlobalSection
 EndGlobal
