@@ -4,12 +4,12 @@
 #include <functional>
 
 class TestA;
-typedef int (TestA::* twoParam)(int, int);//Àà³ÉÔ±º¯ÊıµÄÖ¸Õë
-using noParam = void (TestA::*)(void);//Ê¹ÓÃusingĞÎÊ½µÄ³ÉÔ±º¯ÊıÖ¸Õë
+typedef int (TestA::* twoParam)(int, int);//ç±»æˆå‘˜å‡½æ•°çš„æŒ‡é’ˆ
+using noParam = void (TestA::*)(void);//ä½¿ç”¨usingå½¢å¼çš„æˆå‘˜å‡½æ•°æŒ‡é’ˆ
 
-typedef int (*Func_Ret_TwoParams)(int, int);//È«¾Öº¯ÊıµÄÖ¸Õë
+typedef int (*Func_Ret_TwoParams)(int, int);//å…¨å±€å‡½æ•°çš„æŒ‡é’ˆ
 
-//Ö±½Ó¶¨Òå´úÀíÀàĞÍ£¬²»¾ßÓĞÍØÕ¹ĞÔ
+//ç›´æ¥å®šä¹‰ä»£ç†ç±»å‹ï¼Œä¸å…·æœ‰æ‹“å±•æ€§
 class FDelegateTwoParams
 {
 public:
@@ -53,7 +53,7 @@ private:
 	std::list<std::function<int()>> funcs;
 };
 
-//Ê¹ÓÃºêÉùÃ÷´úÀíÀàĞÍ
+//ä½¿ç”¨å®å£°æ˜ä»£ç†ç±»å‹
 #define DECLARE_DELEGATE(DelegateName)\
 class My##DelegateName\
 {\
@@ -65,10 +65,10 @@ private:\
 	std::function<void()> func;\
 };
 
-//Ê¹ÓÃºê+Ä£°åÉùÃ÷´úÀíÀàĞÍ
-//ÓÃÄ£°å¶¨Òåº¯ÊıÖ¸Õë£¬ÓÉÓÚÄ£°åÖ»ÄÜÓÃÔÚº¯Êı¡¢Àà¡¢½á¹¹ÌåÉÏ£¬ËùÒÔÒªÓÃ½á¹¹Ìå°Ñtypedef°üÆğÀ´
+//ä½¿ç”¨å®+æ¨¡æ¿å£°æ˜ä»£ç†ç±»å‹
+//ç”¨æ¨¡æ¿å®šä¹‰å‡½æ•°æŒ‡é’ˆï¼Œç”±äºæ¨¡æ¿åªèƒ½ç”¨åœ¨å‡½æ•°ã€ç±»ã€ç»“æ„ä½“ä¸Šï¼Œæ‰€ä»¥è¦ç”¨ç»“æ„ä½“æŠŠtypedefåŒ…èµ·æ¥
 
-template<typename ClassName, typename RetValType>
+template<typename ClassName, typename RetValType>//è¯¥å£°æ˜æ˜¯ä¸ºäº†ç¡®ä¿åŒåæ¨¡æ¿ç»“æ„åœ¨ä½¿ç”¨å¯å˜å‚æ•°æ—¶ï¼Œç»“æŸå˜é‡é€’å½’å¤„ç†
 struct TFuncPtrType;
 
 template<typename ClassName, typename RetValType, typename... ArgTypes>
@@ -102,6 +102,6 @@ private:
 	std::function<RetValType()> func;
 };
 
-//ÓÃ¼Ì³ĞµÄ·½Ê½Ê¹ÓÃºêÉú³É´úÀíÀàĞÍ
+//ç”¨ç»§æ‰¿çš„æ–¹å¼ä½¿ç”¨å®ç”Ÿæˆä»£ç†ç±»å‹
 #define DECLARE_DELEGATE_NOPARAM(DelegateName) class DelegateName : public TBaseDelegate<void> {};
 
