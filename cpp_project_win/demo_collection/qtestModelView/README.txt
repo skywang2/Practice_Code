@@ -1,0 +1,3 @@
+1.尝试使用model/view形式展示运行配置、进度展示等功能
+2.继承QStyledItemDelegate实现自定义代理类
+3.使用QStandardItemModel数据模型、自定义view显示模型
