@@ -1,0 +1,4 @@
+1.创建QGraphics相关窗口
+2.使用QGraphicsScene创建图元管理场景
+3.使用QGraphicsView创建视口
+4.使用QGraphicsItem创建图元
