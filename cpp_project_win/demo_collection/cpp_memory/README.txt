@@ -1,0 +1,1 @@
+1.在msvc编译命令配置中添加/d1 reportAllClassLayout编译选项，用于显示程序中定义的类的内存结构
