@@ -1,0 +1,2 @@
+1.创建闪屏循环，尝试解决
+2.使用ReadConsoleOutputCharacterA、WriteConsoleOutputCharacterA等函数实现双缓冲显示
