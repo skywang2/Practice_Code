@@ -861,7 +861,7 @@ Singleton& Singleton::getInstance()
 class Singleton
 {
 public:
-    static Singleton& getInstance();
+    static Singleton* getInstance();
 private:
     Singleton(){}
     Singleton(const Singleton&) = delete;
