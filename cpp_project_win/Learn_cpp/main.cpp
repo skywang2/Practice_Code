@@ -216,6 +216,15 @@ int main(int argc, char* argv[]) {
 		cout << "unknow error." << endl;
 	}
 	
+	//测试*a++的执行顺序
+	{
+		int arr[2] = { 3, 7 };
+		int* p = arr;
+
+		(*p)++;//*与++优先级相同，并且“从右向左”执行，所以是*(p++)，p指向第二个元素，返回7
+		int tmp = 0;
+	}
+
 	system("pause");
 	return 0;
 }

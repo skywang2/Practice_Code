@@ -10,3 +10,6 @@
 10.验证std::forward对模板函数中万能引用的影响
 11.计算vector长度
 12.访问者模式
+13.定义只能在堆上创建的类（析构函数设为私有），定义只能在栈上创建的类（new和delete设为私有，重载operate new/delete函数）
+14.测试*a++的执行顺序
+15.在vs自带的prompt使用dumpbin命令行工具生成PE的dump文件查看可执行文件的段落结构
