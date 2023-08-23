@@ -1,6 +1,7 @@
 #include "main.h"
 #include <ctime>
 #include <iostream>
+#include <random>
 #include "Circular_Queue.hpp"
 #include "Queue.hpp"
 #include "MyLocker.hpp"
@@ -223,6 +224,16 @@ int main(int argc, char* argv[]) {
 
 		(*p)++;//*与++优先级相同，并且“从右向左”执行，所以是*(p++)，p指向第二个元素，返回7
 		int tmp = 0;
+	}
+
+	//使用cpp的随机数生成类
+	{
+		std::random_device rnd;//利用CPU指令生成准随机数（比伪随机好）
+		std::mt19937 rng(rnd());//初始化随机数生成器（伪随机）
+		std::uniform_int_distribution<int> uni(0, 100);//使用不同概率分布对象，完成类似x % 10的取随机数范围的操作
+		std::uniform_real_distribution<double> und(0, 1.0);
+		int numi = uni(rng);
+		double numd = und(rng);
 	}
 
 	system("pause");
