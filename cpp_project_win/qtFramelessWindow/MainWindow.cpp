@@ -4,6 +4,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
 {
     ui.setupUi(this);
+
 }
 
 MainWindow::~MainWindow()

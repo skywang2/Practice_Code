@@ -1,4 +1,5 @@
 <RCC>
-    <qresource prefix="MainWindow">
-    </qresource>
+  <qresource prefix="TitleBar">
+    <file>resource/icon/FarCry3.ico</file>
+  </qresource>
 </RCC>
