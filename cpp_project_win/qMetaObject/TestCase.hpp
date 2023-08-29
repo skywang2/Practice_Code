@@ -68,7 +68,7 @@ public:
 	}
 };
 
-
+//简单工厂，使用字符串来选择要生成的对象
 class SimpleFactoryMate
 {
 public:
@@ -81,7 +81,7 @@ public:
 		TestCaseBase* obj = nullptr;
 
 		int id = QMetaType::type(className);
-		if (id != QMetaType::UnknownType)
+		if (QMetaType::UnknownType != id)
 		{
 			//qDebug() << "typeName:" << QMetaType::typeName(id);
 			try
