@@ -2,6 +2,10 @@
 /cpp_project_linux/project009_cmake_async_thread/build/*
 /cpp_project_linux/project011_epoll01/build/*
 
+# vs code远程开发
+/.vscode/*
+/cpp_project_linux/.vscode/*
+
 # win项目
 /.vs/*
 /cpp_project_win/cppLearn/*.user

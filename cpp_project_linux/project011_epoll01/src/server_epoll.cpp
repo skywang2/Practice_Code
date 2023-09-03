@@ -125,13 +125,12 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    int result = -1;
     while (true)
     {
         //准备接收事件，连接事件、数据收发事件（IN、OUT）
         epoll_event epollEvents[maxEventCount];
         memset(epollEvents, 0, sizeof(epoll_event) * maxEventCount);
-        result = epoll_wait(epollfd, epollEvents, maxEventCount, 1000);
+        int result = epoll_wait(epollfd, epollEvents, maxEventCount, 1000);
         if(result < 0)
         {
             if(EINTR == errno)
@@ -142,7 +141,7 @@ int main(int argc, char* argv[])
         }
         else if(0 == result)
         {
-            std::cout << ".";
+            std::cout << "." << std::flush;            
             continue;
         }
         std::cout << std::endl;
@@ -165,7 +164,7 @@ int main(int argc, char* argv[])
                         //设置clientfd的属性
                         int oldSocketFlag = fcntl(clientfd, F_GETFL, 0);
                         int newSocketFlag = oldSocketFlag | O_NONBLOCK;
-                        if(-1 == fcntl(epollEvents[i].data.fd, F_SETFL, newSocketFlag))
+                        if(-1 == fcntl(clientfd, F_SETFL, newSocketFlag))
                         {
                             close(clientfd);
                             std::cout << "set clientfd to nonblock error" << std::endl;
@@ -173,16 +172,17 @@ int main(int argc, char* argv[])
                         }
                         //将clientfd添加到epollfd事件中
                         epoll_event client_event;
-                        listen_event.data.fd = clientfd;
-                        listen_event.events = EPOLLIN;
+                        client_event.data.fd = clientfd;
+                        client_event.events = EPOLLIN;
+                        // listen_event.events |= EPOLLET;
                         if(-1 == epoll_ctl(epollfd, EPOLL_CTL_ADD, clientfd, &client_event))
                         {
                             close(clientfd);
-                            std::cout << "epoll_ctl error" << std::endl;
+                            std::cout << "add new clientfd error" << std::endl;
                         }
                         else
                         {
-                            std::cout << "accept new clientfd" << std::endl;
+                            std::cout << "add new clientfd:" << clientfd << std::endl;
                         }
                     }
                     else
@@ -192,14 +192,15 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
+                    // sleep(2);
                     std::cout << "client fd:" << epollEvents[i].data.fd << " receive data" << std::endl;
-                    char ch = 0;//LT模式下，每次读取1个字符
-                    //Readn(epollEvents[i].data.fd,)
+                    char ch;//LT模式下，每次读取1个字符
                     int recvNum = recv(epollEvents[i].data.fd, &ch, 1, 0);
+                    std::cout << "recvnum:" << recvNum << std::endl;
                     if(0 == recvNum)
                     {
                         //读完了，对端关闭连接，从epollfd上移除clientfd
-                        if(-1 != epoll_ctl(epollfd, EPOLL_CTL_DEL, epollEvents[i].data.fd, epollEvents))
+                        if(-1 != epoll_ctl(epollfd, EPOLL_CTL_DEL, epollEvents[i].data.fd, nullptr))
                         {
                             std::cout << "receive 0 from client, disconnect" << std::endl;
                         }
@@ -210,9 +211,9 @@ int main(int argc, char* argv[])
                         //读取出错，EWOULDBLOCK、EINTR情况下需要重新读取，故不处理
                         if(EWOULDBLOCK != recvNum && EINTR != recvNum)
                         {
-                            if(-1 != epoll_ctl(epollfd, EPOLL_CTL_DEL, epollEvents[i].data.fd, epollEvents))
+                            if(-1 != epoll_ctl(epollfd, EPOLL_CTL_DEL, epollEvents[i].data.fd, nullptr))
                             {
-                                std::cout << "receive 0 from client, disconnect" << std::endl;
+                                std::cout << "receive error, disconnect" << std::endl;
                             }
                             close(epollEvents[i].data.fd);//不论是否从epollfd中移除，都必须关闭
                         }
