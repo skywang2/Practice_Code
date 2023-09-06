@@ -1,6 +1,7 @@
 # linux项目
 /cpp_project_linux/project009_cmake_async_thread/build/*
 /cpp_project_linux/project011_epoll01/build/*
+/cpp_project_linux/project012_signalTest/build/*
 
 # vs code远程开发
 /.vscode/*
