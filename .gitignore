@@ -5,6 +5,7 @@
 
 # vs code远程开发
 /.vscode/*
+/build/*
 /cpp_project_linux/.vscode/*
 
 # win项目
