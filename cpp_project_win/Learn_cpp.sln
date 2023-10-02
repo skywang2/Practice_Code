@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomDelegate", "CustomDel
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "qtFramelessWindow", "qtFramelessWindow\qtFramelessWindow.vcxproj", "{2DC7D76C-DACA-46C4-9D53-01FE18F78DA4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ping_ICMP", "Ping_ICMP\Ping_ICMP.vcxproj", "{88486A49-E763-4547-9627-B126FDA9160B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -137,12 +139,20 @@ Global
 		{2DC7D76C-DACA-46C4-9D53-01FE18F78DA4}.Release|x64.ActiveCfg = Release|x64
 		{2DC7D76C-DACA-46C4-9D53-01FE18F78DA4}.Release|x64.Build.0 = Release|x64
 		{2DC7D76C-DACA-46C4-9D53-01FE18F78DA4}.Release|x86.ActiveCfg = Release|x64
+		{88486A49-E763-4547-9627-B126FDA9160B}.Debug|x64.ActiveCfg = Debug|x64
+		{88486A49-E763-4547-9627-B126FDA9160B}.Debug|x64.Build.0 = Debug|x64
+		{88486A49-E763-4547-9627-B126FDA9160B}.Debug|x86.ActiveCfg = Debug|Win32
+		{88486A49-E763-4547-9627-B126FDA9160B}.Debug|x86.Build.0 = Debug|Win32
+		{88486A49-E763-4547-9627-B126FDA9160B}.Release|x64.ActiveCfg = Release|x64
+		{88486A49-E763-4547-9627-B126FDA9160B}.Release|x64.Build.0 = Release|x64
+		{88486A49-E763-4547-9627-B126FDA9160B}.Release|x86.ActiveCfg = Release|Win32
+		{88486A49-E763-4547-9627-B126FDA9160B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = msvc2015_64
 		SolutionGuid = {3483F0AD-9B26-40E3-BC0E-5B91A2591B8B}
+		Qt5Version = msvc2015_64
 	EndGlobalSection
 EndGlobal

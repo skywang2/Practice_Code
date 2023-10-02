@@ -46,3 +46,6 @@
 /cpp_project_win/qtFramelessWindow/*.user
 /cpp_project_win/qtFramelessWindow/x64
 /cpp_project_win/qtFramelessWindow/.vs
+/cpp_project_win/Ping_ICMP/*.user
+/cpp_project_win/Ping_ICMP/x64
+/cpp_project_win/Ping_ICMP/.vs
