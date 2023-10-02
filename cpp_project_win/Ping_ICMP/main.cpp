@@ -25,12 +25,13 @@ int main(int argc, char* argv[])
     WSADATA wsaData;
     hostent* remoteHostInfo = nullptr;
     struct in_addr remoteAddr;
+    memset(&remoteAddr, 0, sizeof(remoteAddr));
 
     //start
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != 0) {
         std::cout << "WSAStartup failed: " << iResult << std::endl;
-        return 1;
+        return -1;
     }
     
     //parse parameters
@@ -64,15 +65,15 @@ int main(int argc, char* argv[])
         if (dwError != 0) {
             if (dwError == WSAHOST_NOT_FOUND) {
                 printf("Host not found\n");
-                return 1;
+                return -1;
             }
             else if (dwError == WSANO_DATA) {
                 printf("No data record found\n");
-                return 1;
+                return -1;
             }
             else {
                 printf("Function failed with error: %ld\n", dwError);
-                return 1;
+                return -1;
             }
         }
     }
@@ -92,7 +93,7 @@ int main(int argc, char* argv[])
     }
 
     //ping
-
+    Ping(inet_ntoa(remoteAddr));
 
     //end
     WSACleanup();
