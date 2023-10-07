@@ -93,7 +93,11 @@ int main(int argc, char* argv[])
     }
 
     //ping
-    Ping(inet_ntoa(remoteAddr));
+    //Ping(inet_ntoa(remoteAddr));
+
+    //ping class
+    PingTest myping(inet_ntoa(remoteAddr));
+    myping.Ping();
 
     //end
     WSACleanup();
