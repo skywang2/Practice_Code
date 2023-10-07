@@ -34,8 +34,7 @@ int main(int argc, char* argv[])
         return -1;
     }
     
-    //parse parameters
-//#define IN_VS
+#define IN_VS
 #ifdef IN_VS
     int option = 0;
     std::string optstring(":a:");
