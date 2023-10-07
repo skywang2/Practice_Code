@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+//#define PingRecv
+
 typedef struct ICMP_ECHO
 {
 	uint8_t type;
@@ -13,6 +15,16 @@ typedef struct ICMP_ECHO
 	// data
 	char data[64];
 } ICMP_ECHO_REQ, ICMP_ECHO_REPLY;
+
+class PingTest
+{
+public:
+	PingTest() {};
+
+private:
+
+};
+
 
 /// <summary>
 /// ping函数，用于检测与主机的网络是否连通，以及延迟、丢包等信息

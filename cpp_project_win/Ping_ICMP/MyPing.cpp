@@ -1,11 +1,15 @@
-#include "MyPing.h"
-#include <WinSock2.h>
-#include <WS2tcpip.h>
 #include <string.h>
 #include <iostream>
+#include <chrono>
+#include <WinSock2.h>
+#include <WS2tcpip.h>
+#include "MyPing.h"
 
 #define RECV_TIMEOUT_SEC 10
 #define RECV_TIMEOUT_USEC 10 * 1000
+
+std::chrono::system_clock::time_point sendTime;
+std::chrono::system_clock::time_point recvTime;
 
 /// <summary>
 /// 计算网络校验和，算法来自RFC1071
@@ -57,46 +61,53 @@ int SendEchoRequest(SOCKET sock, sockaddr_in* addr, uint16_t ident, uint16_t seq
     icmp.seq = htons(seq);
 
     //data
-    char payload[64] = "hello world";
+    char payload[64] = "Hi";
     //memset(payload, 0, sizeof(payload));
     memcpy_s(icmp.data, sizeof(icmp.data), payload, sizeof(payload));
     //strncpy_s(icmp.data, payload, strlen(payload));    
     icmp.checksum = checksum((unsigned char*)&icmp, sizeof(icmp));
 
-    //send
+    //send，不能把数据部分和报文头分开发送，这样相当于发了两次icmp报文，数据部分的报文会因为icmp格式不正确而无法被服务端正确识别，应用层的报文或许可以分开发送
     int bytes = sendto(sock, (const char*)&icmp, sizeof(icmp), 0, (sockaddr*)addr, sizeof(*addr));
+    sendTime = std::chrono::system_clock::now();//记录发送时间
     if (SOCKET_ERROR == bytes)
     {
         int err = WSAGetLastError();
         std::cout << "sendto failed, error: " << err << std::endl;
         return -1;
-    }
+    }    
 
     return 0;
 }
 
 int RecvEchoReply(SOCKET sock, uint16_t ident)
 {
-    char buffer[1024];
+    char buffer[256];
     ICMP_ECHO_REQ* icmp = nullptr;
     //sockaddr_in hostAddr;
 
     //接收IP报文
     int bytes = recvfrom(sock, buffer, sizeof(buffer), 0, nullptr, nullptr);
+    recvTime = std::chrono::system_clock::now();//记录发送时间
     if (SOCKET_ERROR == bytes) {
         int err = WSAGetLastError();
         std::cout << "recvfrom failed, error: " << err << std::endl;
         return -1;
     }
 
+    //记录接收时间，转换为微秒，以微秒为单位
+    auto usedTime = recvTime - sendTime;
+    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(usedTime);
+
     //提取ICMP报文
-    int ip_header_len = (buffer[0] & 0xf) << 2;
+    int ip_header_len = (buffer[0] & 0xf) << 2;//报文长度必须为4的整数倍，报文头中记录了这个倍数
     icmp = (ICMP_ECHO_REQ*)(buffer + ip_header_len);
 
     //读取icmp头部信息
     uint16_t tmpident = ntohs(icmp->ident);
     uint16_t tmpseq = ntohs(icmp->seq);
-    std::cout << "reply:" << icmp->data << std::endl;
+    printf("reply:%s, time:%lldms\n", icmp->data, milliseconds.count());
+    //std::cout << "reply:" << icmp->data << ", time:" << milliseconds.count() << "ms" << std::endl;
 
     return 0;
 }
@@ -113,9 +124,14 @@ int Ping(const char* chHostAddr)
     }
     
     //ip地址转为结构体
-    sockaddr_in hostAddr;
-    memset(&hostAddr, 0, sizeof(hostAddr));
-    hostAddr.sin_family = AF_INET;
+    sockaddr_in hostAddr = {
+        .sin_family = AF_INET,//结构体初始化的一种写法
+        .sin_port = 0,
+        .sin_addr = {0},
+        .sin_zero = {0}
+    };
+    //memset(&hostAddr, 0, sizeof(hostAddr));
+    //hostAddr.sin_family = AF_INET;
     inet_pton(AF_INET, chHostAddr, &hostAddr.sin_addr);
 
     //设置收发超时时间
@@ -127,8 +143,7 @@ int Ping(const char* chHostAddr)
     }
 
     //循环发送、接受报文，处理返回信息
-    int count = 4;
-    int cur = 0;
+    int count = 4;//需要发送报文总数
     bool infinite = false;
     int seq = 1;
     uint16_t ident = (uint16_t)GetCurrentProcessId();
@@ -148,8 +163,8 @@ int Ping(const char* chHostAddr)
         //calculate
 
         seq++;
-        cur++;
-        if (false == infinite && cur >= count)
+        count--;
+        if (false == infinite && count <= 0)
         {
             break;
         }
