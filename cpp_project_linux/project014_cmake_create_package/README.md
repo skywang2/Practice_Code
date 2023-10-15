@@ -1,0 +1,5 @@
+1. 实现一个cmake的包，使别的程序可以使用find_package使用这个包里的库
+2. 源码放在src，install为自定义的安装目录，可以在cmake文件里写死安装目录，也可以在命令行用`-DCMAKE_INSTALL_PREFIX=`定义安装目录
+3. use_lib是一个使用find_package寻找库的子项目，需要手动定义xxx_DIR路径，使得cmake能够找到xxxConfig.cmake文件
+4. xxxTarget.cmake是用来从安装树将目标导入到另一个项目
+5. xxxConfig.cmake使用configure_package_config_file函数生成，用于定位软件包避免路径硬编码，需要一个cmake.in文件做模板，需要把Targe.cmake文件导入进来
