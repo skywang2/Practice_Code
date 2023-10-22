@@ -6,7 +6,7 @@
 #include "MainWindow.h"
 #include "TitleBar.h"
 
-#define PADDING 10 //定义能改变鼠标形状的边框宽度
+#define PADDING 3 //定义能改变鼠标形状的边框宽度
 
 /*
 窗体结构：
@@ -26,7 +26,7 @@ FramelessWindow::FramelessWindow(QWidget *parent)
 	TitleBar* title = new TitleBar(this);
 	ui.titleLayout->addWidget(title);
 	ui.mainLayout->addWidget(main);
-	main->setMouseTracking(true);
+	main->setMouseTracking(true);//可以在ui中设置
 	title->setMouseTracking(true);
 
 	// 去除标题栏
@@ -48,7 +48,10 @@ void FramelessWindow::mousePressEvent(QMouseEvent * event)
 	{
 	case Qt::LeftButton:
 		m_isLeftPressed = true;
-		m_mouseOffset = event->globalPos() - this->frameGeometry().topLeft();// globalPos原点是屏幕左上角，frameGeometry.topleft是窗口边框左上角
+		if (CENTER == m_location)
+		{
+			m_mouseOffset = event->globalPos() - this->frameGeometry().topLeft();// globalPos原点是屏幕左上角，frameGeometry.topleft是窗口边框左上角
+		}
 		break;
 	default:
 		break;
@@ -84,8 +87,73 @@ void FramelessWindow::mouseMoveEvent(QMouseEvent* event)
 	{
 		this->move(globalPos - m_mouseOffset);// move是以边框左上角为基准计算的
 		event->accept();
+		return;
 	}
 	// 鼠标按下，在边缘位置，窗口缩放
+	QRect rect = this->rect();
+	QPoint topleft = mapToGlobal(rect.topLeft());
+	QPoint bottomright = mapToGlobal(rect.bottomRight());
+	if (m_isLeftPressed)
+	{
+		QRect newRect(topleft, bottomright);// 使用屏幕坐标
+
+		switch (m_location)
+		{
+		case TOP:
+			// 避免窗口被推走
+			if (bottomright.y() - globalPos.y() > this->minimumHeight())
+			{
+				newRect.setY(globalPos.y());
+			}
+			break;
+		case RIGHT:
+			newRect.setWidth(globalPos.x() - topleft.x());
+			break;
+		case BOTTOM:
+			newRect.setHeight(globalPos.y() - topleft.y());
+			break;
+		case LEFT:
+			if (bottomright.x() - globalPos.x() > this->minimumWidth())
+			{
+				newRect.setX(globalPos.x());
+			}
+			break;
+		case TOP_LEFT:
+			if (bottomright.y() - globalPos.y() > this->minimumHeight())
+			{
+				newRect.setY(globalPos.y());
+			}
+			if (bottomright.x() - globalPos.x() > this->minimumWidth())
+			{
+				newRect.setX(globalPos.x());
+			}
+			break;
+		case TOP_RIGHT:
+			if (bottomright.y() - globalPos.y() > this->minimumHeight())
+			{
+				newRect.setY(globalPos.y());
+			}
+			newRect.setWidth(globalPos.x() - topleft.x());
+			break;
+		case BOTTOM_RIGHT:
+			newRect.setHeight(globalPos.y() - topleft.y());
+			newRect.setWidth(globalPos.x() - topleft.x());
+			break;
+		case BOTTOM_LEFT:
+			newRect.setHeight(globalPos.y() - topleft.y());
+			if (bottomright.x() - globalPos.x() > this->minimumWidth())
+			{
+				newRect.setX(globalPos.x());
+			}
+			break;
+		case CENTER:
+			break;
+		default:
+			break;
+		}
+
+		this->setGeometry(newRect);
+	}
 }
 
 void FramelessWindow::appendStyleSheet(const QString& stylesheetFile)

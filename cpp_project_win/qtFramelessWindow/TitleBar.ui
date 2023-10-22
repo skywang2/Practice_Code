@@ -16,6 +16,9 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -46,6 +49,12 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="tabletTracking">
+      <bool>false</bool>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -58,6 +67,12 @@
     <layout class="QHBoxLayout" name="TitleBarButtons">
      <item>
       <widget class="QLabel" name="TitleText">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>工具名_版本号_1234567890</string>
        </property>
@@ -65,6 +80,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="skin">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>S</string>
        </property>
@@ -78,6 +99,12 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>-</string>
        </property>
@@ -85,6 +112,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="max">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>+</string>
        </property>
@@ -92,6 +125,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="close">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>x</string>
        </property>
@@ -103,6 +142,12 @@
     <layout class="QHBoxLayout" name="ActionButtons">
      <item>
       <widget class="QLabel" name="note">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>TextLabel</string>
        </property>
@@ -110,6 +155,12 @@
      </item>
      <item>
       <widget class="QPushButton" name="noteButton">
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>PushButton</string>
        </property>
