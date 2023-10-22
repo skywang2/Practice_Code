@@ -1,0 +1,19 @@
+QWidget {
+	background-color: #8fc7ff;
+}
+QPushButton {
+	background-color: rgb(64,64,64);
+	font: 16px "Algerian";
+	color: rgb(200,200,200);
+	border: 1px solid #707070;
+	border-radius: 10px;
+	padding: 5px;
+}
+
+QPushButton:hover {
+	background-color: rgb(40,40,40);
+}
+
+QPushButton:pressed {
+	background-color: rgb(64,64,64);
+}

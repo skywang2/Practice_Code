@@ -1,5 +1,8 @@
 <RCC>
-  <qresource prefix="TitleBar">
-    <file>resource/icon/FarCry3.ico</file>
-  </qresource>
+    <qresource prefix="/TitleBar">
+        <file>resource/icon/FarCry3.ico</file>
+    </qresource>
+    <qresource prefix="/qss">
+        <file>resource/qss/FramelessWindow.qss</file>
+    </qresource>
 </RCC>

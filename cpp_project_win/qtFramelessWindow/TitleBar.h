@@ -11,6 +11,9 @@ public:
 	TitleBar(QWidget *parent = nullptr);
 	~TitleBar();
 
+signals:
+	void SigCloseWidget();
+
 private:
 	Ui::TitleBarClass ui;
 };
