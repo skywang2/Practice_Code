@@ -9,6 +9,7 @@
 /cpp_project_linux/project014_cmake_create_package/build/*
 /cpp_project_linux/project014_cmake_create_package/install/*
 /cpp_project_linux/project014_cmake_create_package/use_lib/build/*
+/go_project_all/project001_gRPC/download/*
 
 # vs code远程开发
 /.vscode/*
