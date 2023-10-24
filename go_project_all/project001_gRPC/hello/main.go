@@ -27,13 +27,8 @@ func (s *server) DoSomething(ctx context.Context, in *pb.HelloRequest) (*pb.Hell
 func main() {
 	flag.Parse()
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	
+	lis, _ := net.Listen("tcp", fmt.Sprintf(":%d", *port))	
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
 	s.Serve(lis)
 }
-

@@ -18,6 +18,7 @@
 # vs code远程开发，go语言项目
 *.work
 *.work.sum
+**/__debug_bin*
 
 # win项目
 /.vs/*
