@@ -5,6 +5,7 @@
 #include <condition_variable>
 #include <list>
 #include <atomic>
+#include <memory>
 
 class MyThreadPool 
 {
@@ -37,6 +38,7 @@ private:
     int m_maxJob;
     int m_threadCount;
     std::atomic<int> m_freeThreadCount;
+    // std::atomic<bool> m_initOver;
     WORKER* m_workers;
     std::list<JOB*> m_jobList;
     std::mutex m_jobMutex;

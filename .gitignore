@@ -1,3 +1,7 @@
+# vs code远程开发，通用
+**/.vscode/*
+**/build/*
+
 # linux项目
 /cpp_project_linux/project009_cmake_async_thread/build/*
 /cpp_project_linux/project011_epoll01/build/*
@@ -11,10 +15,6 @@
 /cpp_project_linux/project014_cmake_create_package/use_lib/build/*
 /go_project_all/project001_gRPC/download/*
 
-# vs code远程开发，通用
-**/.vscode/*
-/build/*
-/cpp_project_linux/.vscode/*
 # vs code远程开发，go语言项目
 *.work
 *.work.sum

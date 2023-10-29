@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cstring>
 
+#define SAFE_DELETE(x) do{ if(x) { delete x; x = nullptr; } }while(0)
+#define SAFE_FREE(x) do{ if(x) { free(x); x = nullptr; } }while(0)
+
 /// @brief 初始化线程池
 /// @param threadCount 
 /// @param maxJob 
@@ -25,14 +28,17 @@ MyThreadPool::MyThreadPool(int threadCount, int maxJob)
     }
     for(int i = 0; i < m_threadCount; i++)
     {
-        std::thread th(_Run, static_cast<void*>(&m_workers[i]));// 启动线程，传入线程控制块
+        //先构造worker再启动线程，最后修改worker中的值，避免thread执行太快worker为空
         m_workers[i] = 
         {
-            .threadid = th.get_id(),
+            .threadid = std::thread::id(0),
             .terminate = false,
             .isWorking = false,
             .pool = this,
         };
+        std::thread th(_Run, static_cast<void*>(&m_workers[i]));// 启动线程，传入线程控制块
+        m_workers[i].threadid = th.get_id();
+
         th.detach();
     }
 }
@@ -46,8 +52,12 @@ MyThreadPool::~MyThreadPool()
         m_workers[i].terminate = true;
     }
     //唤醒所有线程
-    std::unique_lock<std::mutex> mtx(m_jobMutex);
-    m_jobCond.notify_all();
+    {
+        std::unique_lock<std::mutex> lck(m_jobMutex);
+        m_jobCond.notify_all();
+    }
+
+    delete[] m_workers;
 }
 
 /// @brief job加入队列，用户接口
@@ -64,7 +74,7 @@ int MyThreadPool::pushJob(JobFunc func, void *args, int argsLen)
         return -1;
     }
     job->func = func;
-    job->user_data = static_cast<void*>(new char[argsLen]);   
+    job->user_data = calloc(argsLen, 1);
     memcpy(job->user_data, args, argsLen);
 
     _AddJob(job);
@@ -77,10 +87,10 @@ int MyThreadPool::pushJob(JobFunc func, void *args, int argsLen)
 /// @return 
 bool MyThreadPool::_AddJob(JOB* job)
 {
-    std::unique_lock<std::mutex> mtx(m_jobMutex);
+    std::unique_lock<std::mutex> lck(m_jobMutex);
     if(m_jobList.size() >= m_maxJob)
     {
-        std::cerr << "job list full" << std::endl;
+        std::cerr << "add job error, job list is full" << std::endl;
         return false;
     }
     m_jobList.push_back(job);
@@ -111,12 +121,12 @@ void MyThreadPool::_ThreadRun(void *args)
 
         //从job队列取任务，需要加锁
         {
-            std::unique_lock<std::mutex> mtx(m_jobMutex);
+            std::unique_lock<std::mutex> lck(m_jobMutex);
             //没有任务，等待有任务和被唤醒
             while(m_jobList.size() == 0)
             {
                 if(worker->terminate) { break; }
-                m_jobCond.wait(mtx);
+                m_jobCond.wait(lck);
             }
             if(worker->terminate) { break; }
 
@@ -133,9 +143,7 @@ void MyThreadPool::_ThreadRun(void *args)
         m_freeThreadCount++;
 
         //释放该任务相关资源
-        delete[] job->user_data;
+        SAFE_FREE(job->user_data);
         delete job;
     }
-
-    delete worker;    
 }
