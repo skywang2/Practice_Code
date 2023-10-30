@@ -128,6 +128,7 @@ void MyThreadPool::_ThreadRun(void *args)
                 if(worker->terminate) { break; }
                 m_jobCond.wait(lck);
             }
+            // m_jobCond.wait(lck, [&](){ return worker->terminate || (m_jobList.size() > 0); });// 第二个参数返回值为true则可以往下执行，为false则继续wait
             if(worker->terminate) { break; }
 
             //有任务，取一个出来
