@@ -20,8 +20,11 @@
 *.work.sum
 **/__debug_bin*
 
-# win项目
+# win项目，通用
 /.vs/*
+!/cpp_project_win/packages/**/build/*
+
+# win项目
 /cpp_project_win/cppLearn/*.user
 /cpp_project_win/.vs
 /cpp_project_win/dongfangcaifu/*.user
@@ -61,3 +64,6 @@
 /cpp_project_win/Ping_ICMP/*.user
 /cpp_project_win/Ping_ICMP/x64
 /cpp_project_win/Ping_ICMP/.vs
+/cpp_project_win/gRPC_test/x64
+/cpp_project_win/gRPC_test/*.user
+/cpp_project_win/x64/Debug/gRPC_test.pdb
