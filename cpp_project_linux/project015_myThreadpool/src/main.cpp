@@ -15,7 +15,7 @@ void TestFunc(void* arg)
 
 int main()
 {
-    MyThreadPool* pool = new MyThreadPool(800, 10000);
+    MyThreadPool* pool = new MyThreadPool(2000, 10000);
     std::cout << "=====start=====" << std::endl;
     for(int i = 0; i < 10000; i++)
     {

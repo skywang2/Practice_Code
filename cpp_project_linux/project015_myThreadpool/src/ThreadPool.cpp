@@ -123,13 +123,8 @@ void MyThreadPool::_ThreadRun(void *args)
         {
             std::unique_lock<std::mutex> lck(m_jobMutex);
             //没有任务，等待有任务和被唤醒
-            while(m_jobList.size() == 0)
-            {
-                if(worker->terminate) { break; }
-                m_jobCond.wait(lck);
-            }
-            // m_jobCond.wait(lck, [&](){ return worker->terminate || (m_jobList.size() > 0); });// 第二个参数返回值为true则可以往下执行，为false则继续wait
-            if(worker->terminate) { break; }
+            m_jobCond.wait(lck, [&](){ return worker->terminate || !m_jobList.empty(); });// 先进行第二个参数的返回值判断，再wait，第二个参数返回值为true则可以往下执行，为false则继续wait
+            if(worker->terminate && m_jobList.empty()) { break; }// 执行完队列中所有任务再结束
 
             //有任务，取一个出来
             job = m_jobList.front();
