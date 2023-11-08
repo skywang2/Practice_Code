@@ -12,6 +12,7 @@
 
 const short port = 3333;
 const int maxEventCount = 1024;
+const int buffSize = 1024;
 
 /*fn Writen
  *brief write 'count' bytes to fd
@@ -174,8 +175,8 @@ int main(int argc, char* argv[])
                         //将clientfd添加到epollfd事件中
                         epoll_event client_event;
                         client_event.data.fd = clientfd;
-                        client_event.events = EPOLLIN;
-                        // listen_event.events |= EPOLLET;
+                        client_event.events = EPOLLIN | EPOLLOUT;
+                        client_event.events |= EPOLLET;//监听EPOLLOUT事件但不用EPOLLET模式会导致持续触发EPOLLOUT事件
                         if(-1 == epoll_ctl(epollfd, EPOLL_CTL_ADD, clientfd, &client_event))
                         {
                             close(clientfd);
@@ -193,10 +194,12 @@ int main(int argc, char* argv[])
                 }
                 else
                 {
-                    // sleep(2);
                     std::cout << "client fd:" << epollEvents[i].data.fd << " receive data" << std::endl;
-                    char ch;//LT模式下，每次读取1个字符
-                    int recvNum = recv(epollEvents[i].data.fd, &ch, 1, 0);
+                    // char ch;//LT模式下，每次读取1个字符
+                    // int recvNum = recv(epollEvents[i].data.fd, &ch, 1, 0);
+                    char chBuff[buffSize];
+                    memset(chBuff, 0, buffSize);
+                    int recvNum = recv(epollEvents[i].data.fd, chBuff, buffSize - 1, 0);
                     std::cout << "recvnum:" << recvNum << std::endl;
                     if(0 == recvNum)
                     {
@@ -222,13 +225,24 @@ int main(int argc, char* argv[])
                     else
                     {
                         //正常读取
-                        std::cout << "receive:" << ch << std::endl;
+                        std::cout << "receive:" << chBuff << std::endl;
+                        //重新注册EPOLLOUT事件，实际情况中要根据是否还要读一次来决定是否重新注册事件，因为在ET模式下，注册一次事件只会触发一次
+                        epoll_event clientFdEvent;
+                        clientFdEvent.data.fd = epollEvents[i].data.fd;
+                        clientFdEvent.events = EPOLLIN || EPOLLOUT || EPOLLET;
+                        if(-1 == epoll_ctl(epollfd, EPOLL_CTL_MOD, epollEvents[i].data.fd, &clientFdEvent))
+                        {
+                            std::cout << "modify clientfd error" << std::endl;
+                        }
                     }
                 }
             }
             else if(epollEvents[i].events & EPOLLOUT)
             {
-                //do nothing
+                if(epollEvents[i].data.fd != listenfd)
+                {
+                    std::cout << "EPOLLOUT triggered, clientfd:" << epollEvents[i].data.fd << std::endl;
+                }
             }
             else if(epollEvents[i].events & EPOLLERR)
             {
