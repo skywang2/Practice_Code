@@ -16,4 +16,13 @@ dlv debug --headless --listen ":2345" --log --api-version 2
     - 服务端开启后在本地vscode端配置launch.json
     - 配置完成后选择要调试的go文件按F5开始调试
 7. 编译后使用dlv调试，可保留调试符号用于打断点
-    - 
+    - 如果无法加断点，可以在lanunch.json的configurations字段加上"trace": "verbose"，用来生成详细日志
+    - 一般无法创建断点是因为使用了软连接找不到文件，解决方法是：1.使用在完整路径的文件夹下进行调试（推荐）；2.在lanunch.json和settings.json中都添加以下字段
+    ```json
+    "substitutePath": [
+            {
+             "from": "/you/soft/link/path/",  // 软链路径
+             "to": "/mnt/c/Users/xxx/real/path/",  //实际路径
+            },
+        ]
+    ```
