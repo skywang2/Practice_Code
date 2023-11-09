@@ -1,0 +1,1 @@
+1. others文件夹下的Makefile实现了使用linux make命令同时完成生成cpp文件和编译静态库文件
