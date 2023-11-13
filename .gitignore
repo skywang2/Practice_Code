@@ -23,6 +23,7 @@
 # win项目，通用
 /.vs/*
 !/cpp_project_win/packages/**/build/*
+/cpp_project_win/**/*.user
 
 # win项目
 /cpp_project_win/cppLearn/*.user
