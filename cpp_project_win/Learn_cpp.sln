@@ -35,6 +35,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ping_ICMP", "Ping_ICMP\Ping
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gRPC_test", "gRPC_test\gRPC_test.vcxproj", "{B800BD8A-89F3-4E17-A236-307BC20DDCD5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "co_wait", "co_wait\co_wait.vcxproj", "{307AF84A-3793-4366-8A7D-ABAB83361648}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -157,12 +159,20 @@ Global
 		{B800BD8A-89F3-4E17-A236-307BC20DDCD5}.Release|x64.Build.0 = Release|x64
 		{B800BD8A-89F3-4E17-A236-307BC20DDCD5}.Release|x86.ActiveCfg = Release|Win32
 		{B800BD8A-89F3-4E17-A236-307BC20DDCD5}.Release|x86.Build.0 = Release|Win32
+		{307AF84A-3793-4366-8A7D-ABAB83361648}.Debug|x64.ActiveCfg = Debug|x64
+		{307AF84A-3793-4366-8A7D-ABAB83361648}.Debug|x64.Build.0 = Debug|x64
+		{307AF84A-3793-4366-8A7D-ABAB83361648}.Debug|x86.ActiveCfg = Debug|Win32
+		{307AF84A-3793-4366-8A7D-ABAB83361648}.Debug|x86.Build.0 = Debug|Win32
+		{307AF84A-3793-4366-8A7D-ABAB83361648}.Release|x64.ActiveCfg = Release|x64
+		{307AF84A-3793-4366-8A7D-ABAB83361648}.Release|x64.Build.0 = Release|x64
+		{307AF84A-3793-4366-8A7D-ABAB83361648}.Release|x86.ActiveCfg = Release|Win32
+		{307AF84A-3793-4366-8A7D-ABAB83361648}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		Qt5Version = msvc2015_64
 		SolutionGuid = {3483F0AD-9B26-40E3-BC0E-5B91A2591B8B}
+		Qt5Version = msvc2015_64
 	EndGlobalSection
 EndGlobal
