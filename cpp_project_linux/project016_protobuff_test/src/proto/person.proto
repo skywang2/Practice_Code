@@ -1,0 +1,22 @@
+syntax = "proto3";
+import "address.proto";
+package PeopleInfo;
+
+enum Color 
+{
+    Red = 0;
+    Green = 1;
+    Yellow = 2;
+    Blue = 3;
+}
+
+message Person
+{
+    // repeated关键字，用于定义动态数组
+    int32 id = 1;
+    bytes name = 2;
+    bytes sex = 3;
+    int32 age = 4;
+    AddrInfo.Address addr = 5;
+    Color color = 6;
+}
