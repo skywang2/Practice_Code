@@ -1,4 +1,4 @@
-# vs code远程开发，通用
+﻿# vs code远程开发，通用
 **/.vscode/*
 **/build/*
 
@@ -24,6 +24,7 @@
 /.vs/*
 !/cpp_project_win/packages/**/build/*
 /cpp_project_win/**/*.user
+/cpp_project_win/*.VC.*
 
 # win项目
 /cpp_project_win/cppLearn/*.user
@@ -69,3 +70,4 @@
 /cpp_project_win/gRPC_test/*.user
 /cpp_project_win/x64/Debug/gRPC_test.pdb
 /cpp_project_win/MyLog4cxx/x64
+/cpp_project_win/ffmpegTest/x64
