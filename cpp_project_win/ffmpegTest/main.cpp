@@ -1,10 +1,10 @@
-//extern "C" {
+﻿extern "C" {
 #include "libavcodec\avcodec.h"
 #include "libavformat\avformat.h"
 #include "libswscale\swscale.h"
 #include "libavutil\imgutils.h"
 #include "SDL.h"
-//}
+}
 
 #include "output_log.h"
 
@@ -13,8 +13,8 @@
 #define SFM_BREAK_EVENT (SDL_USEREVENT + 2)
 
 static int g_frame_rate = 1;
-static int g_sfp_refresh_thread_exit = 0;
-static int g_sfp_refresh_thread_pause = 0;
+static bool g_sfp_refresh_thread_exit = 0;
+static bool g_sfp_refresh_thread_pause = 0;
 
 //子线程，事件发生器
 int sfp_refresh_thread(void *data) {
@@ -23,7 +23,7 @@ int sfp_refresh_thread(void *data) {
 	g_sfp_refresh_thread_pause = 0;
 	while (!g_sfp_refresh_thread_exit) {
 		if (!g_sfp_refresh_thread_pause) {
-			SDL_Event sdlEvent;
+			SDL_Event sdlEvent = { 0 };
 			sdlEvent.type = SFM_REFRESH_EVENT;
 			SDL_PushEvent(&sdlEvent);
 		}
@@ -32,9 +32,9 @@ int sfp_refresh_thread(void *data) {
 	//标记复位
 	g_sfp_refresh_thread_exit = 0;
 	g_sfp_refresh_thread_pause = 0;
-	SDL_Event sdlEvent;
-	sdlEvent.type = SFM_BREAK_EVENT;
-	SDL_PushEvent(&sdlEvent);
+	SDL_Event sdlEvent = { 0 };
+	sdlEvent.type = SFM_BREAK_EVENT;	
+	return SDL_PushEvent(&sdlEvent);
 }
 
 int vPlayer_sdl2(char* filePath) {
@@ -55,7 +55,7 @@ int vPlayer_sdl2(char* filePath) {
 	SDL_Window* pSDLWindow = nullptr;
 	SDL_Renderer* pSDLRender = nullptr;
 	SDL_Texture* pSDLTexture = nullptr;
-	SDL_Rect sdlRect;
+	SDL_Rect sdlRect = { 0 };
 	SDL_Thread* pSDLThread = nullptr;
 	SDL_Event sdlEvent;
 
@@ -186,7 +186,7 @@ int vPlayer_sdl2(char* filePath) {
 		}
 		else if (SDL_KEYDOWN == sdlEvent.type) {
 			if (SDLK_SPACE == sdlEvent.type) {
-				g_sfp_refresh_thread_pause != g_sfp_refresh_thread_pause;
+				g_sfp_refresh_thread_pause = !g_sfp_refresh_thread_pause;
 			}
 			if (SDLK_ESCAPE == sdlEvent.type) {
 				g_sfp_refresh_thread_exit = 1;
@@ -218,7 +218,7 @@ end:
 }
 
 int main(int argc, char* argv[]) {
-	vPlayer_sdl2("test");
+	vPlayer_sdl2("big_buck_bunny.mp4");
 
 	return 0;
 }
