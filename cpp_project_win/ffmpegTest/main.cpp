@@ -57,7 +57,7 @@ int vPlayer_sdl2(char* filePath) {
 	SDL_Texture* pSDLTexture = nullptr;
 	SDL_Rect sdlRect = { 0 };
 	SDL_Thread* pSDLThread = nullptr;
-	SDL_Event sdlEvent;
+	SDL_Event sdlEvent = { 0 };
 
 	//init ffmpeg，分配空间
 	pFormatCtx = avformat_alloc_context();
@@ -185,10 +185,10 @@ int vPlayer_sdl2(char* filePath) {
 			}while(AVERROR(EAGAIN) == temp_ret);
 		}
 		else if (SDL_KEYDOWN == sdlEvent.type) {
-			if (SDLK_SPACE == sdlEvent.type) {
+			if (SDLK_SPACE == sdlEvent.key.keysym.sym) {
 				g_sfp_refresh_thread_pause = !g_sfp_refresh_thread_pause;
 			}
-			if (SDLK_ESCAPE == sdlEvent.type) {
+			if (SDLK_ESCAPE == sdlEvent.key.keysym.sym) {
 				g_sfp_refresh_thread_exit = 1;
 			}
 		}
