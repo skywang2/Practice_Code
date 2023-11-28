@@ -190,7 +190,7 @@ int vPlayer_sdl2(char* filePath) {
 					SDL_RenderCopy(pSDLRender, pSDLTexture, nullptr, &sdlRect);/*关注整个texture*/
 					SDL_RenderPresent(pSDLRender);//draw call
 				}
-			}while(AVERROR(EAGAIN) == temp_ret);
+			}while(AVERROR(EAGAIN) != temp_ret);
 		}
 		else if (SDL_AUDIODEVICEADDED == sdlEvent.type) {
 			output_log(LOG_INFO, "audio device added");
