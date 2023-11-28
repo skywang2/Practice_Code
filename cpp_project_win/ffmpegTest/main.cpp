@@ -12,22 +12,29 @@
 #define SFM_REFRESH_EVENT (SDL_USEREVENT + 1)//sdl的用户自定义事件
 #define SFM_BREAK_EVENT (SDL_USEREVENT + 2)
 
-static int g_frame_rate = 1;
 static bool g_sfp_refresh_thread_exit = 0;
 static bool g_sfp_refresh_thread_pause = 0;
+static int g_FPS = 1;//FPS
+static Uint32 g_FPS_timer = SDL_GetTicks();//记录两帧之间的刷新间隔
 
 //子线程，事件发生器
 int sfp_refresh_thread(void *data) {
 	//标记初始化
 	g_sfp_refresh_thread_exit = 0;
 	g_sfp_refresh_thread_pause = 0;
+	Uint32 fpsDuration = 1000 / g_FPS;//帧间间隔时间，使用整型会使得时间间隔略低，即刷新率略高
 	while (!g_sfp_refresh_thread_exit) {
 		if (!g_sfp_refresh_thread_pause) {
 			SDL_Event sdlEvent = { 0 };
 			sdlEvent.type = SFM_REFRESH_EVENT;
 			SDL_PushEvent(&sdlEvent);
 		}
-		SDL_Delay(1000 / g_frame_rate);//粗略时间。需要计算每帧之间的时间间隔，与帧率对应时间比较，判断是否要延迟，以及延迟多久
+		//计算每帧之间的时间间隔，与帧率对应时间比较，判断是否要延迟，以及延迟多久
+		Uint32 oneDuration = SDL_GetTicks() - g_FPS_timer;
+		if (oneDuration < fpsDuration) {
+			SDL_Delay(fpsDuration - oneDuration);
+		}
+		g_FPS_timer = SDL_GetTicks();
 	}
 	//标记复位
 	g_sfp_refresh_thread_exit = 0;
@@ -91,7 +98,7 @@ int vPlayer_sdl2(char* filePath) {
 			avcodec_parameters_to_context(pCodecCtx, pStream->codecpar);
 			videoIdx = i;
 			//帧率，解码、刷新画面的频率
-			g_frame_rate = pStream->avg_frame_rate.num / pStream->avg_frame_rate.den;
+			g_FPS = pStream->avg_frame_rate.num / pStream->avg_frame_rate.den;
 		}
 	}
 	if (!pCodecCtx) {
@@ -106,6 +113,7 @@ int vPlayer_sdl2(char* filePath) {
 		ret = -1;
 		goto end;
 	}
+	av_dump_format(pFormatCtx, videoIdx, filePath, 0);//打印视频格式信息
 
 	//转换视频帧数据格式
 	pSwsCtx = sws_getContext(pCodecCtx->width, pCodecCtx->height,
@@ -184,6 +192,9 @@ int vPlayer_sdl2(char* filePath) {
 				}
 			}while(AVERROR(EAGAIN) == temp_ret);
 		}
+		else if (SDL_AUDIODEVICEADDED == sdlEvent.type) {
+			output_log(LOG_INFO, "audio device added");
+		}
 		else if (SDL_KEYDOWN == sdlEvent.type) {
 			if (SDLK_SPACE == sdlEvent.key.keysym.sym) {
 				g_sfp_refresh_thread_pause = !g_sfp_refresh_thread_pause;
@@ -194,7 +205,10 @@ int vPlayer_sdl2(char* filePath) {
 		}
 		else if (SDL_QUIT == sdlEvent.type) {
 			g_sfp_refresh_thread_exit = 1;
-		}			
+		}
+		else {
+			output_log(LOG_INFO, "event:0x%x", sdlEvent.type);
+		}
 	}								
 
 	//release
@@ -218,7 +232,10 @@ end:
 }
 
 int main(int argc, char* argv[]) {
-	vPlayer_sdl2("big_buck_bunny.mp4");
+	if (argc > 1)
+	{
+		vPlayer_sdl2(argv[1]);
+	}
 
 	return 0;
 }
