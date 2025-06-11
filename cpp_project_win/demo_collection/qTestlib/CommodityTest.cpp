@@ -30,6 +30,17 @@ bool MySplit(const string& str, vector<string>& result, const string& delim = " 
 	return true;
 }
 
+vector<string> SplitString(const string &s, char delimiter)
+{
+	vector<string> tokens;
+	string token;
+	istringstream tokenStream(s);
+	while (getline(tokenStream, token, delimiter)) {
+		tokens.push_back(token);
+	}
+	return tokens;
+}
+
 CommodityTest::CommodityTest(QObject* parent)
 	:QObject(parent)
 {
